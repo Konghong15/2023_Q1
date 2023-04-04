@@ -1,4 +1,6 @@
 #include "RenderManager.h"
+#include "SpriteManager.h"
+#include "Sprite.h"
 
 namespace hongpireSurvivors
 {
@@ -20,9 +22,39 @@ namespace hongpireSurvivors
 		mInstance = nullptr;
 	}
 
+	void RenderManager::Draw(int x, int y, const char ch)
+	{
+		COORD coodi = { x, y };
+		DWORD dw;
+		char str[10] = { 0, };
+		str[0] = ch;
+
+		SetConsoleCursorPosition(getCurrentHandle(), coodi);
+		WriteFile(getCurrentHandle(), str, 1, &dw, NULL);
+	}
+
+	void RenderManager::Draw(int x, int y, eSpriteType spriteType)
+	{
+		COORD coodi = { x, y };
+		DWORD dw;
+
+		const Sprite& sp = SpriteManager::GetInstance()->GetSprite(spriteType);
+		const char* img_ptr = sp.Img;
+
+		for (int i = 0; i < sp.Height - 2; ++i)
+		{
+			SetConsoleCursorPosition(getCurrentHandle(), coodi);
+			WriteFile(getCurrentHandle(), img_ptr, sp.Width, &dw, NULL);
+
+			img_ptr += sp.Width + 1;
+			++coodi.Y;
+		}
+	}
+
 	void RenderManager::Render()
 	{
-
+		swapBuffer();
+		clearBuffer();
 	}
 
 	RenderManager::RenderManager()
@@ -34,7 +66,8 @@ namespace hongpireSurvivors
 		CONSOLE_CURSOR_INFO cursorInfo = { 0, };
 		cursorInfo.bVisible = 0;
 		cursorInfo.dwSize = 1;
-		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+		SetConsoleCursorInfo(mScreen[static_cast<int>(eBufferIndex::FRONT)], &cursorInfo);
+		SetConsoleCursorInfo(mScreen[static_cast<int>(eBufferIndex::BACK)], &cursorInfo);
 
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
 		GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -53,6 +86,7 @@ namespace hongpireSurvivors
 
 	void RenderManager::swapBuffer()
 	{
+		SetConsoleActiveScreenBuffer(getCurrentHandle());
 		mBufferIndex = mBufferIndex == eBufferIndex::FRONT ? eBufferIndex::BACK : eBufferIndex::FRONT;
 	}
 
@@ -64,7 +98,7 @@ namespace hongpireSurvivors
 
 		for (coordi.Y = mScreenSize.Top; coordi.Y < getScreenHeight(); ++coordi.Y)
 		{
-			FillConsoleOutputCharacter(mScreen[static_cast<int>(mBufferIndex)], ' ', getScreenWidth(), coordi, &dw);
+			FillConsoleOutputCharacter(getCurrentHandle(), ' ', getScreenWidth(), coordi, &dw);
 		}
 	}
 }

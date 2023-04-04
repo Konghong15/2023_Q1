@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 
 #include <Windows.h>
 
@@ -8,9 +7,6 @@ namespace hongpireSurvivors
 	class TimeManager
 	{
 	public:
-		TimeManager();
-		~TimeManager() = default;
-
 		static TimeManager* GetInstance();
 		static void DeleteInstance();
 
@@ -20,6 +16,10 @@ namespace hongpireSurvivors
 		inline ULONGLONG GetElapsedTime();
 		inline ULONGLONG GetDeltaTime();
 		inline unsigned int GetFPS();
+
+	private:
+		TimeManager();
+		~TimeManager() = default;
 
 	private:
 		enum { KEY_SIZE = 255 };

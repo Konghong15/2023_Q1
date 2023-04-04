@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+#include "eSpriteType.h"
 
 namespace hongpireSurvivors
 {
@@ -17,6 +18,8 @@ namespace hongpireSurvivors
 		static RenderManager* GetInstance();
 		static void DeleteInstance();
 
+		void Draw(int x, int y, const char c);
+		void Draw(int x, int y, eSpriteType spriteType);
 		void Render();
 
 	private:
@@ -27,6 +30,7 @@ namespace hongpireSurvivors
 		void clearBuffer();
 		inline int getScreenWidth() const;
 		inline int getScreenHeight() const;
+		inline HANDLE& getCurrentHandle();
 
 	private:
 		enum { KEY_SIZE = 255 };
@@ -45,5 +49,10 @@ namespace hongpireSurvivors
 	int RenderManager::getScreenHeight() const
 	{
 		return mScreenSize.Bottom - mScreenSize.Top;
+	}
+
+	HANDLE& RenderManager::getCurrentHandle()
+	{
+		return mScreen[static_cast<int>(mBufferIndex)];
 	}
 }

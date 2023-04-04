@@ -24,7 +24,7 @@ namespace hongpireSurvivors
 	}
 
 	InputManager::InputManager()
-		: mkeyState{ eKeyState::NONE, }
+		: mKeyState{ eKeyState::NONE, }
 	{
 	}
 
@@ -34,17 +34,17 @@ namespace hongpireSurvivors
 		{
 			if (GetAsyncKeyState(i) & 0x8000)
 			{
-				switch (mkeyState[i])
+				switch (mKeyState[i])
 				{
 				case eKeyState::NONE:
 					/* intentional  fall-through */
 				case eKeyState::POP:
-					mkeyState[i] = eKeyState::PUSH;
+					mKeyState[i] = eKeyState::PUSH;
 					break;
 				case eKeyState::PUSH:
 					/* intentional  fall-through */
 				case eKeyState::HOLD:
-					mkeyState[i] = eKeyState::HOLD;
+					mKeyState[i] = eKeyState::HOLD;
 					break;
 				default:
 					assert(false);
@@ -53,17 +53,17 @@ namespace hongpireSurvivors
 			}
 			else
 			{
-				switch (mkeyState[i])
+				switch (mKeyState[i])
 				{
 				case eKeyState::NONE:
 					/* intentional  fall-through */
 				case eKeyState::POP:
-					mkeyState[i] = eKeyState::NONE;
+					mKeyState[i] = eKeyState::NONE;
 					break;
 				case eKeyState::PUSH:
 					/* intentional  fall-through */
 				case eKeyState::HOLD:
-					mkeyState[i] = eKeyState::POP;
+					mKeyState[i] = eKeyState::POP;
 					break;
 				default:
 					assert(false);

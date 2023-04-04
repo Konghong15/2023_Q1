@@ -13,18 +13,25 @@ namespace hongpireSurvivors
 	class InputManager
 	{
 	public:
-		InputManager();
-		~InputManager() = default;
-
 		static InputManager* GetInstance();
 		static void DeleteInstance();
 
 		void Frame();
+		inline eKeyState GetKeyState(WORD keyCode);
+
+	private:
+		InputManager();
+		~InputManager() = default;
 
 	private:
 		enum { KEY_SIZE = 255 };
 		static InputManager* mInstance;
 
-		eKeyState mkeyState[KEY_SIZE];
+		eKeyState mKeyState[KEY_SIZE];
 	};
+
+	eKeyState InputManager::GetKeyState(WORD keyCode)
+	{
+		return mKeyState[keyCode];
+	}
 }
