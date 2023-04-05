@@ -13,7 +13,11 @@ namespace hongpireSurvivors
 		virtual void Frame() override;
 
 	private:
-		int mElapsed;
+		float mElapsed;
+		float mAttackElapsed;
+		float mJumpForce;
 		bool mCanMove;
+		bool mCanAttack;
+		bool mCanJump;
 	};
 }

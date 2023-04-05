@@ -23,9 +23,23 @@ namespace hongpireSurvivors
 
 	void ObjectManager::Frame()
 	{
-		for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
+		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end(); ++iter)
 		{
-			// remove unvaild unit
+			delete* iter;
+		}
+		mDeadObjects.clear();
+
+		for (auto iter = mObjects.begin(); iter != mObjects.end();)
+		{
+			if (!(*iter)->GetValid())
+			{
+				mDeadObjects.push_back(*iter);
+				iter = mObjects.erase(iter);
+			}
+			else
+			{
+				++iter;
+			}
 		}
 		for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
 		{
@@ -41,5 +55,6 @@ namespace hongpireSurvivors
 		: mObjects()
 	{
 		mObjects.reserve(128);
+		mDeadObjects.reserve(128);
 	}
 }

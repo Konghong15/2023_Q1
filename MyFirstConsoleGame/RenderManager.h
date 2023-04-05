@@ -22,31 +22,36 @@ namespace hongpireSurvivors
 		void Draw(int x, int y, eSpriteType spriteType);
 		void Render();
 
+		inline int GetScreenWidth() const;
+		inline int GetScreenHeight() const;
+
 	private:
 		RenderManager();
 		~RenderManager();
 
 		void swapBuffer();
 		void clearBuffer();
-		inline int getScreenWidth() const;
-		inline int getScreenHeight() const;
 		inline HANDLE& getCurrentHandle();
 
 	private:
-		enum { KEY_SIZE = 255 };
+		enum { KEY_SIZE = 255 }; // font size 10 : { 426, 79 }
+		enum { BUFFER_X_OFFSET = 12 }; // font size 10 : { 426, 79 }
+		enum { BUFFER_WIDTH = 426 }; // font size 10 : { 426, 79 }
+		enum { BUFFER_HEIGHT = 79 }; // font size 6 : { 680, 133 }
 		static RenderManager* mInstance;
 
+		char(*mBuffer)[BUFFER_WIDTH];
 		HANDLE mScreen[static_cast<int>(eBufferIndex::SIZE)];
 		eBufferIndex mBufferIndex;
 		SMALL_RECT mScreenSize;
 	};
 
-	int RenderManager::getScreenWidth() const
+	int RenderManager::GetScreenWidth() const
 	{
 		return mScreenSize.Right - mScreenSize.Left;
 	}
 
-	int RenderManager::getScreenHeight() const
+	int RenderManager::GetScreenHeight() const
 	{
 		return mScreenSize.Bottom - mScreenSize.Top;
 	}

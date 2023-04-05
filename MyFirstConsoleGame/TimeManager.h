@@ -14,7 +14,7 @@ namespace hongpireSurvivors
 		void Frame();
 
 		inline ULONGLONG GetElapsedTime();
-		inline ULONGLONG GetDeltaTime();
+		inline float GetDeltaTime();
 		inline unsigned int GetFPS();
 
 	private:
@@ -37,9 +37,9 @@ namespace hongpireSurvivors
 		return mElapsedTime;
 	}
 
-	ULONGLONG TimeManager::GetDeltaTime()
+	float TimeManager::GetDeltaTime()
 	{
-		return mCurTime - mPrevTime;
+		return (mCurTime - mPrevTime) / 1000.f;
 	}
 
 	unsigned int TimeManager::GetFPS()

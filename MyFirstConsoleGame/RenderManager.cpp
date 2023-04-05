@@ -35,30 +35,33 @@ namespace hongpireSurvivors
 
 	void RenderManager::Draw(int x, int y, eSpriteType spriteType)
 	{
-		COORD coodi = { x, y };
-		DWORD dw;
-
 		const Sprite& sp = SpriteManager::GetInstance()->GetSprite(spriteType);
-		const char* img_ptr = sp.Img;
 
-		for (int i = 0; i < sp.Height - 2; ++i)
+		for (int i = 0; i < (sp.Height - 1) * sp.Width; ++i)
 		{
-			SetConsoleCursorPosition(getCurrentHandle(), coodi);
-			WriteFile(getCurrentHandle(), img_ptr, sp.Width, &dw, NULL);
+			int yi = y + (i / sp.Width);
+			int xi = x + (i % sp.Width) + BUFFER_X_OFFSET;
 
-			img_ptr += sp.Width + 1;
-			++coodi.Y;
+			if (sp.Img[i] != ' ')
+			{
+				mBuffer[yi][xi] = sp.Img[i];
+			}
 		}
 	}
 
 	void RenderManager::Render()
 	{
+		DWORD dw;
+
+		SetConsoleCursorPosition(getCurrentHandle(), { 0, 0 });
+		WriteFile(getCurrentHandle(), mBuffer, BUFFER_HEIGHT * BUFFER_WIDTH, &dw, NULL);
 		swapBuffer();
 		clearBuffer();
 	}
 
 	RenderManager::RenderManager()
 		: mBufferIndex(eBufferIndex::FRONT)
+		, mBuffer{ 0, }
 	{
 		mScreen[static_cast<int>(eBufferIndex::FRONT)] = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 		mScreen[static_cast<int>(eBufferIndex::BACK)] = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
@@ -70,18 +73,22 @@ namespace hongpireSurvivors
 		SetConsoleCursorInfo(mScreen[static_cast<int>(eBufferIndex::BACK)], &cursorInfo);
 
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
+		SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), { BUFFER_WIDTH, BUFFER_HEIGHT });
 		GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
 
 		mScreenSize.Left = csbi.srWindow.Left;
 		mScreenSize.Right = csbi.srWindow.Right;
 		mScreenSize.Bottom = csbi.srWindow.Bottom;
 		mScreenSize.Top = csbi.srWindow.Top;
+		mBuffer = new char[BUFFER_HEIGHT][BUFFER_WIDTH];
+		memset(mBuffer, ' ', BUFFER_HEIGHT * BUFFER_WIDTH);
 	}
 
 	RenderManager::~RenderManager()
 	{
 		CloseHandle(mScreen[static_cast<int>(eBufferIndex::FRONT)]);
 		CloseHandle(mScreen[static_cast<int>(eBufferIndex::BACK)]);
+		delete[] mBuffer;
 	}
 
 	void RenderManager::swapBuffer()
@@ -92,13 +99,14 @@ namespace hongpireSurvivors
 
 	void RenderManager::clearBuffer()
 	{
-		COORD coordi = { 0, };
-		coordi.X = mScreenSize.Left;
-		DWORD dw;
-
-		for (coordi.Y = mScreenSize.Top; coordi.Y < getScreenHeight(); ++coordi.Y)
-		{
-			FillConsoleOutputCharacter(getCurrentHandle(), ' ', getScreenWidth(), coordi, &dw);
-		}
+		//COORD coordi = { 0, };
+		//coordi.X = mScreenSize.Left;
+		//DWORD dw;
+		memset(mBuffer, ' ', BUFFER_HEIGHT * BUFFER_WIDTH);
+		Draw(0, 0, eSpriteType::MAP_1);
+		//for (coordi.Y = mScreenSize.Top; coordi.Y < GetScreenHeight(); ++coordi.Y)
+		//{
+		//	FillConsoleOutputCharacter(getCurrentHandle(), ' ', GetScreenWidth(), coordi, &dw);
+		//}
 	}
 }

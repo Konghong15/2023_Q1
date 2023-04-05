@@ -25,6 +25,7 @@ namespace hongpireSurvivors
 		static ObjectManager* mInstance;
 
 		std::vector<Object*> mObjects;
+		std::vector<Object*> mDeadObjects;
 	};
 
 	void ObjectManager::OnSpawn(Object* object)
