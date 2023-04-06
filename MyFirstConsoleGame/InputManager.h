@@ -5,7 +5,7 @@ namespace hongpireSurvivors
 	enum class eKeyState
 	{
 		NONE,
-		PUSH,
+		PUSH, // push 딱 한 프레임 유지되거든 ? 
 		HOLD,
 		POP
 	};

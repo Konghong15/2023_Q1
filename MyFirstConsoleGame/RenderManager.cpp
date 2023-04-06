@@ -33,18 +33,34 @@ namespace hongpireSurvivors
 		WriteFile(getCurrentHandle(), str, 1, &dw, NULL);
 	}
 
-	void RenderManager::Draw(int x, int y, eSpriteType spriteType)
+	void RenderManager::Draw(int x, int y, eSpriteType spriteType, bool isLeft)
 	{
 		const Sprite& sp = SpriteManager::GetInstance()->GetSprite(spriteType);
 
-		for (int i = 0; i < (sp.Height - 1) * sp.Width; ++i)
+		if (!isLeft)
 		{
-			int yi = y + (i / sp.Width);
-			int xi = x + (i % sp.Width) + BUFFER_X_OFFSET;
-
-			if (sp.Img[i] != ' ')
+			for (int i = 0; i < (sp.Height - 1) * sp.Width; ++i)
 			{
-				mBuffer[yi][xi] = sp.Img[i];
+				int yi = y + (i / sp.Width);
+				int xi = x + (i % sp.Width) + BUFFER_X_OFFSET;
+
+				if (sp.Img[i] != ' ')
+				{
+					mBuffer[yi][xi] = sp.Img[i];
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < (sp.Height - 1) * sp.Width; ++i)
+			{
+				int yi = y + (i / sp.Width);
+				int xi = x + (sp.Width - (i % sp.Width)) + BUFFER_X_OFFSET;
+
+				if (sp.Img[i] != ' ')
+				{
+					mBuffer[yi][xi] = sp.Img[i];
+				}
 			}
 		}
 	}
@@ -74,12 +90,17 @@ namespace hongpireSurvivors
 
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
 		SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), { BUFFER_WIDTH, BUFFER_HEIGHT });
+		SetConsoleScreenBufferSize(mScreen[static_cast<int>(eBufferIndex::FRONT)], { BUFFER_WIDTH, BUFFER_HEIGHT });
+		SetConsoleScreenBufferSize(mScreen[static_cast<int>(eBufferIndex::BACK)], { BUFFER_WIDTH, BUFFER_HEIGHT });
 		GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
 
 		mScreenSize.Left = csbi.srWindow.Left;
 		mScreenSize.Right = csbi.srWindow.Right;
 		mScreenSize.Bottom = csbi.srWindow.Bottom;
 		mScreenSize.Top = csbi.srWindow.Top;
+
+		// assert(GetScreenWidth() == BUFFER_WIDTH && GetScreenHeight() == BUFFER_HEIGHT);
+
 		mBuffer = new char[BUFFER_HEIGHT][BUFFER_WIDTH];
 		memset(mBuffer, ' ', BUFFER_HEIGHT * BUFFER_WIDTH);
 	}

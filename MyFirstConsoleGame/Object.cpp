@@ -3,13 +3,14 @@
 
 namespace hongpireSurvivors
 {
-	Object::Object(COORD pos, COORD size, eSpriteType spriteType, eObjectType objectType, bool isValid)
+	Object::Object(COORD pos, COORD size, eSpriteType spriteType, eObjectType objectType, bool isValid, bool isLeft)
 		: mPos(pos)
 		, mSize(size)
 		, mSpriteType(spriteType)
 		, mObjectType(objectType)
 		, mIsVaild(isValid)
 		, mCollider(nullptr)
+		, mIsLeft(isLeft)
 	{
 	}
 
@@ -28,6 +29,6 @@ namespace hongpireSurvivors
 
 	void Object::Render()
 	{
-		RenderManager::GetInstance()->Draw(mPos.X, mPos.Y, mSpriteType);
+		RenderManager::GetInstance()->Draw(mPos.X, mPos.Y, mSpriteType, mIsLeft);
 	}
 }

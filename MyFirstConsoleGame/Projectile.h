@@ -12,9 +12,11 @@ namespace hongpireSurvivors
 
 		virtual void Frame() override;
 
+		void handleMove();
+		void handleCollision();
+
 	private:
 		float mElapsed;
 		bool mCanMove;
-		bool mIsLeft;
 	};
 }

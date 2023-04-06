@@ -6,16 +6,15 @@
 namespace hongpireSurvivors
 {
 	Projectile::Projectile(COORD pos, COORD size, eSpriteType spriteType, bool isLeft)
-		: Object(pos, size, spriteType, eObjectType::PROJECTILE, true)
+		: Object(pos, size, spriteType, eObjectType::PROJECTILE, true, isLeft)
 		, mCanMove(true)
-		, mIsLeft(isLeft)
 		, mElapsed(0.f)
 	{
 	}
 
 	void Projectile::Frame()
 	{
- 		int width = RenderManager::GetInstance()->GetScreenWidth();
+		int width = RenderManager::GetInstance()->GetScreenWidth();
 
 		if (!mCanMove)
 		{
@@ -23,22 +22,23 @@ namespace hongpireSurvivors
 
 			if (mElapsed >= 0.005f)
 			{
-				mElapsed = 0.0f;
+				mElapsed -= 0.005f;
 				mCanMove = true;
 			}
 
 			return;
 		}
 
-		int flag = mCollider->GetStayBitFlag();
+		int flag = mCollider->GetEnterBitFlag();
 		int mask = static_cast<int>(eObjectType::ENEMY);
+
 		if ((flag & mask) != 0)
 		{
 			mIsVaild = false;
 			return;
 		}
 
-		if (mPos.X == 0 || mPos.X == width - mSize.X)
+		if (mPos.X == 0 || mPos.X == width - 26 - mSize.X)
 		{
 			mIsVaild = false;
 			return;
@@ -55,4 +55,8 @@ namespace hongpireSurvivors
 
 		mCanMove = false;
 	}
+
+
+	// void handleMove()
+	//void handleCollision()
 }

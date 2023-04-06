@@ -19,7 +19,7 @@ namespace hongpireSurvivors
 		static void DeleteInstance();
 
 		void Draw(int x, int y, const char c);
-		void Draw(int x, int y, eSpriteType spriteType);
+		void Draw(int x, int y, eSpriteType spriteType, bool isLeft = false);
 		void Render();
 
 		inline int GetScreenWidth() const;

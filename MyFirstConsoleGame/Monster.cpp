@@ -28,7 +28,7 @@ namespace hongpireSurvivors
 			return;
 		}
 
-		int flag = mCollider->GetStayBitFlag();
+		int flag = mCollider->GetEnterBitFlag();
 		int mask = static_cast<int>(eObjectType::PROJECTILE);
 		if ((flag & mask) != 0)
 		{

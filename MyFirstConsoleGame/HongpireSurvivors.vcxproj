@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9eeabb34-bf05-4dad-a957-7f000752ec03}</ProjectGuid>
-    <RootNamespace>MyFirstConsoleGame</RootNamespace>
+    <ProjectGuid>{4aa9952f-8c94-48d6-84ad-c6026ffc5a17}</ProjectGuid>
+    <RootNamespace>HongpireSurvivors</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,7 +127,46 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="MyFirstConsoleGame.cpp" />
+    <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="ColliderManager.cpp" />
+    <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="SpriteManager.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RenderManager.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="Projectile.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Bat.h" />
+    <ClInclude Include="Collider.h" />
+    <ClInclude Include="ColliderManager.h" />
+    <ClInclude Include="Devil.h" />
+    <ClInclude Include="EnemyProjectile.h" />
+    <ClInclude Include="eObjectType.h" />
+    <ClInclude Include="eSpriteType.h" />
+    <ClInclude Include="FlyingOrge.h" />
+    <ClInclude Include="Helper.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="KingOrge.h" />
+    <ClInclude Include="Monster.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectManager.h" />
+    <ClInclude Include="Orge.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="RenderManager.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteManager.h" />
+    <ClInclude Include="TimeManager.h" />
+    <ClInclude Include="Projectile.h" />
+    <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
