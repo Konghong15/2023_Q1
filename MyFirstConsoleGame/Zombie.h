@@ -1,15 +1,17 @@
 #pragma once
 
-#include "Object.h"
+#include "Monster.h"
+#include "eSpriteType.h"
 
 namespace hongpireSurvivors
 {
-	class Zombie : public Object
+	class Zombie : public Monster
 	{
 	public:
-		Zombie(COORD pos, COORD size, eSpriteType spriteType);
+		Zombie(COORD pos, COORD size, eSpriteType spriteType, bool isLeft = true);
 		virtual ~Zombie() = default;
 
-		virtual void Frame() override;
+	protected:
+		virtual void handleMove() override;
 	};
 }

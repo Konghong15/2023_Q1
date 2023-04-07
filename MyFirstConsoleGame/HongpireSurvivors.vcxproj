@@ -127,10 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="ColliderManager.cpp" />
+    <ClCompile Include="Devil.cpp" />
+    <ClCompile Include="EnemyProjectile.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="Orge.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -142,6 +146,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bat.h" />

@@ -7,14 +7,18 @@ namespace hongpireSurvivors
 	class Monster : public Object
 	{
 	public:
-		Monster(COORD pos, COORD size, eSpriteType spriteType);
+		Monster(COORD pos, COORD size, eSpriteType spriteType, bool isLeft = true);
 		virtual ~Monster() = default;
 
 		virtual void Frame() override;
 
-	private:
+	protected:
+		virtual void handleCollision();
+		virtual void handleDirection();
+		virtual void handleMove() = 0;
+
+	protected:
 		float mElapsed;
 		bool mCanMove;
-		bool mIsLeft;
 	};
 }

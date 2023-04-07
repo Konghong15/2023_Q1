@@ -29,13 +29,13 @@ namespace hongpireSurvivors
 		load(eSpriteType::PLAYER_RUN, "run.txt");
 		load(eSpriteType::PLAYER_ATTACK, "attack.txt");
 		load(eSpriteType::PLAYER_JUMP, "jump.txt");
-		load(eSpriteType::MONSTER_LEFT, "monster_left.txt");
-		load(eSpriteType::PROJECTILE_RIGHT, "projectile_right.txt");
+		load(eSpriteType::PROJECTIE, "projectile.txt");
 
 		load(eSpriteType::MAP_1, "map_1.txt");
 
 		load(eSpriteType::ENEMY_0, "enemy_0.txt");
 		load(eSpriteType::ENEMY_1, "enemy_1.txt");
+		load(eSpriteType::ENEMY_1_PROJECTILE, "bat_projectile.txt");
 		load(eSpriteType::ENEMY_2, "enemy_2.txt");
 		load(eSpriteType::BOSS_0_IDLE, "Boss_0_idle.txt");
 		load(eSpriteType::BOSS_0_JUMP, "Boss_0_jump.txt");

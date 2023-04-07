@@ -42,7 +42,6 @@ namespace hongpireSurvivors
 		}
 	}
 
-
 	void Player::handleMove()
 	{
 		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
@@ -56,56 +55,56 @@ namespace hongpireSurvivors
 				mElapsed -= 0.02f;
 				mCanMove = true;
 			}
+
+			return;
 		}
-		else
+
+		if (InputManager::GetInstance()->GetKeyState(VK_LEFT) != eKeyState::NONE)
 		{
-			if (InputManager::GetInstance()->GetKeyState(VK_LEFT) != eKeyState::NONE)
+			if (mCanJump)
 			{
-				if (mCanJump)
-				{
-					mPos.X -= 2;
-				}
-				else
-				{
-					--mPos.X;
-				}
-
-				mCanMove = false;
-				mIsLeft = true;
-				
-				mAniElapsed = 2.f;
-				if (mSpriteType == eSpriteType::PLAYER_IDLE)
-				{
-					mSpriteType = eSpriteType::PLAYER_RUN;
-				}
-				else if (mSpriteType == eSpriteType::PLAYER_RUN)
-				{
-					mSpriteType = eSpriteType::PLAYER_IDLE;
-				}
+				mPos.X -= 2;
 			}
-			else if (InputManager::GetInstance()->GetKeyState(VK_RIGHT) != eKeyState::NONE)
+			else
 			{
-				if (mCanJump)
-				{
-					mPos.X += 2;
-				}
-				else
-				{
-					++mPos.X;
-				}
+				--mPos.X;
+			}
 
-				mCanMove = false;
-				mIsLeft = false;
-				
-				mAniElapsed = 2.f;
-				if (mSpriteType == eSpriteType::PLAYER_IDLE)
-				{
-					mSpriteType = eSpriteType::PLAYER_RUN;
-				}
-				else if (mSpriteType == eSpriteType::PLAYER_RUN)
-				{
-					mSpriteType = eSpriteType::PLAYER_IDLE;
-				}
+			mCanMove = false;
+			mIsLeft = true;
+
+			mAniElapsed = 2.f;
+			if (mSpriteType == eSpriteType::PLAYER_IDLE)
+			{
+				mSpriteType = eSpriteType::PLAYER_RUN;
+			}
+			else if (mSpriteType == eSpriteType::PLAYER_RUN)
+			{
+				mSpriteType = eSpriteType::PLAYER_IDLE;
+			}
+		}
+		else if (InputManager::GetInstance()->GetKeyState(VK_RIGHT) != eKeyState::NONE)
+		{
+			if (mCanJump)
+			{
+				mPos.X += 2;
+			}
+			else
+			{
+				++mPos.X;
+			}
+
+			mCanMove = false;
+			mIsLeft = false;
+
+			mAniElapsed = 2.f;
+			if (mSpriteType == eSpriteType::PLAYER_IDLE)
+			{
+				mSpriteType = eSpriteType::PLAYER_RUN;
+			}
+			else if (mSpriteType == eSpriteType::PLAYER_RUN)
+			{
+				mSpriteType = eSpriteType::PLAYER_IDLE;
 			}
 		}
 	}
@@ -177,7 +176,7 @@ namespace hongpireSurvivors
 			if (InputManager::GetInstance()->GetKeyState(VK_SPACE) != eKeyState::NONE)
 			{
 				SHORT proj_y = mPos.Y + 3;
-				Object* projectile = new Projectile({ mPos.X, proj_y }, { 15, 5 }, eSpriteType::PROJECTILE_RIGHT, mIsLeft);
+				Object* projectile = new Projectile({ mPos.X, proj_y }, { 15, 5 }, eSpriteType::PROJECTIE, mIsLeft);
 				Collider* col1 = new Collider({ 15, 5 }, { 0, 0 }, *projectile);
 
 				projectile->AddCollider(col1);

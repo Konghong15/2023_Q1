@@ -3,12 +3,12 @@
 
 namespace hongpireSurvivors
 {
-	Object::Object(COORD pos, COORD size, eSpriteType spriteType, eObjectType objectType, bool isValid, bool isLeft)
+	Object::Object(COORD pos, COORD size, eSpriteType spriteType, eObjectType objectType, bool isLeft)
 		: mPos(pos)
 		, mSize(size)
 		, mSpriteType(spriteType)
 		, mObjectType(objectType)
-		, mIsVaild(isValid)
+		, mIsVaild(true)
 		, mCollider(nullptr)
 		, mIsLeft(isLeft)
 	{

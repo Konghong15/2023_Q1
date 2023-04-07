@@ -12,6 +12,28 @@ namespace hongpireSurvivors
 		SIZE = 2
 	};
 
+	enum class eConsoleColor
+	{
+		BLACK = 0,
+		DEEP_BLUE = 1,
+		DEEP_GREEN = 2,
+		DEEP_MINT = 3,
+		DEEP_RED = 4,
+		DEEP_PINK = 5,
+		DEEP_YELLOW = 6,
+		DEEP_WHITE = 7,
+		GRAY = 8,
+		BLUE = 9,
+		GREEN = 10,
+		MINT = 11,
+		RED = 12,
+		PINK = 13,
+		YELLOW = 14,
+		WHITE = 15
+	};
+
+	class Sprite;
+
 	class RenderManager
 	{
 	public:
@@ -32,6 +54,8 @@ namespace hongpireSurvivors
 		void swapBuffer();
 		void clearBuffer();
 		inline HANDLE& getCurrentHandle();
+		inline WORD getColor(eConsoleColor background, eConsoleColor font);
+		void setColor(int x, int y, const Sprite& sprite, WORD color, bool isLeft);
 
 	private:
 		enum { KEY_SIZE = 255 }; // font size 10 : { 426, 79 }
@@ -41,6 +65,7 @@ namespace hongpireSurvivors
 		static RenderManager* mInstance;
 
 		char(*mBuffer)[BUFFER_WIDTH];
+		WORD(*mColorBuffer)[BUFFER_WIDTH];
 		HANDLE mScreen[static_cast<int>(eBufferIndex::SIZE)];
 		eBufferIndex mBufferIndex;
 		SMALL_RECT mScreenSize;
@@ -59,5 +84,10 @@ namespace hongpireSurvivors
 	HANDLE& RenderManager::getCurrentHandle()
 	{
 		return mScreen[static_cast<int>(mBufferIndex)];
+	}
+
+	WORD RenderManager::getColor(eConsoleColor background, eConsoleColor font)
+	{
+		return static_cast<WORD>(background) << 4 | static_cast<WORD>(font);
 	}
 }

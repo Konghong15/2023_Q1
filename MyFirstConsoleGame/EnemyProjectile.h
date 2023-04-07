@@ -1,19 +1,25 @@
 #pragma once
 
-#include "Object.h"
+#include "Monster.h"
 
 namespace hongpireSurvivors
 {
-	class EnemyProjectile : public Object
+	class EnemyProjectile : public Monster
 	{
 	public:
-		EnemyProjectile(COORD pos, COORD size, eSpriteType spriteType, bool isLeft);
+		EnemyProjectile(COORD arrivalPos, COORD pos, COORD size, eSpriteType spriteType, bool isLeft);
 		virtual ~EnemyProjectile() = default;
 
-		virtual void Frame() override;
+	protected:
+		virtual void handleMove() override;
+		virtual void handleCollision() override;
 
 	private:
-		float mElapsed;
-		bool mCanMove;
+		const COORD ARRIVAL_POS;
+		const COORD START_POS;
+		const float INCREASE_X;
+		const float INCREASE_Y;
+
+		unsigned int mMoveCount;
 	};
 }

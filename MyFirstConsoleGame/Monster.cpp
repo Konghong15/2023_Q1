@@ -5,55 +5,51 @@
 
 namespace hongpireSurvivors
 {
-	Monster::Monster(COORD pos, COORD size, eSpriteType spriteType)
-		: Object(pos, size, spriteType, eObjectType::ENEMY, true)
+	Monster::Monster(COORD pos, COORD size, eSpriteType spriteType, bool isLeft)
+		: Object(pos, size, spriteType, eObjectType::ENEMY, isLeft)
 		, mCanMove(true)
-		, mIsLeft(true)
 		, mElapsed(0.f)
 	{
 	}
 
 	void Monster::Frame()
 	{
-		if (!mCanMove)
+		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
+		mElapsed += DELTA_TIME;
+
+		handleCollision();
+
+		if (!mIsVaild)
 		{
-			mElapsed += TimeManager::GetInstance()->GetDeltaTime();
-
-			if (mElapsed >= 0.01f)
-			{
-				mElapsed = 0.0f;
-				mCanMove = true;
-			}
-
 			return;
 		}
 
+		handleMove();
+		handleDirection();
+	}
+
+	void Monster::handleCollision()
+	{
 		int flag = mCollider->GetEnterBitFlag();
 		int mask = static_cast<int>(eObjectType::PROJECTILE);
+
 		if ((flag & mask) != 0)
 		{
 			mIsVaild = false;
-			return;
 		}
+	}
 
-		if (mPos.X == 0)
+	void Monster::handleDirection()
+	{
+		if (mPos.X <= 0)
 		{
 			mIsLeft = false;
+			mPos.X = 0;
 		}
 		else if (mPos.X == 400 - mSize.X)
 		{
 			mIsLeft = true;
+			mPos.X = 400 - mSize.X;
 		}
-
-		if (mIsLeft)
-		{
-			--mPos.X;
-		}
-		else
-		{
-			++mPos.X;
-		}
-
-		mCanMove = false;
 	}
 }

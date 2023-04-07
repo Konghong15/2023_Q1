@@ -39,7 +39,8 @@ namespace hongpireSurvivors
 
 	float TimeManager::GetDeltaTime()
 	{
-		return (mCurTime - mPrevTime) / 1000.f;
+		float deltaTime = (mCurTime - mPrevTime) / 1000.f;
+		return  deltaTime > 0.03 ? 0.03 : deltaTime;
 	}
 
 	unsigned int TimeManager::GetFPS()

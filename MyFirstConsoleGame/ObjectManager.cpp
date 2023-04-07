@@ -1,5 +1,6 @@
 #include "ObjectManager.h"
 #include "Object.h"
+#include "Player.h"
 
 namespace hongpireSurvivors
 {
@@ -23,6 +24,11 @@ namespace hongpireSurvivors
 
 	void ObjectManager::Frame()
 	{
+		if (!mPlayer->GetValid())
+		{
+			mPlayer = nullptr;
+		}
+
 		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end(); ++iter)
 		{
 			delete* iter;
@@ -53,6 +59,7 @@ namespace hongpireSurvivors
 
 	ObjectManager::ObjectManager()
 		: mObjects()
+		, mPlayer(nullptr)
 	{
 		mObjects.reserve(128);
 		mDeadObjects.reserve(128);

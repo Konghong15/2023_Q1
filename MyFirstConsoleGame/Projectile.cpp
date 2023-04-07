@@ -6,7 +6,7 @@
 namespace hongpireSurvivors
 {
 	Projectile::Projectile(COORD pos, COORD size, eSpriteType spriteType, bool isLeft)
-		: Object(pos, size, spriteType, eObjectType::PROJECTILE, true, isLeft)
+		: Object(pos, size, spriteType, eObjectType::PROJECTILE, isLeft)
 		, mCanMove(true)
 		, mElapsed(0.f)
 	{

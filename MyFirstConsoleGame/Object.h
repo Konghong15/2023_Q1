@@ -12,7 +12,7 @@ namespace hongpireSurvivors
 	class Object
 	{
 	public:
-		Object(COORD pos, COORD size, eSpriteType spriteType, eObjectType objectType, bool isValid = true, bool isLeft = true);
+		Object(COORD pos, COORD size, eSpriteType spriteType, eObjectType objectType, bool isLeft = true);
 		virtual ~Object();
 
 		virtual void Frame() = 0;
