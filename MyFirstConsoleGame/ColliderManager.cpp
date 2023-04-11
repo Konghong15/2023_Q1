@@ -38,6 +38,7 @@ namespace hongpireSurvivors
 			}
 			else
 			{
+				(*iter)->InitEnter();
 				++iter;
 			}
 		}
@@ -46,7 +47,10 @@ namespace hongpireSurvivors
 		{
 			for (auto IterJ = iterI + 1; IterJ != mColliders.end(); ++IterJ)
 			{
-				(*iterI)->CheckCollision(**IterJ);
+				if ((*iterI)->GetOwnerObject().GetValid() && (*IterJ)->GetOwnerObject().GetValid())
+				{
+					(*iterI)->CheckCollision(**IterJ);
+				}
 			}
 		}
 

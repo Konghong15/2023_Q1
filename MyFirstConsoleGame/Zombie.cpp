@@ -4,39 +4,44 @@
 #include "ObjectManager.h"
 #include "TimeManager.h"
 #include "Collider.h"
+#include "Scene.h"
 
 namespace hongpireSurvivors
 {
-	Zombie::Zombie(COORD pos, COORD size, eSpriteType spriteType, bool isLeft)
-		: Monster(pos, size, spriteType, isLeft)
+	Zombie::Zombie(COORD pos, COORD size, eSpriteType spriteType,int minX, int maxX, bool isLeft)
+		: Monster(pos, size, spriteType, minX, maxX, 2, isLeft)
 	{
 	}
 
 	void Zombie::handleMove()
 	{
-		const Object& player = ObjectManager::GetInstance()->GetPlayer();
+		const Object& player = Scene::mScene->GetPlayer();
 		COORD playerPos = player.GetPos();
 
-		if (mElapsed >= 0.02f)
+		if (mElapsed >= ONE_FRAME_TIME)
 		{
-			mElapsed -= 0.02f;
+			mElapsed -= ONE_FRAME_TIME;
 
 			if (mIsLeft)
 			{
-				--mPos.X;
-
-				if (mPos.X - playerPos.X < 100)
+				if (abs(mPos.X - playerPos.X) < 100)
 				{
-					mPos.X -= 1;
+					mPos.X -= MONSTER_SPEED_HIGH;
+				}
+				else
+				{
+					mPos.X -= MONSTER_SPEED_LOW;
 				}
 			}
 			else
 			{
-				++mPos.X;
-
-				if (playerPos.X - mPos.X < 100)
+				if (abs(mPos.X - playerPos.X) < 100)
 				{
-					mPos.X += 1;
+					mPos.X += MONSTER_SPEED_HIGH;
+				}
+				else
+				{
+					mPos.X += MONSTER_SPEED_LOW;
 				}
 			}
 		}

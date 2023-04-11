@@ -1,16 +1,14 @@
-#pragma once
-
 #include "Bat.h"
 #include "ObjectManager.h"
 #include "TimeManager.h"
-#include "Collider.h"
 #include "Helper.h"
 #include "EnemyProjectile.h"
+#include "Scene.h"
 
 namespace hongpireSurvivors
 {
-	Bat::Bat(COORD pos, COORD size, eSpriteType spriteType, bool isLeft)
-		: Monster(pos, size, spriteType, isLeft)
+	Bat::Bat(COORD pos, COORD size, eSpriteType spriteType, int minX, int maxX, bool isLeft, int hp)
+		: Monster(pos, size, spriteType, minX, maxX, hp, isLeft)
 		, mCanAttack(false)
 		, mAttackElapsed(0.f)
 		, mDropElapsed(0.f)
@@ -40,36 +38,26 @@ namespace hongpireSurvivors
 
 	void Bat::handleMove()
 	{
-		const Object& player = ObjectManager::GetInstance()->GetPlayer();
+		const Object& player = Scene::mScene->GetPlayer();
 		COORD playerPos = player.GetPos();
 
-		if (mDropElapsed >= 0.2f)
+		if (mDropElapsed >= ONE_FRAME_TIME)
 		{
-			mDropElapsed -= 0.2f;
+			mDropElapsed -= ONE_FRAME_TIME;
 			mIsDrop = mIsDrop ^ true;
 		}
 
-		if (mElapsed >= 0.04f)
+		if (mElapsed >= ONE_FRAME_TIME)
 		{
-			mElapsed -= 0.04f;
+			mElapsed -= ONE_FRAME_TIME;
 
 			if (mIsLeft)
 			{
-				mPos.X -= 2;
-
-				if (mPos.X - playerPos.X < 100)
-				{
-					mCanAttack = true;
-				}
+				mPos.X -= MONSTER_SPEED_MIDDLE;
 			}
 			else
 			{
-				mPos.X += 2;
-
-				if (playerPos.X - mPos.X < 100)
-				{
-					mCanAttack = true;
-				}
+				mPos.X += MONSTER_SPEED_MIDDLE;
 			}
 
 			if (mIsDrop)
@@ -85,15 +73,26 @@ namespace hongpireSurvivors
 
 	void Bat::handleAttack(void)
 	{
-		const Object& player = ObjectManager::GetInstance()->GetPlayer();
+		const Object& player = Scene::mScene->GetPlayer();
 		COORD playerPos = player.GetPos();
 
-		if (mAttackElapsed >= 2.f)
+		if (abs(mPos.X - playerPos.X) < 100)
+		{
+			mCanAttack = true;
+		}
+
+		if (!mCanAttack)
+		{
+			return;
+		}
+
+		if (mAttackElapsed >= ONE_FRAME_TIME * 60)
 		{
 			mAttackElapsed = 0.f;
 
-			EnemyProjectile* proj = new EnemyProjectile(player.GetPos(), mPos, { 4, 4 }, eSpriteType::ENEMY_1_PROJECTILE, mIsLeft);
-			Helper::Spawn(proj, mPos.X, mPos.Y, 4, 4);
+			EnemyProjectile* proj = new EnemyProjectile(player.GetPos(), mPos, { 4, 4 }, eSpriteType::ENEMY_1_PROJECTILE, mMinX, mMaxX, mIsLeft);
+			Helper::Spawn(proj, 4, 4);
+			mCanAttack = false;
 		}
 	}
 }

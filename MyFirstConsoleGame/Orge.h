@@ -5,7 +5,7 @@ namespace hongpireSurvivors
 	class Orge : public Monster
 	{
 	public:
-		Orge(COORD pos, COORD size, bool isLeft = true);
+		Orge(COORD pos, COORD size, int minX, int maxX, bool isLeft = true);
 		virtual ~Orge() = default;
 
 		virtual void Frame() override;

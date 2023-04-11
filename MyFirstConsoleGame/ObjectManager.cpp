@@ -1,6 +1,7 @@
 #include "ObjectManager.h"
 #include "Object.h"
 #include "Player.h"
+#include "Helper.h"
 
 namespace hongpireSurvivors
 {
@@ -22,21 +23,46 @@ namespace hongpireSurvivors
 		mInstance = nullptr;
 	}
 
-	void ObjectManager::Frame()
+	ObjectManager::ObjectManager()
+		: mObjects()
 	{
-		if (!mPlayer->GetValid())
-		{
-			mPlayer = nullptr;
-		}
+		mObjects.reserve(128);
+		mDeadObjects.reserve(128);
+	}
 
-		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end(); ++iter)
+	ObjectManager::~ObjectManager()
+	{
+		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end();)
 		{
-			delete* iter;
+			Object* obj = (*iter);
+			++iter;
+			delete obj;
 		}
 		mDeadObjects.clear();
 
 		for (auto iter = mObjects.begin(); iter != mObjects.end();)
 		{
+			Object* obj = (*iter);
+			++iter;
+			delete obj;
+		}
+		mObjects.clear();
+	}
+
+	void ObjectManager::Frame()
+	{
+		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end();)
+		{
+			Object* obj = (*iter);
+			++iter;
+			delete obj;
+		}
+		mDeadObjects.clear();
+
+		for (auto iter = mObjects.begin(); iter != mObjects.end();)
+		{
+			(*iter)->Frame();
+
 			if (!(*iter)->GetValid())
 			{
 				mDeadObjects.push_back(*iter);
@@ -47,21 +73,10 @@ namespace hongpireSurvivors
 				++iter;
 			}
 		}
-		for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
-		{
-			(*iter)->Frame();
-		}
+
 		for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
 		{
 			(*iter)->Render();
 		}
-	}
-
-	ObjectManager::ObjectManager()
-		: mObjects()
-		, mPlayer(nullptr)
-	{
-		mObjects.reserve(128);
-		mDeadObjects.reserve(128);
 	}
 }

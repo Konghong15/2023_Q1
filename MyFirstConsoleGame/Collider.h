@@ -23,6 +23,8 @@ namespace hongpireSurvivors
 		inline int GetStayBitFlag() const;
 		inline int GetExitBitFlag() const;
 
+		inline void InitEnter();
+
 	protected:
 		COORD mSize;
 		COORD mOffset;
@@ -66,5 +68,10 @@ namespace hongpireSurvivors
 	int Collider::GetExitBitFlag() const
 	{
 		return mExitBitFlag;
+	}
+
+	void Collider::InitEnter()
+	{
+		mEnterBitFlag = 0;
 	}
 }

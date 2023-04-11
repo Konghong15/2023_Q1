@@ -15,11 +15,9 @@ namespace hongpireSurvivors
 
 	void Collider::CheckCollision(Collider& other)
 	{
-
 		COORD otherPos = other.GetWorldPosition();
 		COORD curPos = GetWorldPosition();
 		bool isCollision = false;
-
 
 		if (otherPos.X > curPos.X)
 		{
@@ -51,10 +49,10 @@ namespace hongpireSurvivors
 
 		if ((mEnterBitFlag & bitMask) != 0)
 		{
-			mEnterBitFlag != ~bitMask;
+			mEnterBitFlag &= ~bitMask;
 			mStayBitFlag |= bitMask;
 		}
-		else
+		else if ((mStayBitFlag & bitMask) == 0)
 		{
 			mEnterBitFlag |= bitMask;
 		}
@@ -63,10 +61,10 @@ namespace hongpireSurvivors
 
 		if ((other.mEnterBitFlag & bitMask) != 0)
 		{
-			other.mEnterBitFlag != ~bitMask;
+			other.mEnterBitFlag &= ~bitMask;
 			other.mStayBitFlag |= bitMask;
 		}
-		else
+		else if ((other.mStayBitFlag & bitMask) == 0)
 		{
 			other.mEnterBitFlag |= bitMask;
 		}

@@ -2,13 +2,18 @@
 #include "RenderManager.h"
 #include "TimeManager.h"
 #include "ColliderManager.h"
+#include "Scene.h"
+#include "SoundManager.h"
 
 namespace hongpireSurvivors
 {
-	Monster::Monster(COORD pos, COORD size, eSpriteType spriteType, bool isLeft)
+	Monster::Monster(COORD pos, COORD size, eSpriteType spriteType, int minX, int maxX, int hp, bool isLeft)
 		: Object(pos, size, spriteType, eObjectType::ENEMY, isLeft)
-		, mCanMove(true)
 		, mElapsed(0.f)
+		, START_POS(pos)
+		, mHp(hp)
+		, mMinX(minX)
+		, mMaxX(maxX)
 	{
 	}
 
@@ -35,21 +40,42 @@ namespace hongpireSurvivors
 
 		if ((flag & mask) != 0)
 		{
-			mIsVaild = false;
+			--mHp;
+
+			if (mHp <= 0)
+			{
+				SoundManager::GetInstance()->Play(eSound::MONSTER_DEATH);
+				mIsVaild = false;
+			}
+			else
+			{
+				SoundManager::GetInstance()->Play(eSound::MONSTER_HIT);
+			}
 		}
+
 	}
 
 	void Monster::handleDirection()
 	{
-		if (mPos.X <= 0)
+		if (mPos.X <= mMinX)
 		{
 			mIsLeft = false;
-			mPos.X = 0;
+			mPos.X = mMinX;
 		}
-		else if (mPos.X == 400 - mSize.X)
+		else if (mPos.X >= mMaxX - mSize.X - 1)
 		{
 			mIsLeft = true;
-			mPos.X = 400 - mSize.X;
+			mPos.X = mMaxX - mSize.X - 1;
+		}
+	}
+
+	void Monster::Render()
+	{
+		int x = mPos.X - Scene::mScene->GetCamara().X;
+
+		if (x >= 0 && x + mSize.X < 400)
+		{
+			RenderManager::GetInstance()->Draw(x, mPos.Y, mSpriteType, RenderManager::GetInstance()->GetColor(eConsoleColor::BLACK, eConsoleColor::RED), mIsLeft);
 		}
 	}
 }

@@ -1,12 +1,13 @@
 #include "Orge.h"
+#include "Scene.h"
 #include "TimeManager.h"
 #include "ObjectManager.h"
 #include "Helper.h"
 
 namespace hongpireSurvivors
 {
-	Orge::Orge(COORD pos, COORD size, bool isLeft)
-		: Monster(pos, size, eSpriteType::BOSS_0_IDLE, isLeft)
+	Orge::Orge(COORD pos, COORD size, int minX, int maxX, bool isLeft)
+		: Monster(pos, size, eSpriteType::BOSS_0_IDLE, minX, maxX, 5, isLeft)
 		, mCanAttack(false)
 		, mIsJump(false)
 		, mDropElapsed(0.f)
@@ -43,10 +44,18 @@ namespace hongpireSurvivors
 		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
 		mElapsed += DELTA_TIME;
 
-		if (mElapsed >= 0.005f)
+		if (mElapsed >= ONE_FRAME_TIME)
 		{
-			mElapsed -= 0.005f;
-			mPos.X += mArrival > mPos.X ? 1 : -1;
+			mElapsed -= ONE_FRAME_TIME;
+
+			if (abs(mPos.X - mArrival) > 5)
+			{
+				mPos.X += mArrival > mPos.X ? MONSTER_SPEED_HIGH : -MONSTER_SPEED_HIGH;
+			}
+			else
+			{
+				mPos.X += mArrival > mPos.X ? MONSTER_SPEED_LOW : -MONSTER_SPEED_LOW;
+			}
 		}
 	}
 
@@ -60,28 +69,30 @@ namespace hongpireSurvivors
 		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
 		mDropElapsed += DELTA_TIME;
 
-		if (mDropElapsed >= 0.025f)
+		if (mDropElapsed >= ONE_FRAME_TIME)
 		{
-			mDropElapsed -= 0.025f;
+			mDropElapsed -= ONE_FRAME_TIME;
 
 
 			if (mJumpForce > 0.25f)
 			{
-				mPos.Y -= 2;
+				mPos.Y -= MONSTER_SPEED_HIGH;
 				mPos.Y = Helper::Clamp(0, 67 - mSize.Y, mPos.Y);
 				mSpriteType = eSpriteType::BOSS_0_JUMP;
 			}
 			else if (mJumpForce > 0.f)
 			{
 				mPos.Y -= 1;
+				mPos.Y = Helper::Clamp(0, 67 - mSize.Y, mPos.Y);
+				mSpriteType = eSpriteType::BOSS_0_JUMP;
 			}
-			else if (mJumpForce > -0.25f)
+			else if (mJumpForce > -0.1f)
 			{
 				mPos.Y += 1;
 			}
 			else
 			{
-				mPos.Y += 2;
+				mPos.Y += MONSTER_SPEED_HIGH;
 			}
 		}
 
@@ -103,19 +114,18 @@ namespace hongpireSurvivors
 			return;
 		}
 
-
 		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
 		mAttackElapsed += DELTA_TIME;
 
-		if (mAttackElapsed < 1.f)
+		if (mAttackElapsed < ONE_FRAME_TIME * 30)
 		{
 			return;
 		}
 
 		mAttackElapsed = 0.f;
 
-		mArrival = ObjectManager::GetInstance()->GetPlayer().GetPos().X;
-		mArrival = Helper::Clamp(0, 400 - 30, mArrival);
+		mArrival = Scene::mScene->GetPlayer().GetPos().X;
+		mArrival = Helper::Clamp(0, Helper::MAP_WIDTH - 30, mArrival);
 		mJumpForce = 0.75f;
 		mIsJump = true;
 		mIsLeft = mArrival > mPos.X ? false : true;

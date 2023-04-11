@@ -5,11 +5,24 @@ namespace hongpireSurvivors
 	enum class eSpriteType
 	{
 		PLAYER_IDLE,
-		PLAYER_RUN,
+		PLAYER_RUN_0,
+		PLAYER_RUN_1,
 		PLAYER_ATTACK,
 		PLAYER_JUMP,
+		PLAYER_JUMP_DOWN,
+		PLAYER_CROUCH,
+		PLAYER_WOUNDED_0,
+		PLAYER_WOUNDED_1,
+		PLAYER_DEAD_0,
+		PLAYER_DEAD_1,
+		PLAYER_DEAD_2,
+		PLAYER_DEAD_3,
 		PROJECTIE,
-		MAP_1,
+		PROJECTIE_EFFECT,
+		MAP_1_0,
+		MAP_1_1,
+		MAP_1_2,
+		MAP_2_0,
 		ENEMY_0, // 15 17
 		ENEMY_1, // 20 13
 		ENEMY_1_PROJECTILE, // 2 2
@@ -21,5 +34,7 @@ namespace hongpireSurvivors
 		BOSS_2_IDLE, // 35 33
 		BOSS_2_ATTACK, // 35 31
 		BOSS_2_PROJECTILE, // 15 8
+		MONSTER_DEAD,
+		UI
 	};
 }

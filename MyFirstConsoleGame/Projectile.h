@@ -11,12 +11,14 @@ namespace hongpireSurvivors
 		virtual ~Projectile() = default;
 
 		virtual void Frame() override;
+		virtual void Render() override;
 
+	private:
 		void handleMove();
 		void handleCollision();
 
 	private:
+		const COORD START_POS;
 		float mElapsed;
-		bool mCanMove;
 	};
 }

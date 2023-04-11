@@ -6,23 +6,26 @@
 #include "EnemyProjectile.h"
 #include "ObjectManager.h"
 #include "Helper.h"
+#include "Scene.h"
 
 namespace hongpireSurvivors
 {
-	const COORD Devil::ORIJIN_LEFT{ 100, 20 };
-	const COORD Devil::ORIJIN_RIGHT{ 300, 10 };
-
-	Devil::Devil(COORD pos, COORD size, bool isLeft)
-		: Monster(pos, size, eSpriteType::ENEMY_1, isLeft)
+	Devil::Devil(COORD pos, COORD size, int minX, int maxX, bool isLeft)
+		: Monster(pos, size, eSpriteType::ENEMY_1, minX, maxX, 3, isLeft)
 		, mAttackElapsed(0.f)
 		, mCanAttack(false)
 		, mStartPos(pos)
-		, mArrivalPos(isLeft ? ORIJIN_LEFT : ORIJIN_RIGHT)
 		, mMoveCount(0)
 		, mDevildState(eDevilState::MOVE)
-		, mSpeed(1u)
-		, mMaxElapsed(0.02f)
 	{
+		if (isLeft)
+		{
+			mArrivalPos = { (SHORT)(pos.X - rand() % 300), 5 };
+		}
+		else
+		{
+			mArrivalPos = { (SHORT)(pos.X + rand() % 300), 5 };
+		}
 	}
 
 	void Devil::Frame()
@@ -45,26 +48,27 @@ namespace hongpireSurvivors
 
 	void Devil::handleMove()
 	{
-		if (mElapsed < mMaxElapsed)
+		if (mElapsed < ONE_FRAME_TIME)
 		{
 			return;
 		}
 
-		mElapsed -= mMaxElapsed;
+		mElapsed -= ONE_FRAME_TIME;
 
 		int increaseX = mArrivalPos.X - mPos.X;
 		int increaseY = mArrivalPos.Y - mPos.Y;
 
 		int xAmonut = 0;
 		int yAmount = 0;
+		const int SPEED = mDevildState == eDevilState::CLOSE_RANGE_ATTACK ? MONSTER_SPEED_HIGH : MONSTER_SPEED_MIDDLE;
 
 		if (increaseX == 0)
 		{
-			yAmount = 1;
+			yAmount = SPEED;
 		}
 		else if (increaseY == 0)
 		{
-			xAmonut = 1;
+			xAmonut = SPEED;
 		}
 		else
 		{
@@ -74,13 +78,13 @@ namespace hongpireSurvivors
 
 			if (fabs(slope) < 1.f)
 			{
-				yAmount = slope;
-				xAmonut = 1;
+				yAmount = slope * SPEED;
+				xAmonut = SPEED;
 			}
 			else
 			{
-				yAmount = 1;
-				xAmonut = 1 / slope;
+				yAmount = SPEED;
+				xAmonut = SPEED / slope;
 			}
 		}
 
@@ -88,7 +92,7 @@ namespace hongpireSurvivors
 		{
 			mPos.X = mPos.X - abs(xAmonut);
 
-			if (mArrivalPos.Y < mStartPos.Y)
+			if (mArrivalPos.Y < mPos.Y)
 			{
 				mPos.Y = mPos.Y - abs(yAmount);
 			}
@@ -118,19 +122,19 @@ namespace hongpireSurvivors
 		{
 			mAttackElapsed = 0.f;
 
-			const Object& player = ObjectManager::GetInstance()->GetPlayer();
+			const Object& player = Scene::mScene->GetPlayer();
 			COORD playerPos = player.GetPos();
-			EnemyProjectile* proj = new EnemyProjectile(player.GetPos(), mPos, { 4, 4 }, eSpriteType::ENEMY_1_PROJECTILE, mIsLeft);
-			Helper::Spawn(proj, mPos.X, mPos.Y, 4, 4);
+			EnemyProjectile* proj = new EnemyProjectile(player.GetPos(), mPos, { 4, 4 }, eSpriteType::ENEMY_1_PROJECTILE, mMinX, mMaxX, mIsLeft);
+			Helper::Spawn(proj, 4, 4);
 		}
 	}
 
 	void Devil::handleState()
 	{
-		const Object& player = ObjectManager::GetInstance()->GetPlayer();
+		const Object& player = Scene::mScene->GetPlayer();
 		COORD playerPos = player.GetPos();
 
-		if (mPos.X == mArrivalPos.X && mPos.Y == mArrivalPos.Y)
+		if (abs(mPos.X - mArrivalPos.X) < 4 && abs(mPos.Y - mArrivalPos.Y) < 4)
 		{
 			switch (mDevildState)
 			{
@@ -143,7 +147,7 @@ namespace hongpireSurvivors
 				mDevildState = eDevilState::CLOSE_RANGE_ATTACK;
 				mArrivalPos = playerPos;
 
-				mArrivalPos.X = Helper::Clamp(0, 400 - mSize.X, mArrivalPos.X);
+				mArrivalPos.X = Helper::Clamp(0, Helper::MAP_WIDTH - mSize.X, mArrivalPos.X);
 				mArrivalPos.Y = Helper::Clamp(0, 67 - mSize.Y, mArrivalPos.Y);
 
 				mStartPos = mPos;
@@ -153,7 +157,14 @@ namespace hongpireSurvivors
 			{
 				mMaxElapsed = 0.015f;
 				mDevildState = eDevilState::MOVE;
-				mArrivalPos = mIsLeft ? ORIJIN_LEFT : ORIJIN_RIGHT;
+				if (mIsLeft)
+				{
+					mArrivalPos = { (SHORT)(mMaxX - rand() % 300), 5 };
+				}
+				else
+				{
+					mArrivalPos = { (SHORT)(mMinX + rand() % 300), 5 };
+				}
 
 				int random = rand() % 50 - 25;
 				mArrivalPos.X += random;

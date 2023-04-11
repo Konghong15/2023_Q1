@@ -40,12 +40,13 @@ namespace hongpireSurvivors
 		static RenderManager* GetInstance();
 		static void DeleteInstance();
 
-		void Draw(int x, int y, const char c);
-		void Draw(int x, int y, eSpriteType spriteType, bool isLeft = false);
+		void Draw(int x, int y, eSpriteType spriteType, WORD color = 0, bool isLeft = false);
+		void DrawMap(eSpriteType left, eSpriteType right, int camaraX, WORD color);
 		void Render();
 
 		inline int GetScreenWidth() const;
 		inline int GetScreenHeight() const;
+		inline WORD GetColor(eConsoleColor background, eConsoleColor font);
 
 	private:
 		RenderManager();
@@ -54,8 +55,6 @@ namespace hongpireSurvivors
 		void swapBuffer();
 		void clearBuffer();
 		inline HANDLE& getCurrentHandle();
-		inline WORD getColor(eConsoleColor background, eConsoleColor font);
-		void setColor(int x, int y, const Sprite& sprite, WORD color, bool isLeft);
 
 	private:
 		enum { KEY_SIZE = 255 }; // font size 10 : { 426, 79 }
@@ -86,7 +85,7 @@ namespace hongpireSurvivors
 		return mScreen[static_cast<int>(mBufferIndex)];
 	}
 
-	WORD RenderManager::getColor(eConsoleColor background, eConsoleColor font)
+	WORD RenderManager::GetColor(eConsoleColor background, eConsoleColor font)
 	{
 		return static_cast<WORD>(background) << 4 | static_cast<WORD>(font);
 	}

@@ -13,11 +13,11 @@ namespace hongpireSurvivors
 		return num;
 	}
 
-	void Helper::Spawn(Object* object, SHORT x, SHORT y, SHORT sizeX, SHORT sizeY)
+	void Helper::Spawn(Object* object, SHORT sizeX, SHORT sizeY)
 	{
 		ObjectManager::GetInstance()->OnSpawn(object);
-		Collider* col2 = new Collider({ sizeX, sizeY }, { 0, 0 }, *object);
-		object->AddCollider(col2);
-		ColliderManager::GetInstance()->OnRegister(col2);
+		Collider* collider = new Collider({ sizeX, sizeY }, { 0, 0 }, *object);
+		object->AddCollider(collider);
+		ColliderManager::GetInstance()->OnRegister(collider);
 	}
 }

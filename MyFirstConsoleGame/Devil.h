@@ -14,7 +14,7 @@ namespace hongpireSurvivors
 	class Devil : public Monster
 	{
 	public:
-		Devil(COORD pos, COORD size, bool isLeft = true);
+		Devil(COORD pos, COORD size, int minX, int maxX, bool isLeft = true);
 		virtual ~Devil() = default;
 
 		virtual void Frame() override;
@@ -25,9 +25,6 @@ namespace hongpireSurvivors
 		void handleState();
 
 	private:
-		static CONST COORD ORIJIN_LEFT;
-		static CONST COORD ORIJIN_RIGHT;
-
 		COORD mArrivalPos;
 		COORD mStartPos;
 
@@ -36,7 +33,5 @@ namespace hongpireSurvivors
 		float mMaxElapsed;
 		float mAttackElapsed;
 		unsigned int mMoveCount;
-
-		unsigned int mSpeed;
 	};
 }

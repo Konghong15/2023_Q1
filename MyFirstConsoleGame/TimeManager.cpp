@@ -1,3 +1,8 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <Windows.h>
+#include <stdio.h>
+
 #include "TimeManager.h"
 
 namespace hongpireSurvivors
@@ -47,6 +52,9 @@ namespace hongpireSurvivors
 
 		if (sTime >= 1.f)
 		{
+			char buf[30];
+			sprintf(buf, "fps : %d\n", mFPS);
+			OutputDebugStringA(buf);
 			sTime -= 1.f;
 			mFPS = mFrameCount;
 			mFrameCount = 0;

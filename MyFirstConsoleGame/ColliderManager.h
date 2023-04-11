@@ -30,5 +30,4 @@ namespace hongpireSurvivors
 	{
 		mColliders.push_back(collider);
 	}
-
 }

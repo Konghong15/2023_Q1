@@ -7,7 +7,7 @@ namespace hongpireSurvivors
 	class Bat : public Monster
 	{
 	public:
-		Bat(COORD pos, COORD size, eSpriteType spriteType, bool isLeft = true);
+		Bat(COORD pos, COORD size, eSpriteType spriteType, int minX, int maxX, bool isLeft = true, int hp = 2);
 		virtual ~Bat() = default;
 
 		virtual void Frame() override;

@@ -7,7 +7,7 @@ namespace hongpireSurvivors
 	class EnemyProjectile : public Monster
 	{
 	public:
-		EnemyProjectile(COORD arrivalPos, COORD pos, COORD size, eSpriteType spriteType, bool isLeft);
+		EnemyProjectile(COORD arrivalPos, COORD pos, COORD size, eSpriteType spriteType, int minX, int maxX, bool isLeft);
 		virtual ~EnemyProjectile() = default;
 
 	protected:

@@ -6,7 +6,6 @@
 namespace hongpireSurvivors
 {
 	class Object;
-	class Player;
 
 	class ObjectManager
 	{
@@ -16,18 +15,16 @@ namespace hongpireSurvivors
 
 		void Frame();
 
-		inline void RegisterPlayer(Player* player);
 		inline void OnSpawn(Object* object);
-		inline const Object& GetPlayer() const;
+		inline int GetObjectCount() const;
 
 	private:
 		ObjectManager();
-		~ObjectManager() = default;
+		~ObjectManager();
 
 	private:
 		static ObjectManager* mInstance;
 
-		Player* mPlayer;
 		std::vector<Object*> mObjects;
 		std::vector<Object*> mDeadObjects;
 	};
@@ -37,16 +34,8 @@ namespace hongpireSurvivors
 		mObjects.push_back(object);
 	}
 
-	void ObjectManager::RegisterPlayer(Player* player)
+	int ObjectManager::GetObjectCount() const
 	{
-		if (mPlayer == nullptr)
-		{
-			mPlayer = player;
-		}
-	}
-
-	const Object& ObjectManager::GetPlayer() const
-	{
-		return *((Object*)mPlayer);
+		return mObjects.size();
 	}
 }

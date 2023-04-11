@@ -1,6 +1,7 @@
 #include "RenderManager.h"
 #include "SpriteManager.h"
 #include "Sprite.h"
+#include "ObjectManager.h"
 
 namespace hongpireSurvivors
 {
@@ -22,90 +23,102 @@ namespace hongpireSurvivors
 		mInstance = nullptr;
 	}
 
-	void RenderManager::Draw(int x, int y, const char ch)
+	void RenderManager::DrawMap(eSpriteType left, eSpriteType right, int camaraX, WORD color)
 	{
-		COORD coodi = { x, y };
-		DWORD dw;
-		char str[10] = { 0, };
-		str[0] = ch;
+		const Sprite& leftSp = SpriteManager::GetInstance()->GetSprite(left);
+		const Sprite& rightSp = SpriteManager::GetInstance()->GetSprite(right);
 
-		SetConsoleCursorPosition(getCurrentHandle(), coodi);
-		WriteFile(getCurrentHandle(), str, 1, &dw, NULL);
+		const int MAP_WIDTH = 400;
+		const int MAP_HIEGHT = 77;
+
+		for (int i = 0; i < MAP_HIEGHT; ++i)
+		{
+			for (int j = 0; j < MAP_WIDTH - camaraX; ++j)
+			{
+				int yi = i;
+				int xi = j + BUFFER_X_OFFSET;
+
+				if (yi > BUFFER_HEIGHT || xi > BUFFER_WIDTH)
+				{
+					continue;
+				}
+
+				int spIndex = i * MAP_WIDTH + j + camaraX;
+
+				if (leftSp.Img[spIndex] != ' ')
+
+				{
+					assert(yi < BUFFER_HEIGHT&& xi < BUFFER_WIDTH);
+					mBuffer[yi][xi] = leftSp.Img[spIndex];
+					mColorBuffer[yi][xi] = color;
+				}
+			}
+
+			for (int j = MAP_WIDTH - camaraX; j < MAP_WIDTH; ++j)
+			{
+				int yi = i;
+				int xi = j + BUFFER_X_OFFSET;
+
+				if (yi > BUFFER_HEIGHT || xi > BUFFER_WIDTH)
+				{
+					continue;
+				}
+
+				int spIndex = i * MAP_WIDTH + j - (MAP_WIDTH - camaraX);
+
+				if (rightSp.Img[spIndex] != ' ')
+				{
+					assert(yi < BUFFER_HEIGHT&& xi < BUFFER_WIDTH);
+					mBuffer[yi][xi] = rightSp.Img[spIndex];
+					mColorBuffer[yi][xi] = color;
+				}
+			}
+		}
 	}
 
-	void RenderManager::Draw(int x, int y, eSpriteType spriteType, bool isLeft)
+	void RenderManager::Draw(int x, int y, eSpriteType spriteType, WORD color, bool isLeft)
 	{
 		const Sprite& sp = SpriteManager::GetInstance()->GetSprite(spriteType);
 
 		if (!isLeft)
 		{
-			for (int i = 0; i < (sp.Height - 1) * sp.Width; ++i)
+			for (int i = 0; i < sp.Height * sp.Width; ++i)
 			{
 				int yi = y + (i / sp.Width);
 				int xi = x + (i % sp.Width) + BUFFER_X_OFFSET;
 
+				if (yi >= BUFFER_HEIGHT || xi >= BUFFER_WIDTH)
+				{
+					continue;
+				}
+
 				if (sp.Img[i] != ' ')
 				{
+					assert(yi < BUFFER_HEIGHT&& xi < BUFFER_WIDTH);
 					mBuffer[yi][xi] = sp.Img[i];
+					mColorBuffer[yi][xi] = color;
 				}
 			}
 		}
 		else
 		{
-			for (int i = 0; i < (sp.Height - 1) * sp.Width; ++i)
+			for (int i = 0; i < sp.Height * sp.Width; ++i)
 			{
 				int yi = y + (i / sp.Width);
 				int xi = x + (sp.Width - (i % sp.Width)) + BUFFER_X_OFFSET;
 
+				if (yi >= BUFFER_HEIGHT || xi >= BUFFER_WIDTH)
+				{
+					continue;
+				}
+
 				if (sp.Img[i] != ' ')
 				{
+					assert(yi < BUFFER_HEIGHT&& xi < BUFFER_WIDTH);
 					mBuffer[yi][xi] = sp.Img[i];
+					mColorBuffer[yi][xi] = color;
 				}
 			}
-		}
-
-		switch (spriteType)
-		{
-		case hongpireSurvivors::eSpriteType::PLAYER_IDLE:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::PLAYER_RUN:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::PLAYER_ATTACK:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::PROJECTIE:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::PLAYER_JUMP:
-			setColor(x, y, sp, getColor(eConsoleColor::BLACK, eConsoleColor::DEEP_YELLOW), isLeft);
-			break;
-		case hongpireSurvivors::eSpriteType::MAP_1:
-			setColor(x, y, sp, getColor(eConsoleColor::BLACK, eConsoleColor::DEEP_GREEN), isLeft);
-			break;
-		case hongpireSurvivors::eSpriteType::ENEMY_0:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::ENEMY_1:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::ENEMY_1_PROJECTILE:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::ENEMY_2:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::BOSS_0_IDLE:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::BOSS_0_JUMP:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::BOSS_1_IDLE:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::BOSS_1_ATTACK:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::BOSS_2_IDLE:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::BOSS_2_ATTACK:
-			/* intentional fall-through */
-		case hongpireSurvivors::eSpriteType::BOSS_2_PROJECTILE:
-			setColor(x, y, sp, getColor(eConsoleColor::BLACK, eConsoleColor::RED), isLeft);
-			break;
-		default:
-			assert(false);
-			break;
 		}
 	}
 
@@ -149,8 +162,8 @@ namespace hongpireSurvivors
 
 		mBuffer = new char[BUFFER_HEIGHT][BUFFER_WIDTH];
 		mColorBuffer = new WORD[BUFFER_HEIGHT][BUFFER_WIDTH];
-		memset(mBuffer, ' ', BUFFER_HEIGHT * BUFFER_WIDTH);
-		memset(mColorBuffer, getColor(eConsoleColor::BLACK, eConsoleColor::BLACK), BUFFER_HEIGHT * BUFFER_WIDTH * sizeof(WORD));
+		memset(mBuffer, ' ', BUFFER_HEIGHT* BUFFER_WIDTH);
+		memset(mColorBuffer, GetColor(eConsoleColor::BLACK, eConsoleColor::BLACK), BUFFER_HEIGHT* BUFFER_WIDTH * sizeof(WORD));
 	}
 
 	RenderManager::~RenderManager()
@@ -169,45 +182,10 @@ namespace hongpireSurvivors
 
 	void RenderManager::clearBuffer()
 	{
-		//COORD coordi = { 0, };
-		//coordi.X = mScreenSize.Left;
-		//DWORD dw;
-		memset(mColorBuffer, getColor(eConsoleColor::BLACK, eConsoleColor::BLACK), BUFFER_HEIGHT * BUFFER_WIDTH * sizeof(WORD));
+		memset(mColorBuffer, GetColor(eConsoleColor::BLACK, eConsoleColor::BLACK), BUFFER_HEIGHT * BUFFER_WIDTH * sizeof(WORD));
 		memset(mBuffer, ' ', BUFFER_HEIGHT * BUFFER_WIDTH);
-		Draw(0, 0, eSpriteType::MAP_1);
-		//for (coordi.Y = mScreenSize.Top; coordi.Y < GetScreenHeight(); ++coordi.Y)
-		//{
-		//	FillConsoleOutputCharacter(getCurrentHandle(), ' ', GetScreenWidth(), coordi, &dw);
-		//}
-	}
 
-	void RenderManager::setColor(int x, int y, const Sprite& sprite, WORD color, bool isLeft)
-	{
-		if (!isLeft)
-		{
-			for (int i = 0; i < (sprite.Height - 1) * sprite.Width; ++i)
-			{
-				int yi = y + (i / sprite.Width);
-				int xi = x + (i % sprite.Width) + BUFFER_X_OFFSET;
-
-				if (sprite.Img[i] != ' ')
-				{
-					mColorBuffer[yi][xi] = color;
-				}
-			}
-		}
-		else
-		{
-			for (int i = 0; i < (sprite.Height - 1) * sprite.Width; ++i)
-			{
-				int yi = y + (i / sprite.Width);
-				int xi = x + (sprite.Width - (i % sprite.Width)) + BUFFER_X_OFFSET;
-
-				if (sprite.Img[i] != ' ')
-				{
-					mColorBuffer[yi][xi] = color;
-				}
-			}
-		}
+		/*COORD camara = ObjectManager::GetInstance()->GetCamara();
+		DrawMap(eSpriteType::MAP_1_0, eSpriteType::MAP_1_1, camara.X, GetColor(eConsoleColor::BLACK, eConsoleColor::DEEP_GREEN));*/
 	}
 }

@@ -2,61 +2,76 @@
 #include "RenderManager.h"
 #include "TimeManager.h"
 #include "ColliderManager.h"
+#include "ObjectManager.h"
+#include "Effect.h"
+#include "Scene.h"
 
 namespace hongpireSurvivors
 {
 	Projectile::Projectile(COORD pos, COORD size, eSpriteType spriteType, bool isLeft)
 		: Object(pos, size, spriteType, eObjectType::PROJECTILE, isLeft)
-		, mCanMove(true)
+		, START_POS(pos)
 		, mElapsed(0.f)
 	{
 	}
 
 	void Projectile::Frame()
 	{
-		int width = RenderManager::GetInstance()->GetScreenWidth();
+		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
+		mElapsed += DELTA_TIME;
 
-		if (!mCanMove)
+		handleCollision();
+
+		if (!mIsVaild)
 		{
-			mElapsed += TimeManager::GetInstance()->GetDeltaTime();
-
-			if (mElapsed >= 0.005f)
-			{
-				mElapsed -= 0.005f;
-				mCanMove = true;
-			}
-
 			return;
 		}
 
-		int flag = mCollider->GetEnterBitFlag();
-		int mask = static_cast<int>(eObjectType::ENEMY);
+		handleMove();
+	}
 
-		if ((flag & mask) != 0)
+	void Projectile::handleMove()
+	{
+		if (mElapsed < ONE_FRAME_TIME)
 		{
-			mIsVaild = false;
 			return;
 		}
 
-		if (mPos.X == 0 || mPos.X == width - 26 - mSize.X)
-		{
-			mIsVaild = false;
-			return;
-		}
+		mElapsed -= ONE_FRAME_TIME;
 
 		if (mIsLeft)
 		{
-			--mPos.X;
+			mPos.X -= PROJECTILE_SPEED_MIDDLE;
 		}
 		else
 		{
-			++mPos.X;
+			mPos.X += PROJECTILE_SPEED_MIDDLE;
 		}
-
-		mCanMove = false;
 	}
 
+	void Projectile::handleCollision()
+	{
+		int flag = mCollider->GetEnterBitFlag();
+		int mask = static_cast<int>(eObjectType::ENEMY);
 
-	// void handleMove()
-	//void handleCollision()
+		if ((flag & mask) != 0 || abs(START_POS.X - mPos.X) > 200)
+		{
+			eSpriteType spriteTypes[1] = { eSpriteType::PROJECTIE_EFFECT };
+			Effect* effect = new Effect({ (SHORT)(mPos.X), (SHORT)(mPos.Y) }, { (SHORT)10, (SHORT)10 }, spriteTypes, 1, 0.25f, RenderManager::GetInstance()->GetColor(eConsoleColor::BLACK, eConsoleColor::WHITE), mIsLeft);
+			ObjectManager::GetInstance()->OnSpawn(effect);
+
+			mIsVaild = false;
+			return;
+		}
+	}
+
+	void Projectile::Render()
+	{
+		int x = mPos.X - Scene::mScene->GetCamara().X;
+
+		if (x >= 0 && x + mSize.X < 400)
+		{
+			RenderManager::GetInstance()->Draw(x, mPos.Y, mSpriteType, RenderManager::GetInstance()->GetColor(eConsoleColor::BLACK, eConsoleColor::DEEP_WHITE), mIsLeft);
+		}
+	}
 }

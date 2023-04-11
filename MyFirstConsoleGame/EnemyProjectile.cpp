@@ -5,8 +5,8 @@
 
 namespace hongpireSurvivors
 {
-	EnemyProjectile::EnemyProjectile(COORD arrivalPos, COORD pos, COORD size, eSpriteType spriteType, bool isLeft)
-		: Monster(pos, size, spriteType, isLeft)
+	EnemyProjectile::EnemyProjectile(COORD arrivalPos, COORD pos, COORD size, eSpriteType spriteType, int minX, int maxX, bool isLeft)
+		: Monster(pos, size, spriteType, minX, maxX, 1, isLeft)
 		, ARRIVAL_POS(arrivalPos)
 		, START_POS(pos)
 		, INCREASE_X(ARRIVAL_POS.X - START_POS.X)
@@ -66,7 +66,7 @@ namespace hongpireSurvivors
 
 	void EnemyProjectile::handleCollision()
 	{
-		if (mPos.X <= 0 || mPos.X >= 400 - mSize.X || mPos.Y <= 0 || mPos.Y >= 67 - mSize.Y)
+		if (abs(START_POS.X - mPos.X) + abs(START_POS.Y - mPos.Y) > 200)
 		{
 			mIsVaild = false;
 			return;
