@@ -4,9 +4,6 @@
 #include "./fmod/fmod.hpp"
 #include "./fmod/fmod_errors.h"
 
-#pragma comment(lib, "./fmod/fmod_vc.lib")
-#pragma comment(lib, "./fmod/fmodL_vc.lib")
-
 namespace hongpireSurvivors
 {
 	class Sound

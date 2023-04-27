@@ -23,6 +23,8 @@
 #include "Helper.h"
 #include "Scene.h"
 
+#pragma comment(lib, "./fmod/fmod_vc.lib")
+#pragma comment(lib, "./fmod/fmodL_vc.lib")
 using namespace hongpireSurvivors;
 
 /*
