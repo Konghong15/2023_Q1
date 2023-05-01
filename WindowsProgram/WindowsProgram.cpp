@@ -64,7 +64,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
 	WNDCLASSEXW wcex;
-
+	TCHAR tchar;
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
@@ -73,8 +73,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
 	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINDOWSPROGRAM));
-	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.hCursor = LoadCursor(nullptr, IDC_CROSS);
+	//wcex.hbrBackground = CreateSolidBrush(RGB(0, 0, 255));
+	wcex.hbrBackground = CreateHatchBrush(HS_DIAGCROSS, RGB(0, 255, 255));
+
 	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_WINDOWSPROGRAM);
 	wcex.lpszClassName = szWindowClass;
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -96,7 +98,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
 	if (!hWnd)
@@ -110,8 +112,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	return TRUE;
 }
 
-#define Y_LENGTH (10)
-#define X_LENGTH (10)
+#define Y_LENGTH (8)
+#define X_LENGTH (8)
 
 bool g_isClicked[Y_LENGTH][X_LENGTH];
 
@@ -161,7 +163,7 @@ void DrawGrid(HWND hWnd, HDC hDc)
 		LineTo(hDc, endX, endY);
 	}
 
-	HBRUSH hBr = CreateSolidBrush(RGB(0, 255, 0));
+	HBRUSH hBr = CreateHatchBrush(HS_DIAGCROSS, RGB(255, 0, 0));
 	HBRUSH prevHBr = (HBRUSH)SelectObject(hDc, hBr);
 	for (int i = 0; i < Y_LENGTH; ++i)
 	{
@@ -173,7 +175,7 @@ void DrawGrid(HWND hWnd, HDC hDc)
 				startY = i * BLOCK_HEIGTH;
 				endX = (j + 1) * BLOCK_WIDTH;
 				endY = (i + 1) * BLOCK_HEIGTH;
-				Rectangle(hDc, startX, startY, endX, endY);
+				Rectangle(hDc, startX, startY, endX + 1, endY + 1);
 			}
 		}
 	}
@@ -222,6 +224,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
+	}
+	break;
+	case WM_CHAR:
+	{
+		int a = 10;
 	}
 	break;
 	case WM_LBUTTONDOWN:

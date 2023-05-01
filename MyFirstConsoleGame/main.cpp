@@ -12,6 +12,8 @@
 #include "TitleScene.h"
 #include "GameScene.h"
 
+#pragma comment(lib, "./fmod/fmod_vc.lib")
+#pragma comment(lib, "./fmod/fmodL_vc.lib")
 using namespace hongpireSurvivors;
 
 int main(void)
