@@ -17,6 +17,7 @@ namespace hongpireSurvivors
 		, mStartPos(pos)
 		, mMoveCount(0)
 		, mDevildState(eDevilState::MOVE)
+		, mMaxElapsed(0.f)
 	{
 		if (isLeft)
 		{
@@ -78,13 +79,13 @@ namespace hongpireSurvivors
 
 			if (fabs(slope) < 1.f)
 			{
-				yAmount = slope * SPEED;
+				yAmount = static_cast<int>(slope * SPEED);
 				xAmonut = SPEED;
 			}
 			else
 			{
 				yAmount = SPEED;
-				xAmonut = SPEED / slope;
+				xAmonut = static_cast<int>(SPEED / slope);
 			}
 		}
 
@@ -122,17 +123,17 @@ namespace hongpireSurvivors
 		{
 			mAttackElapsed = 0.f;
 
-			const Object& player = Scene::mScene->GetPlayer();
-			COORD playerPos = player.GetPos();
-			EnemyProjectile* proj = new EnemyProjectile(player.GetPos(), mPos, { 4, 4 }, eSpriteType::ENEMY_1_PROJECTILE, mMinX, mMaxX, mIsLeft);
+			const Object* player = ObjectManager::GetInstance()->GetPlayerOrNull();
+			COORD playerPos = player->GetPos();
+			EnemyProjectile* proj = new EnemyProjectile(playerPos, mPos, { 4, 4 }, eSpriteType::ENEMY_1_PROJECTILE, mMinX, mMaxX, mIsLeft);
 			Helper::Spawn(proj, 4, 4);
 		}
 	}
 
 	void Devil::handleState()
 	{
-		const Object& player = Scene::mScene->GetPlayer();
-		COORD playerPos = player.GetPos();
+		const Object* player = ObjectManager::GetInstance()->GetPlayerOrNull();
+		COORD playerPos = player->GetPos();
 
 		if (abs(mPos.X - mArrivalPos.X) < 4 && abs(mPos.Y - mArrivalPos.Y) < 4)
 		{

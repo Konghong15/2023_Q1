@@ -38,8 +38,8 @@ namespace hongpireSurvivors
 
 	void Bat::handleMove()
 	{
-		const Object& player = Scene::mScene->GetPlayer();
-		COORD playerPos = player.GetPos();
+		const Object* player = ObjectManager::GetInstance()->GetPlayerOrNull();
+		COORD playerPos = player->GetPos();
 
 		if (mDropElapsed >= ONE_FRAME_TIME)
 		{
@@ -73,8 +73,8 @@ namespace hongpireSurvivors
 
 	void Bat::handleAttack(void)
 	{
-		const Object& player = Scene::mScene->GetPlayer();
-		COORD playerPos = player.GetPos();
+		const Object* player = ObjectManager::GetInstance()->GetPlayerOrNull();
+		COORD playerPos = player->GetPos();
 
 		if (abs(mPos.X - playerPos.X) < 100)
 		{
@@ -90,7 +90,7 @@ namespace hongpireSurvivors
 		{
 			mAttackElapsed = 0.f;
 
-			EnemyProjectile* proj = new EnemyProjectile(player.GetPos(), mPos, { 4, 4 }, eSpriteType::ENEMY_1_PROJECTILE, mMinX, mMaxX, mIsLeft);
+			EnemyProjectile* proj = new EnemyProjectile(playerPos, mPos, { 4, 4 }, eSpriteType::ENEMY_1_PROJECTILE, mMinX, mMaxX, mIsLeft);
 			Helper::Spawn(proj, 4, 4);
 			mCanAttack = false;
 		}

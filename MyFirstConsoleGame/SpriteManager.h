@@ -32,8 +32,13 @@ namespace hongpireSurvivors
 	const Sprite& SpriteManager::GetSprite(eSpriteType spriteType)
 	{
 		auto finded = mSpriteMap.find(spriteType);
-		assert(finded != mSpriteMap.end());
 
+		if (finded == mSpriteMap.end())
+		{
+			int a = 0;
+			assert(finded != mSpriteMap.end());
+		}
+	
 		return *(finded->second);
 	}
 }

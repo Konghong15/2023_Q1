@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="ColliderManager.cpp" />
     <ClCompile Include="Devil.cpp" />
@@ -140,6 +141,7 @@
     <ClCompile Include="KingOrge.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Orge.cpp" />
+    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Sound.cpp" />
@@ -155,16 +157,19 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bat.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="ColliderManager.h" />
     <ClInclude Include="Devil.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EnemyProjectile.h" />
     <ClInclude Include="eObjectType.h" />
+    <ClInclude Include="eSceneType.h" />
     <ClInclude Include="eSpriteType.h" />
     <ClInclude Include="FlyingOrge.h" />
     <ClInclude Include="Helper.h" />
@@ -176,6 +181,7 @@
     <ClInclude Include="Orge.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RenderManager.h" />
+    <ClInclude Include="GameScene.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Sound.h" />
@@ -184,6 +190,7 @@
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

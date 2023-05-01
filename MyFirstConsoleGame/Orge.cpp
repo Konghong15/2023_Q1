@@ -122,9 +122,8 @@ namespace hongpireSurvivors
 			return;
 		}
 
-		mAttackElapsed = 0.f;
-
-		mArrival = Scene::mScene->GetPlayer().GetPos().X;
+		mAttackElapsed = 0.f; 
+		mArrival = ObjectManager::GetInstance()->GetPlayerOrNull()->GetPos().X;
 		mArrival = Helper::Clamp(0, Helper::MAP_WIDTH - 30, mArrival);
 		mJumpForce = 0.75f;
 		mIsJump = true;

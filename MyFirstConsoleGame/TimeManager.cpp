@@ -26,8 +26,7 @@ namespace hongpireSurvivors
 	}
 
 	TimeManager::TimeManager()
-		: mElapsedTime(0)
-		, mCurTime(0)
+		: mCurTime(0)
 		, mPrevTime(0)
 		, mFrameCount(0)
 		, mFPS(0)
@@ -39,7 +38,6 @@ namespace hongpireSurvivors
 		mCurTime = GetTickCount64();
 		mPrevTime = mCurTime;
 		mFPS = 0;
-		mElapsedTime = 0;
 		mFrameCount = 0;
 	}
 
@@ -48,7 +46,6 @@ namespace hongpireSurvivors
 		static float sTime = 0.f;
 
 		sTime += GetDeltaTime();
-		mElapsedTime += GetDeltaTime();
 
 		if (sTime >= 1.f)
 		{

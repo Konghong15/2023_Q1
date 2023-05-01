@@ -11,6 +11,8 @@ namespace hongpireSurvivors
 	{
 	public:
 		static int Clamp(int min, int max, int num);
+		static bool IsContain(COORD pos, COORD size, COORD point);
+		static bool IsContain(COORD pos, COORD size, POINT point);
 		static void Spawn(Object* object, SHORT sizeX, SHORT sizeY);
 
 	public:

@@ -43,10 +43,9 @@ namespace hongpireSurvivors
 		load(eSpriteType::PROJECTIE, "./resource/projectile.txt");
 		load(eSpriteType::PROJECTIE_EFFECT, "./resource/hit_effect.txt");
 
-		load(eSpriteType::MAP_1_0, "./resource/map_1_0_temp.txt");
-		load(eSpriteType::MAP_1_1, "./resource/map_1_1.txt");
-		load(eSpriteType::MAP_1_2, "./resource/map_1_2.txt");
-		load(eSpriteType::MAP_2_0, "./resource/map_2_0.txt");
+		load(eSpriteType::TITLE_BG_0, "./resource/map_1_0.txt");
+		load(eSpriteType::TITLE_BG_1, "./resource/title.txt");
+		load(eSpriteType::GAME_BG, "./resource/game_map.txt");
 
 		load(eSpriteType::ENEMY_0, "./resource/enemy_0.txt");
 		load(eSpriteType::ENEMY_1, "./resource/enemy_1.txt");
@@ -83,8 +82,6 @@ namespace hongpireSurvivors
 		fileSize -= curPoint;
 
 		sp->Height = fileSize / sp->Width;
-
-		//printf("%s %d\n", fileName, sp->Height);
 		char* img = new char[fileSize];
 		fin.read(img, fileSize);
 

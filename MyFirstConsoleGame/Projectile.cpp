@@ -4,6 +4,7 @@
 #include "ColliderManager.h"
 #include "ObjectManager.h"
 #include "Effect.h"
+#include "SceneManager.h"
 #include "Scene.h"
 
 namespace hongpireSurvivors
@@ -67,7 +68,7 @@ namespace hongpireSurvivors
 
 	void Projectile::Render()
 	{
-		int x = mPos.X - Scene::mScene->GetCamara().X;
+		int x = mPos.X - SceneManager::GetInstance()->GetCurScene()->GetCamaraPos().X;
 
 		if (x >= 0 && x + mSize.X < 400)
 		{

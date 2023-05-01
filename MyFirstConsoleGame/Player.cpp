@@ -11,9 +11,10 @@
 #include "Collider.h"
 #include "ColliderManager.h"
 #include "RenderManager.h"
-#include "Scene.h"
 #include "Helper.h"
 #include "SoundManager.h"
+#include "SceneManager.h"
+#include "Scene.h"
 
 namespace hongpireSurvivors
 {
@@ -36,12 +37,13 @@ namespace hongpireSurvivors
 	{
 		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
 		mElapsed += DELTA_TIME;
+		COORD camaraPos = SceneManager::GetInstance()->GetCurScene()->GetCamaraPos();
 
 		handleMove();
 		handleJump();
 		handleAttack();
 		handleCollision();
-		mPos.X = Helper::Clamp(Scene::mScene->GetCamara().X, Scene::mScene->GetCamara().X + 370, mPos.X);
+		mPos.X = Helper::Clamp(camaraPos.X, camaraPos.X + 370, mPos.X);
 		mPos.Y = Helper::Clamp(0, Helper::MAP_HEIGHT - mSize.Y, mPos.Y);
 
 		mAniElapsed -= DELTA_TIME;
@@ -149,7 +151,7 @@ namespace hongpireSurvivors
 			}
 		}
 
-		mJumpForce -= DELTA_TIME * 1.5;
+		mJumpForce -= DELTA_TIME * 1.5f;
 
 		if (mPos.Y + mSize.Y > 67)
 		{
@@ -237,7 +239,7 @@ namespace hongpireSurvivors
 
 	void Player::Render()
 	{
-		int x = mPos.X - Scene::mScene->GetCamara().X;
+		int x = mPos.X - SceneManager::GetInstance()->GetCurScene()->GetCamaraPos().X;
 
 		if (x >= 0 && x + mSize.X < 400)
 		{

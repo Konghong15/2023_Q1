@@ -4,6 +4,7 @@
 #include "ColliderManager.h"
 #include "Scene.h"
 #include "SoundManager.h"
+#include "SceneManager.h"
 
 namespace hongpireSurvivors
 {
@@ -40,7 +41,7 @@ namespace hongpireSurvivors
 
 		if ((flag & mask) != 0)
 		{
-			--mHp;
+  			--mHp;
 
 			if (mHp <= 0)
 			{
@@ -71,7 +72,7 @@ namespace hongpireSurvivors
 
 	void Monster::Render()
 	{
-		int x = mPos.X - Scene::mScene->GetCamara().X;
+		int x = mPos.X - SceneManager::GetInstance()->GetCurScene()->GetCamaraPos().X;
 
 		if (x >= 0 && x + mSize.X < 400)
 		{

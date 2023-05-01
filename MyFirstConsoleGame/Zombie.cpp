@@ -15,8 +15,8 @@ namespace hongpireSurvivors
 
 	void Zombie::handleMove()
 	{
-		const Object& player = Scene::mScene->GetPlayer();
-		COORD playerPos = player.GetPos();
+		const Object* player = ObjectManager::GetInstance()->GetPlayerOrNull();
+		COORD playerPos = player->GetPos();
 
 		if (mElapsed >= ONE_FRAME_TIME)
 		{

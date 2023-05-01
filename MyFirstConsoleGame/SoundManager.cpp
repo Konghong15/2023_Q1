@@ -53,7 +53,9 @@ namespace hongpireSurvivors
 
 	void SoundManager::load()
 	{
-		mSoundMap.emplace(eSound::BGM, new Sound("./sound/bgm.mp3", true));
+		mSoundMap.emplace(eSound::TITLE_BGM, new Sound("./sound/bgm.mp3", true));
+		mSoundMap.emplace(eSound::GAME_BGM, new Sound("./sound/bgm.mp3", true));
+		mSoundMap.emplace(eSound::ENDING_BGM, new Sound("./sound/bgm.mp3", true));
 		mSoundMap.emplace(eSound::PLAYER_DEATH, new Sound("./sound/ARTHURDEATH.wav"));
 		mSoundMap.emplace(eSound::PLAYER_HIT, new Sound("./sound/ARTHURHIT.wav"));
 		mSoundMap.emplace(eSound::PLAYER_JUMP, new Sound("./sound/ARTHURJUMP.wav"));

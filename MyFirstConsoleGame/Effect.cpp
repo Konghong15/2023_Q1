@@ -1,6 +1,7 @@
 #include "Effect.h"
 #include "TimeManager.h"
 #include "RenderManager.h"
+#include "SceneManager.h"
 #include "Scene.h"
 
 namespace hongpireSurvivors
@@ -14,7 +15,7 @@ namespace hongpireSurvivors
 		, mElapsed(0.f)
 	{
 		mSptieTypes = new eSpriteType[mSpriteLength + 1];
-		for (int i = 0; i < spriteLength; ++i)
+		for (size_t i = 0; i < spriteLength; ++i)
 		{
 			mSptieTypes[i] = spriteTypes[i];
 		}
@@ -47,7 +48,7 @@ namespace hongpireSurvivors
 
 	void Effect::Render()
 	{
-		int x = mPos.X - Scene::mScene->GetCamara().X;
+		int x = mPos.X - SceneManager::GetInstance()->GetCurScene()->GetCamaraPos().X;
 
 		if (x >= 0 && x + mSize.X < 400)
 		{

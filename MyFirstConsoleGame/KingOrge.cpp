@@ -54,7 +54,7 @@ namespace hongpireSurvivors
 		const float ATTACK_FRAME_TIME = ONE_FRAME_TIME * 30;
 		const float SPAWN_FRAME_TIME = ONE_FRAME_TIME * 120;
 
-		COORD playerPos = Scene::mScene->GetPlayer().GetPos();
+		COORD playerPos = ObjectManager::GetInstance()->GetPlayerOrNull()->GetPos();
 		mIsLeft = playerPos.X > mPos.X ? false : true;
 
 		if (mAttackElapsed >= ATTACK_FRAME_TIME)

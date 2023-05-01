@@ -1,3 +1,5 @@
+#include <Windows.h>
+
 #include "ObjectManager.h"
 #include "Object.h"
 #include "Player.h"
@@ -12,6 +14,7 @@ namespace hongpireSurvivors
 		if (mInstance == nullptr)
 		{
 			mInstance = new ObjectManager();
+			mInstance->Init();
 		}
 
 		return mInstance;
@@ -19,45 +22,32 @@ namespace hongpireSurvivors
 
 	void ObjectManager::DeleteInstance()
 	{
+		mInstance->Release();
 		delete mInstance;
 		mInstance = nullptr;
 	}
 
-	ObjectManager::ObjectManager()
-		: mObjects()
+	void ObjectManager::Init()
 	{
-		mObjects.reserve(128);
-		mDeadObjects.reserve(128);
-	}
-
-	ObjectManager::~ObjectManager()
-	{
-		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end();)
-		{
-			Object* obj = (*iter);
-			++iter;
-			delete obj;
-		}
-		mDeadObjects.clear();
-
-		for (auto iter = mObjects.begin(); iter != mObjects.end();)
-		{
-			Object* obj = (*iter);
-			++iter;
-			delete obj;
-		}
-		mObjects.clear();
+		mObjects.reserve(RESERVE_SIZE);
+		mDeadObjects.reserve(RESERVE_SIZE);
+		mSpawnObjects.reserve(RESERVE_SIZE);
 	}
 
 	void ObjectManager::Frame()
 	{
-		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end();)
+ 		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end(); ++iter)
 		{
 			Object* obj = (*iter);
-			++iter;
 			delete obj;
 		}
 		mDeadObjects.clear();
+
+		for (auto iter = mSpawnObjects.begin(); iter != mSpawnObjects.end(); ++iter)
+		{
+			mObjects.push_back((*iter));
+		}
+		mSpawnObjects.clear();
 
 		for (auto iter = mObjects.begin(); iter != mObjects.end();)
 		{
@@ -78,5 +68,37 @@ namespace hongpireSurvivors
 		{
 			(*iter)->Render();
 		}
+	}
+
+	void ObjectManager::Release()
+	{
+		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end(); ++iter)
+		{
+			Object* obj = (*iter);
+			delete obj;
+		}
+		mDeadObjects.clear();
+
+		for (auto iter = mSpawnObjects.begin(); iter != mSpawnObjects.end(); ++iter)
+		{
+			Object* obj = (*iter);
+			delete obj;
+		}
+		mSpawnObjects.clear();
+
+		for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
+		{
+			Object* obj = (*iter);
+			delete obj;
+		}
+		mObjects.clear();
+
+		delete mPlayer;
+		mPlayer = nullptr;
+	}
+
+	void ObjectManager::RegisterPlayer(Player* player)
+	{
+		mPlayer = static_cast<Object*>(player);
 	}
 }

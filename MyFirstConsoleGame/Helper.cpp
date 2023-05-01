@@ -13,6 +13,20 @@ namespace hongpireSurvivors
 		return num;
 	}
 
+	bool Helper::IsContain(COORD pos, COORD size, COORD point)
+	{
+		const COORD END = { pos.X + size.X , pos.Y + size.Y };
+
+		return pos.X <= point.X && pos.Y <= point.Y && END.X >= point.X && END.Y >= point.Y;
+	}	
+	
+	bool Helper::IsContain(COORD pos, COORD size, POINT point)
+	{
+		const COORD END = { pos.X + size.X , pos.Y + size.Y };
+
+		return pos.X <= point.x && pos.Y <= point.y && END.X >= point.x && END.Y >= point.y;
+	}
+
 	void Helper::Spawn(Object* object, SHORT sizeX, SHORT sizeY)
 	{
 		ObjectManager::GetInstance()->OnSpawn(object);

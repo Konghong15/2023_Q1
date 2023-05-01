@@ -2,6 +2,7 @@
 #include "RenderManager.h"
 #include "ObjectManager.h"
 #include "Scene.h"
+#include "SceneManager.h"
 
 namespace hongpireSurvivors
 {
@@ -22,6 +23,7 @@ namespace hongpireSurvivors
 	Object::~Object()
 	{
 		delete mCollider;
+		mCollider = nullptr;
 	}
 
 	void Object::AddCollider(Collider* collider)
@@ -34,7 +36,7 @@ namespace hongpireSurvivors
 
 	void Object::Render()
 	{
-		int x = mPos.X - Scene::mScene->GetCamara().X;
+		int x = mPos.X - SceneManager::GetInstance()->GetCurScene()->GetCamaraPos().X;
 
 		if (x >= 0 && x + mSize.X < 400)
 		{

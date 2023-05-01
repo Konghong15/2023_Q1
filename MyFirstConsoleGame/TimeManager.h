@@ -25,22 +25,16 @@ namespace hongpireSurvivors
 		enum { KEY_SIZE = 255 };
 		static TimeManager* mInstance;
 
-		ULONGLONG mElapsedTime;
 		ULONGLONG mCurTime;
 		ULONGLONG mPrevTime;
 		unsigned int mFrameCount;
 		unsigned int mFPS;
 	};
 
-	ULONGLONG TimeManager::GetElapsedTime()
-	{
-		return mElapsedTime;
-	}
-
 	float TimeManager::GetDeltaTime()
 	{
 		float deltaTime = (mCurTime - mPrevTime) / 1000.f;
-		return  deltaTime > 0.03 ? 0.03 : deltaTime;
+		return  deltaTime > 0.03f ? 0.03f : deltaTime;
 	}
 
 	unsigned int TimeManager::GetFPS()

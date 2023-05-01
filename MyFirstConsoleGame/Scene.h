@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Windows.h>
-
 #include "eSpriteType.h"
 
 namespace hongpireSurvivors
@@ -12,58 +11,28 @@ namespace hongpireSurvivors
 	class Scene
 	{
 	public:
-		Scene(COORD sceneSize, eSpriteType backgrounds[], size_t backgroundLength, COORD backGroundSize, COORD camaraPos = { 0,0 });
-		~Scene();
+		Scene(COORD sceneSize, COORD camaraPos = { 0,0 });
+		virtual ~Scene() = default;
 
-		void Init();
-		void Frame();
+		virtual void Enter() = 0;
+		virtual void Frame() = 0;
+		virtual void Exit() = 0;
 
-		inline const Object& GetPlayer() const;
-		inline const COORD& GetMapSize() const;
-		inline const COORD& GetCamara() const;
+		inline const COORD& GetSceneSize() const;
+		inline const COORD& GetCamaraPos() const;
 
-	private:
-		void handleSpawnMonster();
-		void handleMap();
-		void handleSceneState();
-
-	public:
-		static Scene* mScene;
-
-	private:
-		enum { SPAWN_POINT_0 = 100 };
-		enum { SPAWN_POINT_1 = 300 };
-		enum { SPAWN_POINT_2 = 500 };
-		enum { SPAWN_POINT_3 = 800 };
-		enum { SPAWN_POINT_4 = 1199 };
-
-		Object* mUI;
-		Player* mPlayer;
-
-		COORD mMapSize;
-		COORD mCamara;
-		eSpriteType* mBackgrounds;
-		size_t mBackgroundLength;
-		COORD mBackgroundSize;
-
-		float mElapsed;
-		float mSceneEndElapsed;
-		bool mIsEvents[6];
-		bool mCanCamaraMove;
+	protected:
+		COORD mSceneSize;
+		COORD mCamaraPos;
 	};
 
-	const Object& Scene::GetPlayer() const
+	const COORD& Scene::GetSceneSize() const
 	{
-		return *((const Object*)mPlayer);
+		return mSceneSize;
 	}
 
-	const COORD& Scene::GetMapSize() const
+	const COORD& Scene::GetCamaraPos() const
 	{
-		return mMapSize;
-	}
-
-	const COORD& Scene::GetCamara() const
-	{
-		return mCamara;
+		return mCamaraPos;
 	}
 }

@@ -19,10 +19,9 @@ namespace hongpireSurvivors
 		PLAYER_DEAD_3,
 		PROJECTIE,
 		PROJECTIE_EFFECT,
-		MAP_1_0,
-		MAP_1_1,
-		MAP_1_2,
-		MAP_2_0,
+		TITLE_BG_0,
+		TITLE_BG_1,
+		GAME_BG,
 		ENEMY_0, // 15 17
 		ENEMY_1, // 20 13
 		ENEMY_1_PROJECTILE, // 2 2

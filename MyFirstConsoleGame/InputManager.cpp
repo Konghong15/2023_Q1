@@ -1,7 +1,11 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <cassert>
 #include <Windows.h>
+#include <stdio.h>
 
 #include "InputManager.h"
+#include "RenderManager.h"
 
 namespace hongpireSurvivors
 {
@@ -30,6 +34,22 @@ namespace hongpireSurvivors
 
 	void InputManager::Frame()
 	{
+		GetCursorPos(&mMousePos);
+		COORD screenPos = RenderManager::GetInstance()->GetScreenInfo().dwCursorPosition;
+
+		mMousePos.x -= screenPos.X;
+		mMousePos.y -= screenPos.Y;
+
+		if (mKeyState[VK_LBUTTON] != eKeyState::NONE)
+		{
+			char buffer[64];
+			sprintf(buffer, "x : %d / y : %d\n", mMousePos.x, mMousePos.y);
+			OutputDebugStringA(buffer);
+		}
+
+		//HWND hWnd = WindowFromPoint(mMousePos); // temp
+		//ScreenToClient(hWnd, &mMousePos);
+
 		for (int i = 0; i < KEY_SIZE; ++i)
 		{
 			if (GetAsyncKeyState(i) & 0x8000)

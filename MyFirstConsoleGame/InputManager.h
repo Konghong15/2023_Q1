@@ -5,7 +5,7 @@ namespace hongpireSurvivors
 	enum class eKeyState
 	{
 		NONE,
-		PUSH, // push 딱 한 프레임 유지되거든 ? 
+		PUSH,
 		HOLD,
 		POP
 	};
@@ -17,7 +17,9 @@ namespace hongpireSurvivors
 		static void DeleteInstance();
 
 		void Frame();
+
 		inline eKeyState GetKeyState(WORD keyCode);
+		inline const POINT& GetMousePos() const;
 
 	private:
 		InputManager();
@@ -27,11 +29,17 @@ namespace hongpireSurvivors
 		enum { KEY_SIZE = 255 };
 		static InputManager* mInstance;
 
+		POINT mMousePos;
 		eKeyState mKeyState[KEY_SIZE];
 	};
 
 	eKeyState InputManager::GetKeyState(WORD keyCode)
 	{
 		return mKeyState[keyCode];
+	}
+
+	const POINT& InputManager::GetMousePos() const
+	{
+		return mMousePos;
 	}
 }

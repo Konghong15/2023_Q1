@@ -8,6 +8,7 @@ namespace hongpireSurvivors
 		ENEMY = 2,
 		PROJECTILE = 4,
 		GROUND = 8,
-		EFFECT = 16
+		EFFECT = 16,
+		BUTTON = 32
 	};
 }

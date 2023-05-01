@@ -10,7 +10,9 @@ namespace hongpireSurvivors
 		PLAYER_HIT,
 		PLAYER_JUMP,
 		PLAYER_THROW,
-		BGM,
+		TITLE_BGM,
+		GAME_BGM,
+		ENDING_BGM,
 		GAME_START,
 		MONSTER_HIT,
 		MONSTER_DEATH

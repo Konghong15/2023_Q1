@@ -23,56 +23,56 @@ namespace hongpireSurvivors
 		mInstance = nullptr;
 	}
 
-	void RenderManager::DrawMap(eSpriteType left, eSpriteType right, int camaraX, WORD color)
+	WORD RenderManager::GetColor(eConsoleColor background, eConsoleColor font)
 	{
-		const Sprite& leftSp = SpriteManager::GetInstance()->GetSprite(left);
-		const Sprite& rightSp = SpriteManager::GetInstance()->GetSprite(right);
+		return static_cast<WORD>(background) << 4 | static_cast<WORD>(font);
+	}
 
-		const int MAP_WIDTH = 400;
-		const int MAP_HIEGHT = 77;
+	void RenderManager::DrawMap(eSpriteType spriteType, const COORD& sceneSize, const COORD& camaraPos, WORD color)
+	{
+		const Sprite& sp = SpriteManager::GetInstance()->GetSprite(spriteType);
+		const int MAX_Y = BUFFER_HEIGHT < sceneSize.Y ? BUFFER_HEIGHT : sceneSize.Y;
 
-		for (int i = 0; i < MAP_HIEGHT; ++i)
+		for (int i = 0; i < MAX_Y; ++i)
 		{
-			for (int j = 0; j < MAP_WIDTH - camaraX; ++j)
+			for (int j = BUFFER_X_OFFSET; j < BUFFER_WIDTH - BUFFER_X_OFFSET; ++j)
 			{
 				int yi = i;
-				int xi = j + BUFFER_X_OFFSET;
+				int xi = j;
 
-				if (yi > BUFFER_HEIGHT || xi > BUFFER_WIDTH)
+				if (yi >= BUFFER_HEIGHT || xi >= BUFFER_WIDTH)
 				{
 					continue;
 				}
 
-				int spIndex = i * MAP_WIDTH + j + camaraX;
+				int spIndex = (camaraPos.Y + i) * sp.Width + (camaraPos.X + j);
 
-				if (leftSp.Img[spIndex] != ' ')
-
+				if (sp.Img[spIndex] != ' ')
 				{
 					assert(yi < BUFFER_HEIGHT&& xi < BUFFER_WIDTH);
-					mBuffer[yi][xi] = leftSp.Img[spIndex];
+					mBuffer[yi][xi] = sp.Img[spIndex];
 					mColorBuffer[yi][xi] = color;
 				}
 			}
+		}
+	}
 
-			for (int j = MAP_WIDTH - camaraX; j < MAP_WIDTH; ++j)
-			{
-				int yi = i;
-				int xi = j + BUFFER_X_OFFSET;
+	void RenderManager::DrawRect(int x, int y, int w, int h, char ch, WORD color)
+	{
+		for (int i = x; i < x + w; ++i)
+		{
+			mBuffer[y][i] = ch;
+			mBuffer[y + h][i] = ch;
+			mColorBuffer[y][i] = color;
+			mColorBuffer[y + h][i] = color;
+		}
 
-				if (yi > BUFFER_HEIGHT || xi > BUFFER_WIDTH)
-				{
-					continue;
-				}
-
-				int spIndex = i * MAP_WIDTH + j - (MAP_WIDTH - camaraX);
-
-				if (rightSp.Img[spIndex] != ' ')
-				{
-					assert(yi < BUFFER_HEIGHT&& xi < BUFFER_WIDTH);
-					mBuffer[yi][xi] = rightSp.Img[spIndex];
-					mColorBuffer[yi][xi] = color;
-				}
-			}
+		for (int i = y; i < y + h; ++i)
+		{
+			mBuffer[i][x] = ch;
+			mBuffer[i][x + w] = ch;
+			mColorBuffer[i][x] = color;
+			mColorBuffer[i][x + w] = color;
 		}
 	}
 
@@ -127,8 +127,11 @@ namespace hongpireSurvivors
 		DWORD dw;
 
 		SetConsoleCursorPosition(getCurrentHandle(), { 0, 0 });
+		GetConsoleScreenBufferInfo(getCurrentHandle(), &mScreenInfo);
 		WriteFile(getCurrentHandle(), mBuffer, BUFFER_HEIGHT * BUFFER_WIDTH, &dw, NULL);
-		WriteConsoleOutputAttribute(getCurrentHandle(), static_cast<const WORD*>(mColorBuffer[0]), BUFFER_HEIGHT * BUFFER_WIDTH, { 0, 0 }, &dw);
+
+		const WORD* wordPtr = static_cast<const WORD*>(mColorBuffer[0]);
+		WriteConsoleOutputAttribute(getCurrentHandle(), wordPtr, BUFFER_HEIGHT * BUFFER_WIDTH, { 0, 0 }, &dw);
 
 		swapBuffer();
 		clearBuffer();
@@ -137,6 +140,7 @@ namespace hongpireSurvivors
 	RenderManager::RenderManager()
 		: mBufferIndex(eBufferIndex::FRONT)
 		, mBuffer{ 0, }
+		, mScreenInfo{ 0, }
 	{
 		mScreen[static_cast<int>(eBufferIndex::FRONT)] = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 		mScreen[static_cast<int>(eBufferIndex::BACK)] = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);

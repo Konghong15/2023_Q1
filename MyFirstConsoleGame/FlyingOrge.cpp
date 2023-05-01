@@ -21,6 +21,7 @@ namespace hongpireSurvivors
 		, mIsDrop(false)
 		, mArrival(isLeft ? eFlyingOrgePos::LEFT_TOP : eFlyingOrgePos::RIGHT_TOP)
 		, mArrivalPos(isLeft ? ORIJIN_LEFT_TOP : ORIJIN_RIGHT_TOP)
+		, mAniElapsed(0.f)
 	{
 	}
 
@@ -89,13 +90,13 @@ namespace hongpireSurvivors
 
 			if (fabs(slope) < 1.f)
 			{
-				yAmount = slope * MONSTER_SPEED_VERY_HIGH;
+				yAmount = static_cast<int>(slope * MONSTER_SPEED_VERY_HIGH);
 				xAmonut = MONSTER_SPEED_VERY_HIGH;
 			}
 			else
 			{
 				yAmount = MONSTER_SPEED_VERY_HIGH;
-				xAmonut = MONSTER_SPEED_VERY_HIGH / slope;
+				xAmonut = static_cast<int>(MONSTER_SPEED_VERY_HIGH / slope);
 			}
 		}
 
@@ -130,8 +131,8 @@ namespace hongpireSurvivors
 
 	void FlyingOrge::handleAttack()
 	{
-		const Object& player = Scene::mScene->GetPlayer();
-		COORD playerPos = player.GetPos();
+		const Object* player = ObjectManager::GetInstance()->GetPlayerOrNull();
+		COORD playerPos = player->GetPos();
 
 		if (!mCanAttack)
 		{
