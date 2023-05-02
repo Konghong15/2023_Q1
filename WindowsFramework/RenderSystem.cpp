@@ -1,7 +1,10 @@
+#include <cmath>
+
 #include "WinApp.h"
 #include "RenderSystem.h"
 
 #pragma comment(lib, "msimg32.lib")
+
 
 namespace render
 {
@@ -16,7 +19,7 @@ namespace render
 	{
 		hWnd = global::GetWinApp().GetWindow();
 
-		frontMemDC = GetDC(NULL);
+		frontMemDC = GetDC(hWnd);
 
 		backMemDC = CreateCompatibleDC(frontMemDC);
 
@@ -84,6 +87,52 @@ namespace render
 		DeleteObject(hBrush);
 	}
 
+void DrawRotatineRect(int x, int y, int w, int h, float angleInRadian, HDC textureDC)
+{
+	POINT points[3] = { 0, };
+
+	points[0] = { x, y };
+	points[1] = { x + w, y };
+	points[2] = { x, y + h };
+
+	// 오브젝트 로컬 좌표로 원점이동
+	POINT center = { x + w / 2, y + h / 2 };
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			points[i].x -= center.x;
+			points[i].y -= center.y;
+		}
+	}
+
+	// 회전
+	{
+		float cosScalr = cos(angleInRadian);
+		float sinScalr = sin(angleInRadian);
+		POINT temp;
+
+		for (int i = 0; i < 3; ++i)
+		{
+			temp.x = points[i].x * cosScalr - points[i].y * sinScalr;
+			temp.y = points[i].x * sinScalr + points[i].y * cosScalr;
+			points[i] = temp;
+		}
+	}
+
+	// 월드 좌표로 원점이동
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			points[i].x += center.x;
+			points[i].y += center.y;
+		}
+	}
+
+	// UV좌표 지정
+	POINT UV = { 37, 40 };
+	POINT UV_SIZE = { 21, 24 };
+	PlgBlt(backMemDC, points, textureDC, UV.x, UV.y, UV_SIZE.x, UV_SIZE.y, 0, 0, 0);
+}
 
 	void DrawCircle(int x, int y, int radius, COLORREF color)
 	{
@@ -102,7 +151,6 @@ namespace render
 
 		DeleteObject(hPen);
 		DeleteObject(hBrush);
-
 	}
 
 	void DrawPolygon(POINT points[], int count, COLORREF color)

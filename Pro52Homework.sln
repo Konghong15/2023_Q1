@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WindowsProgram", "WindowsPr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WindowsFramework", "WindowsFramework\WindowsFramework.vcxproj", "{BA1A3B6D-4CCE-4960-8C25-2568660EC960}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hockman", "Hockman\Hockman.vcxproj", "{58DFB3B0-C866-42C1-B7B0-99C0BC4D8514}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{BA1A3B6D-4CCE-4960-8C25-2568660EC960}.Release|x64.Build.0 = Release|x64
 		{BA1A3B6D-4CCE-4960-8C25-2568660EC960}.Release|x86.ActiveCfg = Release|Win32
 		{BA1A3B6D-4CCE-4960-8C25-2568660EC960}.Release|x86.Build.0 = Release|Win32
+		{58DFB3B0-C866-42C1-B7B0-99C0BC4D8514}.Debug|x64.ActiveCfg = Debug|x64
+		{58DFB3B0-C866-42C1-B7B0-99C0BC4D8514}.Debug|x64.Build.0 = Debug|x64
+		{58DFB3B0-C866-42C1-B7B0-99C0BC4D8514}.Debug|x86.ActiveCfg = Debug|Win32
+		{58DFB3B0-C866-42C1-B7B0-99C0BC4D8514}.Debug|x86.Build.0 = Debug|Win32
+		{58DFB3B0-C866-42C1-B7B0-99C0BC4D8514}.Release|x64.ActiveCfg = Release|x64
+		{58DFB3B0-C866-42C1-B7B0-99C0BC4D8514}.Release|x64.Build.0 = Release|x64
+		{58DFB3B0-C866-42C1-B7B0-99C0BC4D8514}.Release|x86.ActiveCfg = Release|Win32
+		{58DFB3B0-C866-42C1-B7B0-99C0BC4D8514}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,135 +1,98 @@
-#include <cstdlib>
+#include <Windows.h>
+
 #include "WinApp.h"
-#include "GameManager.h"
+#include "GameCore.h"
 
-namespace global
+namespace hockman
 {
-	WinApp winApp;
+	HWND WinApp::mHWnd = NULL;
+	UINT WinApp::mWidth = 0;
+	UINT WinApp::mHeight = 0;
 
-	const WinApp& GetWinApp()
+	int WinApp::Run(HINSTANCE hInstance, const WCHAR* name, UINT width, UINT height)
 	{
-		return winApp;
+		mWidth = width;
+		mHeight = height;
+
+		WNDCLASSEXW wcex;
+		ZeroMemory(&wcex, sizeof(WNDCLASSEXW));
+
+		wcex.cbSize = sizeof(WNDCLASSEX);
+		wcex.style = CS_HREDRAW | CS_VREDRAW;
+		wcex.hInstance = hInstance;
+		wcex.hbrBackground = CreateSolidBrush(RGB(255, 255, 255));
+		wcex.lpszClassName = name;
+		wcex.lpfnWndProc = WinApp::WndProc;
+		wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+
+		RegisterClassExW(&wcex);
+
+		RECT rect = { 0, 0 ,width, height };
+		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
+
+		UINT screenWidth = GetSystemMetrics(SM_CXSCREEN);
+		UINT screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+		mHWnd = CreateWindowW(
+			name, name,
+			WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME,
+			(screenWidth - (rect.right - rect.left)) / 2,
+			(screenHeight - (rect.bottom - rect.top)) / 2,
+			width, height,
+			nullptr, nullptr,
+			hInstance, nullptr);
+
+		ShowWindow(mHWnd, SW_SHOW);
+		UpdateWindow(mHWnd);
+
+		MSG msg = { 0, };
+		GameCore::GetInstance()->Init();
+		{
+			while (msg.message != WM_QUIT)
+			{
+				if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+				}
+				else
+				{
+					GameCore::GetInstance()->Frame();
+				}
+			}
+		}
+		GameCore::GetInstance()->Release();
+		GameCore::DeletInstance();
+
+		return (int)msg.wParam;
 	}
-}
 
-constexpr int SCREEN_START_LEFT = 10;
-
-constexpr int SCREEN_START_TOP = 10;
-
-constexpr int SCREEN_WIDTH = 1024;
-
-constexpr int SCREEN_HEIGHT = 768;
-
-
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-	_In_opt_ HINSTANCE hPrevInstance,
-	_In_ LPWSTR    lpCmdLine,
-	_In_ int       nCmdShow)
-{
-
-	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
-
-	global::winApp.Initialize(hInstance);
-
-	global::winApp.Run();
-
-	global::winApp.Finalize();
-
-	return EXIT_SUCCESS;
-}
-
-
-void PlaceInCenterOfScreen(HWND window, DWORD style, DWORD exStyle)
-{
-	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
-	RECT clientRect;
-	GetClientRect(window, &clientRect);
-
-	int clientWidth = clientRect.right - clientRect.left;
-	int clientHeight = clientRect.bottom - clientRect.top;
-
-	SetWindowPos(window, NULL,
-		screenWidth / 2 - clientWidth / 2,
-		screenHeight / 2 - clientHeight / 2,
-		clientWidth, clientHeight, 0
-	);
-}
-
-LRESULT CALLBACK WinApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	switch (message)
+	HWND WinApp::GetHWND()
 	{
-	case WM_CREATE:
+		return mHWnd;
+	}
+
+	UINT WinApp::GetWidth()
 	{
-		PlaceInCenterOfScreen(hWnd, WS_OVERLAPPEDWINDOW, WS_EX_APPWINDOW | WS_EX_WINDOWEDGE);
+		return mWidth;
 	}
-	break;
 
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
+	UINT WinApp::GetHeight()
+	{
+		return mHeight;
 	}
-	return 0;
-}
 
+	LRESULT WinApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	{
+		switch (message)
+		{
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			break;
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
 
-void WinApp::Initialize(HINSTANCE hInstance)
-{
-	m_hInstance = hInstance;
-
-	const TCHAR* appName = TEXT("Test Game Framework");
-
-	//Step 1: Registering the Window Class
-
-	WNDCLASS wndClass;
-
-	wndClass.style = CS_HREDRAW | CS_VREDRAW;
-	wndClass.lpfnWndProc = WndProc;
-	wndClass.cbClsExtra = 0;
-	wndClass.cbWndExtra = 0;
-	wndClass.hInstance = hInstance;
-	wndClass.hIcon = LoadIcon(hInstance, IDI_APPLICATION);
-	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wndClass.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
-	wndClass.lpszMenuName = NULL;
-	wndClass.lpszClassName = appName;
-
-	RegisterClass(&wndClass);
-
-	// Step 2: Creating the Window
-
-	RECT rect{ SCREEN_START_LEFT, SCREEN_START_TOP,
-	SCREEN_START_LEFT + SCREEN_WIDTH, SCREEN_START_TOP + SCREEN_HEIGHT };
-
-	::AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
-
-	int width = rect.right - rect.left;
-	int height = rect.bottom - rect.top;
-
-	m_hWnd = CreateWindow(appName, appName, WS_OVERLAPPED | WS_SYSMENU,
-		SCREEN_START_LEFT, SCREEN_START_TOP, width, height, NULL, NULL, hInstance, NULL);
-
-	ShowWindow(m_hWnd, SW_SHOWNORMAL);
-	UpdateWindow(m_hWnd);
-
-	// Step 3: Game Initialize Here
-	game::GameManager::GetInstance()->Initialize();
-}
-
-void WinApp::Run()
-{
-	// Step 4: Game Loop Here
-	game::GameManager::GetInstance()->Run();
-}
-
-void WinApp::Finalize()
-{
-	// Step 5: Game Finalize Here
-	game::GameManager::GetInstance()->Finalize();
-}
+		return 0;
+	}
+};

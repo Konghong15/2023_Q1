@@ -1,4 +1,5 @@
 #pragma once
+#pragma comment(lib, "MsImg32.lib")
 
 namespace game
 {

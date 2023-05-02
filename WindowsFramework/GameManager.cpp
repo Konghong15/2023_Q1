@@ -1,3 +1,9 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#include <assert.h>
+
 #include "WinApp.h"
 #include "InputSystem.h"
 #include "TimeSystem.h"
@@ -7,6 +13,9 @@
 
 #include <string>
 
+#pragma comment(lib, "User32.lib")
+
+#pragma comment(lib, "Msimg32.lib")
 namespace game
 {
 	struct Object
@@ -32,6 +41,9 @@ namespace game
 	};
 
 	Object player = { global::GetWinApp().GetWidth() / 2 ,global::GetWinApp().GetHeight() / 2, 10, 10, RGB(255, 255, 0) };
+	POINT playerWidth = { 20, 20 };
+	float fAngleInRadian = 0.f;
+	HDC textureDC;
 
 	const int bludeCircleMax = 100;
 	int blueCircleCount = 0;
@@ -55,6 +67,15 @@ namespace game
 		else if (input::IsKeyDown('S'))
 		{
 			player.Move(0, player.speed);
+		}
+
+		if (input::IsKeyDown(VK_LEFT))
+		{
+			fAngleInRadian += 0.01f;
+		}
+		else if (input::IsKeyDown(VK_RIGHT))
+		{
+			fAngleInRadian -= 0.01f;
 		}
 	}
 
@@ -85,11 +106,32 @@ namespace game
 	GameManager::~GameManager()
 	{
 	}
+
 	void GameManager::Initialize()
 	{
+		_CrtDumpMemoryLeaks();
+
+		const TCHAR* path = TEXT("img.bmp");
+
+		HBITMAP Bm_hBit = (HBITMAP)LoadImage(nullptr, path, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		_CrtDumpMemoryLeaks();
+
 		input::InitInput();
 		time::InitTime();
 		render::InitRender();
+
+		int error = GetLastError();
+		assert(Bm_hBit != nullptr);
+
+		// 비트맵과 연결할 DC
+		// 이거 역할이 뭐야?
+		textureDC = CreateCompatibleDC(render::frontMemDC);
+
+		//GetPixel()
+		//HBITMAP hPrevBit = (HBITMAP)SelectObject(textureDC, Bm_hBit);
+		//DeleteObject(hPrevBit);
+
+		// 비트맵 정보
 	}
 
 	void GameManager::Update()
@@ -216,7 +258,11 @@ namespace game
 
 	void GameManager::DrawPlayer()
 	{
+		enum { PLAYER_WIDTH = 100 };
+		enum { PLAYER_HEIGHT = 100 };
 		render::DrawCircle(player.x, player.y, player.size, player.color);
+		render::DrawRotatineRect(player.x - PLAYER_WIDTH / 2, player.y - PLAYER_HEIGHT / 2, PLAYER_WIDTH, PLAYER_HEIGHT, fAngleInRadian, textureDC);
+		// void DrawRotatineRect(int x, int y, int w, int h, float angleInRadian, HDC textureDC)
 	}
 
 	void GameManager::DrawSomething()

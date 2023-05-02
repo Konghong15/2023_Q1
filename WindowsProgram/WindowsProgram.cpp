@@ -1,6 +1,7 @@
 ﻿// WindowsProgram.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 //
 
+#include <vector>
 #include "pch.h"
 #include "framework.h"
 #include "WindowsProgram.h"
@@ -25,6 +26,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
+
+	std::vector<int*> vec;
+	vec.reserve(512); // 2의 승수로 하는 게 좋음
+
+	for (auto iter = vec.begin(); iter != vec.end(); ++iter)
+	{
+
+	}
+
+	for (auto iter = vec.rbegin(); iter != vec.rend(); --iter)
+	{
+
+	}
+
+	for (auto iter = vec.cbegin(); iter != vec.cend(); ++iter)
+	{
+		*(*(iter)) = 10;
+	}
 
 	// TODO: 여기에 코드를 입력합니다.
 

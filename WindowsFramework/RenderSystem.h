@@ -2,6 +2,8 @@
 
 namespace render
 {
+	extern HDC frontMemDC;
+
 	void InitRender();
 
 	void BeginDraw();
@@ -12,6 +14,7 @@ namespace render
 
 	void DrawLine(int x1, int y1, int x2, int y2, COLORREF color);
 
+	void DrawRotatineRect(int x, int y, int w, int h, float angleInRadian, HDC textureDC);
 	void DrawRect(int x, int y, int width, int height, COLORREF color);
 
 	void DrawCircle(int x, int y, int radius, COLORREF color);
