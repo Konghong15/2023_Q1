@@ -1,11 +1,11 @@
 #pragma once
 
 #include <map>
+#include "eSceneType.h"
 
 namespace hockman
 {
 	class Scene;
-	enum class eSceneType;
 
 	class SceneManager
 	{
@@ -20,7 +20,7 @@ namespace hockman
 		void ChangeScene(eSceneType sceneType);
 		void Register(eSceneType type, Scene* scene);
 
-		inline const Scene* GetCurScene() const;
+		inline const Scene& GetCurScene() const;
 
 	private:
 		SceneManager();
@@ -33,8 +33,8 @@ namespace hockman
 		Scene* mCurScene;
 	};
 
-	const Scene* SceneManager::GetCurScene() const
+	const Scene& SceneManager::GetCurScene() const
 	{
-		return mCurScene;
+		return *mCurScene;
 	}
 }

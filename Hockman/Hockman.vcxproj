@@ -141,13 +141,15 @@
   <ItemGroup>
     <ClInclude Include="Collider.h" />
     <ClInclude Include="ColliderManager.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="eObjectType.h" />
     <ClInclude Include="eSceneType.h" />
     <ClInclude Include="eSpriteType.h" />
     <ClInclude Include="GameCore.h" />
+    <ClInclude Include="GameScene.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Object.h" />
-    <ClInclude Include="ObjectManager.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
@@ -162,10 +164,12 @@
   <ItemGroup>
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="ColliderManager.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameCore.cpp" />
+    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -174,6 +178,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="WinApp.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>

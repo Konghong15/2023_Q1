@@ -31,17 +31,9 @@ namespace hockman
 
 	void ColliderManager::Frame()
 	{
-		for (auto iter = mColliders.begin(); iter != mColliders.end();)
+		for (auto iter = mColliders.begin(); iter != mColliders.end(); ++iter)
 		{
-			if (!(*iter)->GetOwnerObject().GetValid())
-			{
-				iter = mColliders.erase(iter);
-			}
-			else
-			{
-				(*iter)->InitEnter();
-				++iter;
-			}
+			(*iter)->Release();
 		}
 
 		for (auto iterI = mColliders.begin(); iterI != mColliders.end(); ++iterI)
@@ -57,9 +49,11 @@ namespace hockman
 
 		for (auto iter = mColliders.begin(); iter != mColliders.end(); ++iter)
 		{
-			(*iter)->CheckExitCollision();
+			(*iter)->Render();
 		}
 	}
+
+
 
 	void ColliderManager::Release()
 	{

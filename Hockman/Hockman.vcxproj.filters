@@ -31,6 +31,18 @@
     <Filter Include="헤더 파일\Math">
       <UniqueIdentifier>{f778bf45-ca6f-4fad-b6f0-80c70882df45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\Component\Object">
+      <UniqueIdentifier>{5c4bd3ea-b111-490c-a7db-acbc31116ff6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Component\Scene">
+      <UniqueIdentifier>{fdaefe9a-1989-4515-84bd-1f3cce7fe38c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Math">
+      <UniqueIdentifier>{2ae79733-b312-48cc-aa96-99528f01e150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Component\Object">
+      <UniqueIdentifier>{049b1608-e23d-4040-9ec5-5920fe3bd1c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinApp.cpp">
@@ -45,9 +57,6 @@
     <ClCompile Include="Collider.cpp">
       <Filter>소스 파일\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>소스 파일\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>소스 파일\Component</Filter>
     </ClCompile>
@@ -58,9 +67,6 @@
       <Filter>소스 파일\Component</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
-      <Filter>소스 파일\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectManager.cpp">
       <Filter>소스 파일\Manager</Filter>
     </ClCompile>
     <ClCompile Include="RenderManager.cpp">
@@ -80,6 +86,21 @@
     </ClCompile>
     <ClCompile Include="ColliderManager.cpp">
       <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2.cpp">
+      <Filter>소스 파일\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>소스 파일\Component\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>소스 파일\Component\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,9 +134,6 @@
     <ClInclude Include="Sprite.h">
       <Filter>헤더 파일\Component</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectManager.h">
-      <Filter>헤더 파일\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="RenderManager.h">
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
@@ -139,6 +157,15 @@
     </ClInclude>
     <ClInclude Include="Vector2.h">
       <Filter>헤더 파일\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>헤더 파일\Component\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>헤더 파일\Component\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>헤더 파일\Component\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

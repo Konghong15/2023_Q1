@@ -16,6 +16,7 @@ namespace hockman
 		void Release();
 
 		void Draw(eSpriteType spritType, int x, int y);
+		void DrawRect(int x, int y, int w, int h, COLORREF color);
 
 	private:
 		RenderManager() = default;

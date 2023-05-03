@@ -1,7 +1,5 @@
 #include "Object.h"
 #include "RenderManager.h"
-#include "ObjectManager.h"
-#include "Scene.h"
 #include "SceneManager.h"
 #include "Collider.h"
 
@@ -34,5 +32,6 @@ namespace hockman
 
 	void Object::Render()
 	{
+		RenderManager::GetInstance()->DrawRect(mPos.GetX(), mPos.GetY(), mSize.GetX(), mSize.GetY(), RGB(0, 0, 0));
 	}
 }

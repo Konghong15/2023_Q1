@@ -44,6 +44,17 @@ namespace hockman
 
 	void RenderManager::Draw(eSpriteType spritType, int x, int y)
 	{
-		//
+
+	}
+
+	void RenderManager::DrawRect(int x, int y, int w, int h, COLORREF color)
+	{
+		HPEN hPen = CreatePen(PS_SOLID, 1, color);
+		HPEN hOldPen = (HPEN)SelectObject(mBackHDC, hPen);
+
+		Rectangle(mBackHDC, x, y, x + w, y + h);
+
+		SelectObject(mBackHDC, hOldPen);
+		DeleteObject(hPen);
 	}
 };

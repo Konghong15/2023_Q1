@@ -35,10 +35,6 @@ namespace hockman
 	void InputManager::Frame()
 	{
 		GetCursorPos(&mMousePos);
-		COORD screenPos = RenderManager::GetInstance()->GetScreenInfo().dwCursorPosition;
-
-		mMousePos.x -= screenPos.X;
-		mMousePos.y -= screenPos.Y;
 
 		if (mKeyState[VK_LBUTTON] != eKeyState::NONE)
 		{

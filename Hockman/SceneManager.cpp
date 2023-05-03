@@ -2,6 +2,7 @@
 
 #include "SceneManager.h"
 #include "Scene.h"
+#include "GameScene.h"
 #include "eSceneType.h"
 
 namespace hockman
@@ -32,9 +33,13 @@ namespace hockman
 
 	void SceneManager::Init()
 	{
-		auto iter = mSceneMap.find(eSceneType::TITLE);
-		assert(iter != mSceneMap.end());
+		// init
+		mSceneMap.emplace(eSceneType::GAME, new GameScene(1920, 1000));
 
+
+		// init scene
+		auto iter = mSceneMap.find(eSceneType::GAME);
+		assert(iter != mSceneMap.end());
 		mCurScene = iter->second;
 		mCurScene->Enter();
 	}

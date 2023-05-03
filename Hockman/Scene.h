@@ -1,38 +1,42 @@
 #pragma once
 
-#include <Windows.h>
-#include "eSpriteType.h"
+#include <vector>
 
 namespace hockman
 {
-	class Player;
 	class Object;
 
 	class Scene
 	{
 	public:
-		Scene(COORD sceneSize, COORD camaraPos = { 0,0 });
+		Scene(size_t width, size_t height);
 		virtual ~Scene() = default;
 
-		virtual void Enter() = 0;
-		virtual void Frame() = 0;
-		virtual void Exit() = 0;
+		virtual void Enter();
+		virtual void Frame();
+		virtual void Exit();
 
-		inline const COORD& GetSceneSize() const;
-		inline const COORD& GetCamaraPos() const;
+		inline size_t GetWidth() const;
+		inline size_t GetHeight() const;
 
 	protected:
-		COORD mSceneSize;
-		COORD mCamaraPos;
+		enum { RESERVE_SIZE = 128 };
+
+		size_t mWidth;
+		size_t mHeight;
+
+		std::vector<Object*> mObjects;
+		std::vector<Object*> mDeadObjects;
+		std::vector<Object*> mSpawnObjects;
 	};
 
-	const COORD& Scene::GetSceneSize() const
+	size_t Scene::GetWidth() const
 	{
-		return mSceneSize;
+		return mWidth;
 	}
 
-	const COORD& Scene::GetCamaraPos() const
+	size_t Scene::GetHeight() const
 	{
-		return mCamaraPos;
+		return mHeight;
 	}
 }

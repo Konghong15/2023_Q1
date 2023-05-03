@@ -1,80 +1,54 @@
+#include <cassert>
+
 #include "Collider.h"
+#include "RenderManager.h"
 
 namespace hockman
 {
-	Collider::Collider(COORD size, COORD offset, const Object& ownerObject)
+	Collider::Collider(Vector2 size, Vector2 offset, const Object& ownerObject)
 		: mSize(size)
 		, mOffset(offset)
 		, mOwnerObject(&ownerObject)
-		, mEnterBitFlag(0)
-		, mPrevStayBitFlag(0)
-		, mStayBitFlag(0)
-		, mExitBitFlag(0)
 	{
 	}
 
 	void Collider::CheckCollision(Collider& other)
 	{
-		COORD otherPos = other.GetWorldPosition();
-		COORD curPos = GetWorldPosition();
-		bool isCollision = false;
+		Vector2 topLeft = GetWorldPosition();
+		Vector2 bottomRight(topLeft.GetX() + mSize.GetX(), topLeft.GetY() + mSize.GetY());
+		Vector2 otherTopLeft = other.GetWorldPosition();
+		Vector2 otherBottomRight(otherTopLeft.GetX() + other.mSize.GetX(), otherTopLeft.GetY() + other.mSize.GetY());
 
-		if (otherPos.X > curPos.X)
-		{
-			isCollision = curPos.X + mSize.X > otherPos.X;
-		}
-		else
-		{
-			isCollision = otherPos.X + other.mSize.X > curPos.X;
-		}
+		Vector2 unionTopLeft;
+		unionTopLeft.SetX(topLeft.GetX() < otherTopLeft.GetX() ? topLeft.GetX() : otherTopLeft.GetX());
+		unionTopLeft.SetY(topLeft.GetY() < otherTopLeft.GetY() ? topLeft.GetY() : otherTopLeft.GetY());
+		Vector2 unionBottomRight;
+		unionBottomRight.SetX(bottomRight.GetX() > otherBottomRight.GetX() ? bottomRight.GetX() : otherBottomRight.GetX());
+		unionBottomRight.SetY(bottomRight.GetY() > otherBottomRight.GetY() ? bottomRight.GetY() : otherBottomRight.GetY());
 
-		if (isCollision)
+		if (mSize.GetX() + other.mSize.GetX() < unionBottomRight.GetX() - unionTopLeft.GetX()
+			|| mSize.GetY() + other.mSize.GetY() < unionBottomRight.GetY() - unionBottomRight.GetY())
 		{
-			if (otherPos.Y > curPos.Y)
-			{
-				isCollision = curPos.Y + mSize.Y > otherPos.Y;
-			}
-			else
-			{
-				isCollision = otherPos.Y + other.mSize.Y > curPos.Y;
-			}
-		}
-
-		if (!isCollision)
-		{
-			return;
-		}
-
-		int bitMask = static_cast<int>(other.mOwnerObject->GetObjectType());
-
-		if ((mEnterBitFlag & bitMask) != 0)
-		{
-			mEnterBitFlag &= ~bitMask;
-			mStayBitFlag |= bitMask;
-		}
-		else if ((mStayBitFlag & bitMask) == 0)
-		{
-			mEnterBitFlag |= bitMask;
-		}
-
-		bitMask = static_cast<int>(this->mOwnerObject->GetObjectType());
-
-		if ((other.mEnterBitFlag & bitMask) != 0)
-		{
-			other.mEnterBitFlag &= ~bitMask;
-			other.mStayBitFlag |= bitMask;
-		}
-		else if ((other.mStayBitFlag & bitMask) == 0)
-		{
-			other.mEnterBitFlag |= bitMask;
+			mCollided.insert(&other);
+			other.mCollided.insert(this);
 		}
 	}
 
-	void Collider::CheckExitCollision()
+	void Collider::Render()
 	{
-		mExitBitFlag = mPrevStayBitFlag ^ mStayBitFlag;
+		if (mCollided.size() != 0)
+		{
+			RenderManager::GetInstance()->DrawRect(GetWorldPosition().GetX(), GetWorldPosition().GetY(), mSize.GetX(), mSize.GetY(), RGB(255, 0, 0));
+		}
+		else
+		{
+			RenderManager::GetInstance()->DrawRect(GetWorldPosition().GetX(), GetWorldPosition().GetY(), mSize.GetX(), mSize.GetY(), RGB(0, 0, 0));
+		}
+	}
 
-		mPrevStayBitFlag = mStayBitFlag;
-		mStayBitFlag = 0;
+
+	void Collider::Release()
+	{
+		mCollided.clear();
 	}
 };

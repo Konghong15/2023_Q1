@@ -7,7 +7,6 @@
 namespace hockman
 {
 	class Collider;
-	class Scene;
 
 	class Object
 	{
@@ -20,12 +19,12 @@ namespace hockman
 
 		void AddCollider(Collider* collider);
 
-		//inline const COORD& GetPos() const;
-		//inline const COORD& GetSize() const;
-		//inline const eSpriteType& GetSpriteType() const;
-		//inline const eObjectType& GetObjectType() const;
-		//inline bool GetValid() const;
-		//inline bool GetIsLeft() const;
+		inline const Vector2& GetPos() const;
+		inline const Vector2& GetSize() const;
+		inline const Vector2& GetDirection() const;
+		inline const eSpriteType& GetSpriteType() const;
+		inline const eObjectType& GetObjectType() const;
+		inline bool GetValid() const;
 
 	protected:
 		Vector2 mPos;
@@ -36,4 +35,34 @@ namespace hockman
 		Collider* mCollider;
 		bool mIsVaild;
 	};
+
+	const Vector2& Object::GetPos() const
+	{
+		return mPos;
+	}
+
+	const Vector2& Object::GetSize() const
+	{
+		return mSize;
+	}
+
+	const Vector2& Object::GetDirection() const
+	{
+		return mDirection;
+	}
+
+	const eSpriteType& Object::GetSpriteType() const
+	{
+		return mSpriteType;
+	}
+
+	const eObjectType& Object::GetObjectType() const
+	{
+		return mObjectType;
+	}
+
+	bool Object::GetValid() const
+	{
+		return mIsVaild;
+	}
 }

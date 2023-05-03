@@ -2,10 +2,10 @@
 #include "InputManager.h"
 #include "TimeManager.h"
 #include "SpriteManager.h"
-#include "SoundManager.h"
+//#include "SoundManager.h"
 #include "SceneManager.h"
 #include "RenderManager.h"
-#include "ObjectManager.h"
+#include "ColliderManager.h"
 
 namespace hockman
 {
@@ -35,10 +35,10 @@ namespace hockman
 
 		// init Manager
 		SpriteManager::GetInstance()->Init();
-		SoundManager::GetInstance()->Init();
+		//SoundManager::GetInstance()->Init();
 		SceneManager::GetInstance()->Init();
 		RenderManager::GetInstance()->Init();
-		ObjectManager::GetInstance()->Init();
+		ColliderManager::GetInstance()->Init();
 	}
 
 	void GameCore::Frame()
@@ -47,7 +47,7 @@ namespace hockman
 		TimeManager::GetInstance()->Frame();
 
 		SceneManager::GetInstance()->Frame();
-		ObjectManager::GetInstance()->Frame();
+		ColliderManager::GetInstance()->Frame();
 
 		RenderManager::GetInstance()->Render();
 	}
@@ -55,19 +55,18 @@ namespace hockman
 	void GameCore::Release()
 	{
 		// Release
-		ObjectManager::GetInstance()->Release();
 		RenderManager::GetInstance()->Release();
-		SoundManager::GetInstance()->Release();
+		//SoundManager::GetInstance()->Release();
 		SpriteManager::GetInstance()->Release();
 		SceneManager::GetInstance()->Release();
 
 		// Delete
-		ObjectManager::DeleteInstance();
 		RenderManager::DeleteInstance();
 		SceneManager::DeleteInstance();
-		SoundManager::DeleteInstance();
+		//SoundManager::DeleteInstance();
 		SpriteManager::DeleteInstance();
 		TimeManager::DeleteInstance();
 		InputManager::DeleteInstance();
+		ColliderManager::GetInstance()->Release();
 	}
 }

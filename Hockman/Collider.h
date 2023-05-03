@@ -1,53 +1,45 @@
 #pragma once
 
-#include <Windows.h>
+#include <set>
 
 #include "Object.h"
+#include "Vector2.h"
 
 namespace hockman
 {
 	class Collider
 	{
 	public:
-		Collider(COORD size, COORD offset, const Object& ownerObject);
+		Collider(Vector2 size, Vector2 offset, const Object& ownerObject);
 		~Collider() = default;
 
 		void CheckCollision(Collider& other);
-		void CheckExitCollision();
+	
+		void Render();
+		void Release();
 
-		inline const COORD& GetSize() const;
-		inline COORD GetWorldPosition() const;
+		inline const Vector2& GetSize() const;
+		inline Vector2 GetWorldPosition() const;
 		inline const Object& GetOwnerObject() const;
-
-		inline int GetEnterBitFlag() const;
-		inline int GetStayBitFlag() const;
-		inline int GetExitBitFlag() const;
-
-		inline void InitEnter();
+		inline const std::set<Collider*>& GetCollided() const;
 
 	protected:
-		COORD mSize;
-		COORD mOffset;
+		Vector2 mSize;
+		Vector2 mOffset;
 		const Object* mOwnerObject;
-
-		int mEnterBitFlag;
-		int mPrevStayBitFlag;
-		int mStayBitFlag;
-		int mExitBitFlag;
+		std::set<Collider*> mCollided;
 	};
 
-	const COORD& Collider::GetSize() const
+	const Vector2& Collider::GetSize() const
 	{
 		return mSize;
 	}
 
-	COORD Collider::GetWorldPosition() const
+	Vector2 Collider::GetWorldPosition() const
 	{
-		COORD worldPos = mOwnerObject->GetPos();
-		worldPos.X += mOffset.X;
-		worldPos.Y += mOffset.Y;
+		Vector2 worldPos = mOwnerObject->GetPos();
 
-		return worldPos;
+		return Vector2(worldPos.GetX() + mOffset.GetX(), worldPos.GetY() + mOffset.GetY());
 	}
 
 	const Object& Collider::GetOwnerObject() const
@@ -55,23 +47,8 @@ namespace hockman
 		return *mOwnerObject;
 	}
 
-	int Collider::GetEnterBitFlag() const
+	const std::set<Collider*>& Collider::GetCollided() const
 	{
-		return mEnterBitFlag;
-	}
-
-	int Collider::GetStayBitFlag() const
-	{
-		return mPrevStayBitFlag;
-	}
-
-	int Collider::GetExitBitFlag() const
-	{
-		return mExitBitFlag;
-	}
-
-	void Collider::InitEnter()
-	{
-		mEnterBitFlag = 0;
+		return mCollided;
 	}
 }
