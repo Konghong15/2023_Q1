@@ -13,6 +13,8 @@ namespace hongpireSurvivors
 		static ObjectManager* GetInstance();
 		static void DeleteInstance();
 
+		static Object* CreateObject(eObjectType objectTypes, COORD pos);
+
 		void Init();
 		void Frame();
 		void Release();

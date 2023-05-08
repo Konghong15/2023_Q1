@@ -43,6 +43,9 @@
     <Filter Include="소스 파일\Component\Object">
       <UniqueIdentifier>{049b1608-e23d-4040-9ec5-5920fe3bd1c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Component\Scene">
+      <UniqueIdentifier>{0807f0b9-9d1a-41cf-9c67-a50beffb3948}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinApp.cpp">
@@ -93,14 +96,14 @@
     <ClCompile Include="Player.cpp">
       <Filter>소스 파일\Component</Filter>
     </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>소스 파일\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>소스 파일\Component\Object</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>소스 파일\Component\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>소스 파일\Component\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

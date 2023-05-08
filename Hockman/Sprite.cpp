@@ -2,21 +2,17 @@
 
 namespace hockman
 {
-	Sprite::Sprite()
-		: Sprite(0, 0, nullptr)
-	{
-	}
 
-	Sprite::Sprite(int width, int height, const char* img)
-		: Width(width)
-		, Height(height)
-		, Img(img)
+	Sprite::Sprite(HDC hdc, HBITMAP bitmap, BITMAP bitInfo)
+		: Hdc(hdc)
+		, Bitmap(bitmap)
+		, BitInfo(bitInfo)
 	{
 	}
 
 	Sprite::~Sprite()
 	{
-		delete Img;
-		Img = nullptr;
+		DeleteDC(Hdc);
+		DeleteObject(Bitmap);
 	}
 }

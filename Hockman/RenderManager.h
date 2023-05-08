@@ -17,6 +17,11 @@ namespace hockman
 
 		void Draw(eSpriteType spritType, int x, int y);
 		void DrawRect(int x, int y, int w, int h, COLORREF color);
+		void DrawLine(int startX, int startY, int endX, int endY, COLORREF color);
+		void DrawPoint(int x, int y, COLORREF color);
+
+		inline HDC GetFrontDC() const;
+		inline HDC GetBackDC() const;
 
 	private:
 		RenderManager() = default;
@@ -29,4 +34,14 @@ namespace hockman
 		HDC mBackHDC;
 		HBITMAP mBackBitMap;
 	};
+
+	HDC RenderManager::GetFrontDC() const
+	{
+		return mFrontHDC;
+	}
+
+	HDC RenderManager::GetBackDC() const
+	{
+		return mBackHDC;
+	}
 }

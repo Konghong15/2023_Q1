@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <stdio.h>
 
+#include "WinApp.h"
 #include "InputManager.h"
 #include "RenderManager.h"
 
@@ -34,7 +35,12 @@ namespace hockman
 
 	void InputManager::Frame()
 	{
-		GetCursorPos(&mMousePos);
+		POINT curMousePos;
+		GetCursorPos(&curMousePos); // temp
+		if (ScreenToClient(WinApp::GetHWND(), &curMousePos) != false)
+		{
+			mMousePos = curMousePos;
+		}
 
 		if (mKeyState[VK_LBUTTON] != eKeyState::NONE)
 		{
@@ -42,9 +48,6 @@ namespace hockman
 			sprintf(buffer, "x : %d / y : %d\n", mMousePos.x, mMousePos.y);
 			OutputDebugStringA(buffer);
 		}
-
-		//HWND hWnd = WindowFromPoint(mMousePos); // temp
-		//ScreenToClient(hWnd, &mMousePos);
 
 		for (int i = 0; i < KEY_SIZE; ++i)
 		{

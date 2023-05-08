@@ -10,6 +10,7 @@ namespace hockman
 		, mOffset(offset)
 		, mOwnerObject(&ownerObject)
 	{
+		mCollisionObjects.reserve(RESERVE_SIZE);
 	}
 
 	void Collider::CheckCollision(Collider& other)
@@ -19,24 +20,24 @@ namespace hockman
 		Vector2 otherTopLeft = other.GetWorldPosition();
 		Vector2 otherBottomRight(otherTopLeft.GetX() + other.mSize.GetX(), otherTopLeft.GetY() + other.mSize.GetY());
 
-		Vector2 unionTopLeft;
-		unionTopLeft.SetX(topLeft.GetX() < otherTopLeft.GetX() ? topLeft.GetX() : otherTopLeft.GetX());
-		unionTopLeft.SetY(topLeft.GetY() < otherTopLeft.GetY() ? topLeft.GetY() : otherTopLeft.GetY());
-		Vector2 unionBottomRight;
-		unionBottomRight.SetX(bottomRight.GetX() > otherBottomRight.GetX() ? bottomRight.GetX() : otherBottomRight.GetX());
-		unionBottomRight.SetY(bottomRight.GetY() > otherBottomRight.GetY() ? bottomRight.GetY() : otherBottomRight.GetY());
-
-		if (mSize.GetX() + other.mSize.GetX() < unionBottomRight.GetX() - unionTopLeft.GetX()
-			|| mSize.GetY() + other.mSize.GetY() < unionBottomRight.GetY() - unionBottomRight.GetY())
+		if (bottomRight.GetX() < otherTopLeft.GetX() || otherBottomRight.GetX() < topLeft.GetX()
+			|| topLeft.GetY() > otherBottomRight.GetY() || otherTopLeft.GetY() > bottomRight.GetY()) // 스크린 좌표 기준
 		{
-			mCollided.insert(&other);
-			other.mCollided.insert(this);
+			return;
 		}
+
+		mCollisionObjects.push_back(&other);
+		other.mCollisionObjects.push_back(this);
+	}
+
+	void Collider::Init()
+	{
+		mCollisionObjects.clear();
 	}
 
 	void Collider::Render()
 	{
-		if (mCollided.size() != 0)
+		if (mCollisionObjects.size() != 0)
 		{
 			RenderManager::GetInstance()->DrawRect(GetWorldPosition().GetX(), GetWorldPosition().GetY(), mSize.GetX(), mSize.GetY(), RGB(255, 0, 0));
 		}
@@ -44,11 +45,5 @@ namespace hockman
 		{
 			RenderManager::GetInstance()->DrawRect(GetWorldPosition().GetX(), GetWorldPosition().GetY(), mSize.GetX(), mSize.GetY(), RGB(0, 0, 0));
 		}
-	}
-
-
-	void Collider::Release()
-	{
-		mCollided.clear();
 	}
 };

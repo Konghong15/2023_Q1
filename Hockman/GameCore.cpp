@@ -59,6 +59,7 @@ namespace hockman
 		//SoundManager::GetInstance()->Release();
 		SpriteManager::GetInstance()->Release();
 		SceneManager::GetInstance()->Release();
+		ColliderManager::GetInstance()->Release();
 
 		// Delete
 		RenderManager::DeleteInstance();
@@ -67,6 +68,6 @@ namespace hockman
 		SpriteManager::DeleteInstance();
 		TimeManager::DeleteInstance();
 		InputManager::DeleteInstance();
-		ColliderManager::GetInstance()->Release();
+		ColliderManager::DeleteInstance();
 	}
 }

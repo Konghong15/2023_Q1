@@ -50,11 +50,40 @@ namespace hockman
 	void RenderManager::DrawRect(int x, int y, int w, int h, COLORREF color)
 	{
 		HPEN hPen = CreatePen(PS_SOLID, 1, color);
-		HPEN hOldPen = (HPEN)SelectObject(mBackHDC, hPen);
+		HPEN hPrevPen = (HPEN)SelectObject(mBackHDC, hPen);
 
 		Rectangle(mBackHDC, x, y, x + w, y + h);
 
-		SelectObject(mBackHDC, hOldPen);
+		SelectObject(mBackHDC, hPrevPen);
+		DeleteObject(hPen);
+	}
+
+	void RenderManager::DrawLine(int startX, int startY, int endX, int endY, COLORREF color)
+	{
+		HPEN hPen = CreatePen(PS_SOLID, 1, color);
+		HPEN hPrevPen = (HPEN)SelectObject(mBackHDC, hPen);
+
+		MoveToEx(mBackHDC, startX, startY, NULL);
+		LineTo(mBackHDC, endX, endY);
+
+		SelectObject(mBackHDC, hPrevPen);
+		DeleteObject(hPen);
+	}
+
+	void RenderManager::DrawPoint(int x, int y, COLORREF color)
+	{
+		HPEN hPen = CreatePen(PS_SOLID, 1, color);
+		HPEN hPrevPen = (HPEN)SelectObject(mBackHDC, hPen);
+
+		for (int i = 0; i < 50; ++i)
+		{
+			for (int j = 0; j < 50; ++j)
+			{
+				SetPixel(mBackHDC, x + i, y + j, color);
+			}
+		}
+
+		SelectObject(mBackHDC, hPrevPen);
 		DeleteObject(hPen);
 	}
 };

@@ -1,17 +1,19 @@
 #pragma once
 
+#include <Windows.h>
+
 namespace hockman
 {
 	struct Sprite
 	{
 	public:
-		Sprite();
-		Sprite(int width, int height, const char* img);
+		Sprite() = default;
+		Sprite(HDC hdc, HBITMAP bitmap, BITMAP bitInfo);
 		~Sprite();
 
 	public:
-		const char* Img;
-		int Width;
-		int Height;
+		HDC Hdc;
+		HBITMAP Bitmap;
+		BITMAP BitInfo;
 	};
 }

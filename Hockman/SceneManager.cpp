@@ -36,7 +36,6 @@ namespace hockman
 		// init
 		mSceneMap.emplace(eSceneType::GAME, new GameScene(1920, 1000));
 
-
 		// init scene
 		auto iter = mSceneMap.find(eSceneType::GAME);
 		assert(iter != mSceneMap.end());

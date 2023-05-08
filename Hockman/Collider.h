@@ -1,9 +1,10 @@
 #pragma once
 
-#include <set>
+#include <vector>
 
 #include "Object.h"
 #include "Vector2.h"
+#include "eObjectType.h"
 
 namespace hockman
 {
@@ -14,20 +15,22 @@ namespace hockman
 		~Collider() = default;
 
 		void CheckCollision(Collider& other);
-	
+
+		void Init();
 		void Render();
-		void Release();
 
 		inline const Vector2& GetSize() const;
 		inline Vector2 GetWorldPosition() const;
 		inline const Object& GetOwnerObject() const;
-		inline const std::set<Collider*>& GetCollided() const;
+		inline std::vector<Collider*>& GetCollisionObjects();
 
 	protected:
+		enum { RESERVE_SIZE = 128 };
+
 		Vector2 mSize;
 		Vector2 mOffset;
 		const Object* mOwnerObject;
-		std::set<Collider*> mCollided;
+		std::vector<Collider*> mCollisionObjects;
 	};
 
 	const Vector2& Collider::GetSize() const
@@ -47,8 +50,8 @@ namespace hockman
 		return *mOwnerObject;
 	}
 
-	const std::set<Collider*>& Collider::GetCollided() const
+	std::vector<Collider*>& Collider::GetCollisionObjects()
 	{
-		return mCollided;
+		return mCollisionObjects;
 	}
 }
