@@ -7,7 +7,7 @@
 
 namespace hockman
 {
-	class Sprite;
+	struct Sprite;
 
 	class SpriteManager
 	{

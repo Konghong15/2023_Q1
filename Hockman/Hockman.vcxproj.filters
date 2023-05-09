@@ -46,6 +46,18 @@
     <Filter Include="소스 파일\Component\Scene">
       <UniqueIdentifier>{0807f0b9-9d1a-41cf-9c67-a50beffb3948}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\FSM">
+      <UniqueIdentifier>{7d7ce5fe-9856-42ab-98bb-d99a47515965}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\FSM\Player">
+      <UniqueIdentifier>{268635b4-3a50-4330-8e22-69e1b837a454}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FSM">
+      <UniqueIdentifier>{da46db81-66cd-4693-a7a1-269a47471175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\FSM\Player">
+      <UniqueIdentifier>{48f83b18-dc50-4abd-b482-a6079c9bcd6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinApp.cpp">
@@ -93,13 +105,7 @@
     <ClCompile Include="Vector2.cpp">
       <Filter>소스 파일\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>소스 파일\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Enemy.cpp">
-      <Filter>소스 파일\Component\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Object.cpp">
       <Filter>소스 파일\Component\Object</Filter>
     </ClCompile>
     <ClCompile Include="GameScene.cpp">
@@ -107,6 +113,24 @@
     </ClCompile>
     <ClCompile Include="hRectangle.cpp">
       <Filter>소스 파일\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\Component\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>소스 파일\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerIdle.cpp">
+      <Filter>소스 파일\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerState.cpp">
+      <Filter>소스 파일\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerRun.cpp">
+      <Filter>소스 파일\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerJump.cpp">
+      <Filter>소스 파일\FSM\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +199,21 @@
     </ClInclude>
     <ClInclude Include="hRectangle.h">
       <Filter>헤더 파일\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ePlayerState.h">
+      <Filter>헤더 파일\EnumClass</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerState.h">
+      <Filter>헤더 파일\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerIdle.h">
+      <Filter>헤더 파일\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerRun.h">
+      <Filter>헤더 파일\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerJump.h">
+      <Filter>헤더 파일\FSM\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

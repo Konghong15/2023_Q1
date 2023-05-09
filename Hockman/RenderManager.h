@@ -17,7 +17,7 @@ namespace hockman
 		void Render();
 		void Release();
 
-		void Draw(eSpriteType spritType, int x, int y);
+		void Draw(eSpriteType spritType, hRectangle worldRect, hRectangle uvRect, bool isRight = true);
 		void DrawRect(int x, int y, int w, int h, COLORREF color);
 		void DrawRect(hRectangle rectangle, COLORREF color);
 		void DrawLine(int startX, int startY, int endX, int endY, COLORREF color);
@@ -36,6 +36,9 @@ namespace hockman
 		HDC mFrontHDC;
 		HDC mBackHDC;
 		HBITMAP mBackBitMap;
+
+		HDC mTempBackHDC;
+		HBITMAP mTempBackBitMap;
 	};
 
 	HDC RenderManager::GetFrontDC() const

@@ -32,13 +32,13 @@ namespace hockman
 
 	void Collider::Render()
 	{
-		if (mCollisionObjects.size() != 0)
+		/*if (mCollisionObjects.size() != 0)
 		{
 			RenderManager::GetInstance()->DrawRect(GetWorldRectangle(), RGB(255, 0, 0));
 		}
 		else
 		{
 			RenderManager::GetInstance()->DrawRect(GetWorldRectangle(), RGB(0, 0, 0));
-		}
+		}*/
 	}
 };

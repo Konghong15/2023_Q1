@@ -1,5 +1,9 @@
 #include "RenderManager.h"
+#include "SpriteManager.h"
+#include "Sprite.h"
 #include "WinApp.h"
+
+#pragma comment(lib, "msimg32.lib")
 
 namespace hockman
 {
@@ -27,6 +31,10 @@ namespace hockman
 		mBackHDC = CreateCompatibleDC(mFrontHDC);
 		mBackBitMap = CreateCompatibleBitmap(mFrontHDC, WinApp::GetWidth(), WinApp::GetHeight());
 		SelectObject(mBackHDC, mBackBitMap);
+
+		mTempBackHDC = CreateCompatibleDC(mFrontHDC);
+		mTempBackBitMap = CreateCompatibleBitmap(mFrontHDC, WinApp::GetWidth(), WinApp::GetHeight());
+		SelectObject(mTempBackHDC, mTempBackBitMap);
 	}
 
 	void RenderManager::Render()
@@ -42,9 +50,56 @@ namespace hockman
 		ReleaseDC(WinApp::GetHWND(), mFrontHDC);
 	}
 
-	void RenderManager::Draw(eSpriteType spritType, int x, int y)
+	void RenderManager::Draw(eSpriteType spritType, hRectangle worldRect, hRectangle uvRect, bool isRight)
 	{
+		const Sprite& sprite = SpriteManager::GetInstance()->GetSprite(spritType);
 
+		const Vector2& pos = worldRect.GetPos();
+		const Vector2& size = worldRect.GetSize();
+		const Vector2& uvPos = uvRect.GetPos();
+		const Vector2& uvSize = uvRect.GetSize();
+
+		if (isRight)
+		{
+			TransparentBlt(mBackHDC,
+				static_cast<int>(pos.GetX()),
+				static_cast<int>(pos.GetY()),
+				static_cast<int>(size.GetX()),
+				static_cast<int>(size.GetY()),
+				sprite.Hdc,
+				static_cast<int>(uvPos.GetX()),
+				static_cast<int>(uvPos.GetY()),
+				static_cast<int>(uvSize.GetX()),
+				static_cast<int>(uvSize.GetY()),
+				RGB(210, 230, 210));
+		}
+		else
+		{
+			POINT points[3] = { 0, };
+
+			points[0] = { static_cast<long>(pos.GetX()),  static_cast<long>(pos.GetY()) };
+			points[1] = { static_cast<long>(pos.GetX() + size.GetY()),  static_cast<long>(pos.GetY()) };
+			points[2] = { static_cast<long>(pos.GetX()),  static_cast<long>(pos.GetY() + size.GetY()) };
+
+			PlgBlt(mTempBackHDC, points, sprite.Hdc,
+				static_cast<int>(uvPos.GetX() + uvSize.GetX()),
+				static_cast<int>(uvPos.GetY()),
+				-static_cast<int>(uvSize.GetX()),
+				static_cast<int>(uvSize.GetY()),
+				0, 0, 0);
+
+			TransparentBlt(mBackHDC,
+				static_cast<int>(pos.GetX()),
+				static_cast<int>(pos.GetY()),
+				static_cast<int>(size.GetX()),
+				static_cast<int>(size.GetY()),
+				mTempBackHDC,
+				static_cast<int>(pos.GetX()),
+				static_cast<int>(pos.GetY()),
+				static_cast<int>(size.GetX()),
+				static_cast<int>(size.GetY()),
+				RGB(210, 230, 210));
+		}
 	}
 
 	void RenderManager::DrawRect(hRectangle rectangle, COLORREF color)
@@ -54,7 +109,12 @@ namespace hockman
 
 		const Vector2& topLeft = rectangle.GetPos();
 		const Vector2& bottomRight = rectangle.GetBottomRight();
-		Rectangle(mBackHDC, topLeft.GetX(), topLeft.GetY(), bottomRight.GetX(), bottomRight.GetY());
+
+		Rectangle(mBackHDC,
+			static_cast<int>(topLeft.GetX()),
+			static_cast<int>(topLeft.GetY()),
+			static_cast<int>(bottomRight.GetX()),
+			static_cast<int>(bottomRight.GetY()));
 
 		SelectObject(mBackHDC, hPrevPen);
 		DeleteObject(hPen);

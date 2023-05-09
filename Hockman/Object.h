@@ -25,6 +25,8 @@ namespace hockman
 		inline const eObjectType& GetObjectType() const;
 		inline bool GetValid() const;
 
+		inline void Move(float distanceX, float distanceY);
+
 	protected:
 		hRectangle mRectangle;
 		eSpriteType mSpriteType;
@@ -51,5 +53,12 @@ namespace hockman
 	bool Object::GetValid() const
 	{
 		return mIsVaild;
+	}
+
+
+	void Object::Move(float distanceX, float distanceY)
+	{
+		const Vector2& pos = mRectangle.GetPos();
+		mRectangle.SetPos(pos.GetX() + distanceX, pos.GetY() + distanceY);
 	}
 }

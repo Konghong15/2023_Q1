@@ -28,11 +28,16 @@ namespace hockman
 	void SpriteManager::Init()
 	{
 		// load..
+		load(eSpriteType::Player, "C:\\Users\\User\\Desktop\\rockman_resource\\img.bmp");
 	}
 
 	void SpriteManager::Release()
 	{
 		// delete all
+		for (auto iter = mSpriteMap.begin(); iter != mSpriteMap.end(); ++iter)
+		{
+			delete iter->second;
+		}
 	}
 
 	void SpriteManager::load(eSpriteType spriteType, const char* fileName)

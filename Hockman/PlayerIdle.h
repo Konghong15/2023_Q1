@@ -6,11 +6,12 @@ namespace hockman
 {
 	class PlayerIdle : public PlayerState
 	{
-		PlayerIdle() = default;
+	public:
+		PlayerIdle();
 		virtual ~PlayerIdle() = default;
 
 		virtual void Enter(Player* player) override;
-		virtual void HandleInput(Player* player) override;
+		virtual PlayerState* HandleInputOrNull(Player* player) override;
 		virtual void Update(Player* player) override;
 
 	private:
