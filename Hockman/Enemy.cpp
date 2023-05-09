@@ -8,8 +8,8 @@
 
 namespace hockman
 {
-	Enemy::Enemy(Vector2 pos, Vector2 size, Vector2 direction, eSpriteType spriteType, float moveSpeed)
-		: Object(pos, size, direction, spriteType, eObjectType::ENEMY)
+	Enemy::Enemy(hRectangle rectangle, eSpriteType spriteType, float moveSpeed)
+		: Object(rectangle, spriteType, eObjectType::ENEMY)
 		, mMoveSpeed(moveSpeed)
 	{
 	}
@@ -21,28 +21,34 @@ namespace hockman
 		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
 		const Scene& scene = SceneManager::GetInstance()->GetCurScene();
 
+		const Vector2& pos = mRectangle.GetPos();
+		const Vector2& size = mRectangle.GetSize();
 
-		if (mPos.GetX() + mSize.GetX() > scene.GetWidth())
+		if (pos.GetX() + size.GetX() > scene.GetWidth())
 		{
 			isLeft = true;
 		}
-		else if (mPos.GetX() < 0)
+		else if (pos.GetX() < 0)
 		{
 			isLeft = false;
 		}
 
+		int moveAmount = 0;
+
 		if (isLeft)
 		{
-			mPos.SetX(mPos.GetX() - mMoveSpeed * DELTA_TIME);
+			moveAmount = -mMoveSpeed * DELTA_TIME;
 		}
 		else
 		{
-			mPos.SetX(mPos.GetX() + mMoveSpeed * DELTA_TIME);
+			moveAmount = mMoveSpeed * DELTA_TIME;
 		}
+
+		mRectangle.SetPos(pos.GetX() + moveAmount, pos.GetY());
 	}
 
 	void Enemy::Render()
 	{
-		RenderManager::GetInstance()->DrawRect(mPos.GetX(), mPos.GetY(), mSize.GetX(), mSize.GetY(), RGB(0, 0, 255));
+		RenderManager::GetInstance()->DrawRect(mRectangle, RGB(0, 0, 255));
 	}
 }

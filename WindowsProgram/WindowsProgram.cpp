@@ -194,7 +194,7 @@ void DrawGrid(HWND hWnd, HDC hDc)
 				startY = i * BLOCK_HEIGTH;
 				endX = (j + 1) * BLOCK_WIDTH;
 				endY = (i + 1) * BLOCK_HEIGTH;
-				Rectangle(hDc, startX, startY, endX + 1, endY + 1);
+				hRectangle(hDc, startX, startY, endX + 1, endY + 1);
 			}
 		}
 	}

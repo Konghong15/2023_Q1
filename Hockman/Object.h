@@ -2,6 +2,7 @@
 
 #include "eObjectType.h"
 #include "eSpriteType.h"
+#include "hRectangle.h"
 #include "Vector2.h"
 
 namespace hockman
@@ -11,7 +12,7 @@ namespace hockman
 	class Object
 	{
 	public:
-		Object(Vector2 pos, Vector2 size, Vector2 direction, eSpriteType spriteType, eObjectType objectType);
+		Object(hRectangle rectangle, eSpriteType spriteType, eObjectType objectType);
 		virtual ~Object();
 
 		virtual void Frame() = 0;
@@ -19,36 +20,22 @@ namespace hockman
 
 		void AddCollider(Collider* collider);
 
-		inline const Vector2& GetPos() const;
-		inline const Vector2& GetSize() const;
-		inline const Vector2& GetDirection() const;
+		inline const hRectangle& GetRectangle() const;
 		inline const eSpriteType& GetSpriteType() const;
 		inline const eObjectType& GetObjectType() const;
 		inline bool GetValid() const;
 
 	protected:
-		Vector2 mPos;
-		Vector2 mSize;
-		Vector2 mDirection;
+		hRectangle mRectangle;
 		eSpriteType mSpriteType;
 		eObjectType mObjectType;
 		Collider* mCollider;
 		bool mIsVaild;
 	};
 
-	const Vector2& Object::GetPos() const
+	const hRectangle& Object::GetRectangle() const
 	{
-		return mPos;
-	}
-
-	const Vector2& Object::GetSize() const
-	{
-		return mSize;
-	}
-
-	const Vector2& Object::GetDirection() const
-	{
-		return mDirection;
+		return mRectangle;
 	}
 
 	const eSpriteType& Object::GetSpriteType() const

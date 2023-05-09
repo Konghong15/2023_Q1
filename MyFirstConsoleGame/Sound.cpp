@@ -39,10 +39,9 @@ namespace hongpireSurvivors
 			mSystem->release();
 		}
 	}
-
 	void Sound::Start()
 	{
-		mSystem->playSound(mSound, NULL, false, &mChannel);
+		mSystem->playSound(mSound, NULL, false, &mChannel);  
 	}
 
 	void Sound::Stop()

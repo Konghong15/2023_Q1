@@ -5,10 +5,8 @@
 
 namespace hockman
 {
-	Object::Object(Vector2 pos, Vector2 size, Vector2 direction, eSpriteType spriteType, eObjectType objectType)
-		: mPos(pos)
-		, mSize(size)
-		, mDirection(direction)
+	Object::Object(hRectangle rectangle, eSpriteType spriteType, eObjectType objectType)
+		: mRectangle(rectangle)
 		, mSpriteType(spriteType)
 		, mObjectType(objectType)
 		, mIsVaild(true)
@@ -32,6 +30,6 @@ namespace hockman
 
 	void Object::Render()
 	{
-		RenderManager::GetInstance()->DrawRect(mPos.GetX(), mPos.GetY(), mSize.GetX(), mSize.GetY(), RGB(0, 0, 0));
+		RenderManager::GetInstance()->DrawRect(mRectangle, RGB(0, 0, 0));
 	}
 }

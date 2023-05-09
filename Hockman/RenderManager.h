@@ -1,7 +1,9 @@
 #pragma once
 
 #include <Windows.h>
+
 #include "eSpriteType.h"
+#include "hRectangle.h"
 
 namespace hockman
 {
@@ -17,6 +19,7 @@ namespace hockman
 
 		void Draw(eSpriteType spritType, int x, int y);
 		void DrawRect(int x, int y, int w, int h, COLORREF color);
+		void DrawRect(hRectangle rectangle, COLORREF color);
 		void DrawLine(int startX, int startY, int endX, int endY, COLORREF color);
 		void DrawPoint(int x, int y, COLORREF color);
 

@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "eObjectType.h"
+
 namespace hongpireSurvivors
 {
 	class Object;
@@ -13,7 +15,7 @@ namespace hongpireSurvivors
 		static ObjectManager* GetInstance();
 		static void DeleteInstance();
 
-		static Object* CreateObject(eObjectType objectTypes, COORD pos);
+		//static Object* CreateObject(eObjectType objectTypes, COORD pos);
 
 		void Init();
 		void Frame();

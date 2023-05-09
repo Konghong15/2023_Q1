@@ -78,7 +78,7 @@ namespace render
 
 		HBRUSH hOldBrush = (HBRUSH)SelectObject(backMemDC, hBrush);
 
-		Rectangle(backMemDC, x, y, x + width, y + height);
+		hRectangle(backMemDC, x, y, x + width, y + height);
 
 		SelectObject(backMemDC, hOldPen);
 		SelectObject(backMemDC, hOldBrush);

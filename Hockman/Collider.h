@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Object.h"
-#include "Vector2.h"
+#include "hRectangle.h"
 #include "eObjectType.h"
 
 namespace hockman
@@ -11,7 +11,7 @@ namespace hockman
 	class Collider
 	{
 	public:
-		Collider(Vector2 size, Vector2 offset, const Object& ownerObject);
+		Collider(hRectangle rectangle, const Object& ownerObject);
 		~Collider() = default;
 
 		void CheckCollision(Collider& other);
@@ -19,30 +19,27 @@ namespace hockman
 		void Init();
 		void Render();
 
-		inline const Vector2& GetSize() const;
-		inline Vector2 GetWorldPosition() const;
+		inline const hRectangle& GetRectangle() const;
+		inline hRectangle GetWorldRectangle() const;
 		inline const Object& GetOwnerObject() const;
 		inline std::vector<Collider*>& GetCollisionObjects();
 
 	protected:
 		enum { RESERVE_SIZE = 128 };
 
-		Vector2 mSize;
-		Vector2 mOffset;
+		hRectangle mRectangle;
 		const Object* mOwnerObject;
 		std::vector<Collider*> mCollisionObjects;
 	};
 
-	const Vector2& Collider::GetSize() const
+	const hRectangle& Collider::GetRectangle() const
 	{
-		return mSize;
+		return mRectangle;
 	}
 
-	Vector2 Collider::GetWorldPosition() const
+	hRectangle Collider::GetWorldRectangle() const
 	{
-		Vector2 worldPos = mOwnerObject->GetPos();
-
-		return Vector2(worldPos.GetX() + mOffset.GetX(), worldPos.GetY() + mOffset.GetY());
+		return hRectangle(mRectangle.GetPos() + mOwnerObject->GetRectangle().GetPos(), mRectangle.GetSize());
 	}
 
 	const Object& Collider::GetOwnerObject() const

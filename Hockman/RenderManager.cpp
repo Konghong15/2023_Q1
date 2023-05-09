@@ -47,6 +47,19 @@ namespace hockman
 
 	}
 
+	void RenderManager::DrawRect(hRectangle rectangle, COLORREF color)
+	{
+		HPEN hPen = CreatePen(PS_SOLID, 1, color);
+		HPEN hPrevPen = (HPEN)SelectObject(mBackHDC, hPen);
+
+		const Vector2& topLeft = rectangle.GetPos();
+		const Vector2& bottomRight = rectangle.GetBottomRight();
+		Rectangle(mBackHDC, topLeft.GetX(), topLeft.GetY(), bottomRight.GetX(), bottomRight.GetY());
+
+		SelectObject(mBackHDC, hPrevPen);
+		DeleteObject(hPen);
+	}
+
 	void RenderManager::DrawRect(int x, int y, int w, int h, COLORREF color)
 	{
 		HPEN hPen = CreatePen(PS_SOLID, 1, color);

@@ -53,8 +53,6 @@ namespace hockman
 		}
 	}
 
-
-
 	void ColliderManager::Release()
 	{
 		mColliders.clear();

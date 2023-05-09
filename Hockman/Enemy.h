@@ -7,7 +7,7 @@ namespace hockman
 	class Enemy final : public Object
 	{
 	public:
-		Enemy(Vector2 pos, Vector2 size, Vector2 direction, eSpriteType spriteType, float moveSpeed);
+		Enemy(hRectangle rectangle, eSpriteType spriteType, float moveSpeed);
 		~Enemy() = default;
 
 		virtual void Frame() override;

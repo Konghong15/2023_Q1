@@ -105,6 +105,9 @@
     <ClCompile Include="GameScene.cpp">
       <Filter>소스 파일\Component\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="hRectangle.cpp">
+      <Filter>소스 파일\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinApp.h">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="Enemy.h">
       <Filter>헤더 파일\Component\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="hRectangle.h">
+      <Filter>헤더 파일\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
