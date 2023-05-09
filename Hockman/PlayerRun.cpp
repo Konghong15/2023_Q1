@@ -18,6 +18,8 @@ namespace hockman
 		player->SetAniDuration(0.2f);
 		player->SetIsAniLoop(true);
 		player->SetUVRectangles(&mRunUVRects);
+		player->SetUVRectangles(&mRunUVRects);
+		player->SetUVRectangles(&mRunUVRects);
 	}
 
 	PlayerState* PlayerRun::HandleInputOrNull(Player* player)
