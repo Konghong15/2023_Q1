@@ -132,6 +132,9 @@
     <ClCompile Include="PlayerJump.cpp">
       <Filter>소스 파일\FSM\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>소스 파일\Component\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinApp.h">
@@ -214,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="PlayerJump.h">
       <Filter>헤더 파일\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>헤더 파일\Component\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

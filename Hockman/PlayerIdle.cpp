@@ -14,6 +14,7 @@ namespace hockman
 
 	void PlayerIdle::Enter(Player* player)
 	{
+		player->SetAniIndex(0);
 		player->SetAniElapsed(0.f);
 		player->SetAniDuration(1.f);
 		player->SetIsAniLoop(true);

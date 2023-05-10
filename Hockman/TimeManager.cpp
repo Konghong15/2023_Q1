@@ -26,16 +26,17 @@ namespace hockman
 	}
 
 	TimeManager::TimeManager()
-		: mCurTime(0)
-		, mPrevTime(0)
+		: mFPS(0)
 		, mFrameCount(0)
-		, mFPS(0)
+		, mDeltaTime(0.f)
 	{
+		Init();
 	}
 
 	void TimeManager::Init()
 	{
-		mCurTime = GetTickCount64();
+		QueryPerformanceFrequency(&mFrequency);
+		QueryPerformanceCounter(&mCurTime);
 		mPrevTime = mCurTime;
 		mFPS = 0;
 		mFrameCount = 0;
@@ -47,18 +48,20 @@ namespace hockman
 
 		sTime += GetDeltaTime();
 
+		char buf[64];
+		sprintf(buf, "fps : %d, DeltaTime : %.5f\n", mFPS, GetDeltaTime());
+ 		OutputDebugStringA(buf);
+
 		if (sTime >= 1.f)
 		{
-			char buf[30];
-			sprintf(buf, "fps : %d\n", mFPS);
-			OutputDebugStringA(buf);
 			sTime -= 1.f;
 			mFPS = mFrameCount;
 			mFrameCount = 0;
 		}
 
+		mDeltaTime = (float)(mCurTime.QuadPart - mPrevTime.QuadPart) / mFrequency.QuadPart;
 		mPrevTime = mCurTime;
-		mCurTime = GetTickCount64();
+		QueryPerformanceCounter(&mCurTime);
 		++mFrameCount;
 	}
 }

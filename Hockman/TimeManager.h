@@ -23,16 +23,18 @@ namespace hockman
 	private:
 		static TimeManager* mInstance;
 
-		ULONGLONG mCurTime;
-		ULONGLONG mPrevTime;
+		LARGE_INTEGER mCurTime;
+		LARGE_INTEGER mPrevTime;
+		LARGE_INTEGER mFrequency;
 		unsigned int mFrameCount;
 		unsigned int mFPS;
+
+		float mDeltaTime;
 	};
 
 	float TimeManager::GetDeltaTime()
 	{
-		float deltaTime = (mCurTime - mPrevTime) / 1000.f;
-		return  deltaTime > 0.03f ? 0.03f : deltaTime;
+		return  mDeltaTime > 0.03f ? 0.03f : mDeltaTime;
 	}
 
 	unsigned int TimeManager::GetFPS()

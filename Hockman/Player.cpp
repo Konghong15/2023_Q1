@@ -3,6 +3,7 @@
 #include "TimeManager.h"
 #include "RenderManager.h"
 #include "PlayerIdle.h"
+#include "Collider.h"
 
 namespace hockman
 {
@@ -12,12 +13,15 @@ namespace hockman
 		, mMoveSpeed(moveSpeed)
 		, mPlayerState(new PlayerIdle())
 		, mIsRight(true)
+		, mGravity(5000.f)
 	{
 		mPlayerState->Enter(this);
 	}
 
 	void Player::Frame()
 	{
+		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
+
 		mPlayerState->Update(this);
 		PlayerState* nextState = mPlayerState->HandleInputOrNull(this);
 
@@ -27,7 +31,7 @@ namespace hockman
 			mPlayerState = nextState;
 			nextState->Enter(this);
 		}
-	}
+  	}
 
 	void Player::Render()
 	{

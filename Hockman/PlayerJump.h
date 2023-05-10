@@ -15,5 +15,7 @@ namespace hockman
 		virtual void Update(Player* player) override;
 
 	private:
+		bool mIsDown;
+		bool mIsEnd;
 	};
 }

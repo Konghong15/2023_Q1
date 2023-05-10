@@ -33,7 +33,7 @@ namespace hockman
 			isLeft = false;
 		}
 
-		int moveAmount = 0;
+		float moveAmount = 0.f;
 
 		if (isLeft)
 		{
@@ -44,7 +44,7 @@ namespace hockman
 			moveAmount = mMoveSpeed * DELTA_TIME;
 		}
 
-		mRectangle.SetPos(pos.GetX() + moveAmount, pos.GetY());
+		Move(moveAmount, 0);
 	}
 
 	void Enemy::Render()

@@ -5,6 +5,7 @@
 #include "ColliderManager.h"
 #include "hRectangle.h"
 #include "PlayerState.h"
+#include "Ground.h"
 
 namespace hockman
 {
@@ -30,6 +31,20 @@ namespace hockman
 
 		obj = new Enemy(hRectangle(900, 500, 100, 100), eSpriteType::Player, 500.f);
 		collider = new Collider(hRectangle(10, 10, 80, 80), *obj);
+		obj->AddCollider(collider);
+
+		mSpawnObjects.push_back(obj);
+		ColliderManager::GetInstance()->OnRegister(collider);
+
+		obj = new Ground(hRectangle(1200, 600, 100, 100), eSpriteType::Player);
+		collider = new Collider(hRectangle(0, 0, 100, 100), *obj);
+		obj->AddCollider(collider);
+
+		mSpawnObjects.push_back(obj);
+		ColliderManager::GetInstance()->OnRegister(collider);
+
+		obj = new Ground(hRectangle(600, 600, 100, 100), eSpriteType::Player);
+		collider = new Collider(hRectangle(0, 0, 100, 100), *obj);
 		obj->AddCollider(collider);
 
 		mSpawnObjects.push_back(obj);

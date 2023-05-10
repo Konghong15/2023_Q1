@@ -24,6 +24,9 @@ namespace hockman
 		inline const eSpriteType& GetSpriteType() const;
 		inline const eObjectType& GetObjectType() const;
 		inline bool GetValid() const;
+		inline Collider* GetCollider() const;
+
+		inline void SetRectangle();
 
 		inline void Move(float distanceX, float distanceY);
 
@@ -55,6 +58,10 @@ namespace hockman
 		return mIsVaild;
 	}
 
+	Collider* Object::GetCollider() const
+	{
+		return mCollider;
+	}
 
 	void Object::Move(float distanceX, float distanceY)
 	{

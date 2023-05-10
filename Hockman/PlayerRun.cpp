@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "InputManager.h"
 #include "TimeManager.h"
+#include "Collider.h"
 
 namespace hockman
 {
@@ -14,6 +15,7 @@ namespace hockman
 
 	void PlayerRun::Enter(Player* player)
 	{
+		player->SetAniIndex(0);
 		player->SetAniElapsed(0.f);
 		player->SetAniDuration(0.2f);
 		player->SetIsAniLoop(true);
