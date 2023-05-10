@@ -38,8 +38,12 @@ namespace hockman
 
 		for (auto iterI = mColliders.begin(); iterI != mColliders.end(); ++iterI)
 		{
-			for (auto IterJ = iterI + 1; IterJ != mColliders.end(); ++IterJ)
+			for (auto IterJ = mColliders.begin(); IterJ != mColliders.end(); ++IterJ)
 			{
+				if (*iterI == *IterJ)
+				{
+					continue;
+				}
 				if ((*iterI)->GetOwnerObject().GetValid() && (*IterJ)->GetOwnerObject().GetValid())
 				{
 					(*iterI)->CheckCollision(**IterJ);

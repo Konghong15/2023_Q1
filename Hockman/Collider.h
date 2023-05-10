@@ -23,6 +23,7 @@ namespace hockman
 		inline hRectangle GetWorldRectangle() const;
 		inline const Object& GetOwnerObject() const;
 		inline std::vector<Collider*>& GetCollisionObjects();
+		inline int GetCollisionBitFlag() const;
 
 	protected:
 		enum { RESERVE_SIZE = 128 };
@@ -30,6 +31,7 @@ namespace hockman
 		hRectangle mRectangle;
 		const Object* mOwnerObject;
 		std::vector<Collider*> mCollisionObjects;
+		int mCollisionBitFlag;
 	};
 
 	const hRectangle& Collider::GetRectangle() const
@@ -50,5 +52,10 @@ namespace hockman
 	std::vector<Collider*>& Collider::GetCollisionObjects()
 	{
 		return mCollisionObjects;
+	}
+
+	int Collider::GetCollisionBitFlag() const
+	{
+		return mCollisionBitFlag;
 	}
 }

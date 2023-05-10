@@ -17,10 +17,15 @@ namespace hockman
 
 	void PlayerJump::Enter(Player* player)
 	{
-		player->SetVY(-1500.f);
-		player->SetAniIndex(0);
-		player->SetAniElapsed(0.f);
-		player->SetAniDuration(0.2f);
+		if (InputManager::GetInstance()->GetKeyState(VK_SPACE) == eKeyState::NONE)
+		{
+			player->SetAniIndex(1);
+		}
+		else
+		{
+			player->SetVY(-1500.f);
+			player->SetAniIndex(0);
+		}
 		player->SetIsAniLoop(false);
 		player->SetUVRectangles(&mJumpUVRects);
 	}
@@ -68,18 +73,10 @@ namespace hockman
 
 		player->Move(distanceX, distanceY);
 
-		const int GROUND = 800;
-
 		const hRectangle& playerRect = player->GetRectangle();
 		const Vector2& pos = playerRect.GetPos();
 		const Vector2& size = playerRect.GetSize();
-
 		const int BOTTOM_Y = pos.GetY() + size.GetY();
-		if (BOTTOM_Y > GROUND)
-		{
-			player->Move(0, GROUND - BOTTOM_Y);
-			mIsEnd = true;
-		}
 
 		std::vector<Collider*> objects = player->GetCollider()->GetCollisionObjects();
 		for (auto iter = objects.begin(); iter != objects.end(); ++iter)
@@ -100,7 +97,7 @@ namespace hockman
 				}
 				else if (intersectionRect.GetBottomRight().GetY() == playerRect.GetBottomRight().GetY())
 				{
-					player->Move(0, objRect.GetPos().GetY() - BOTTOM_Y);
+					player->Move(0, objRect.GetPos().GetY() - BOTTOM_Y );
 					mIsEnd = true;
 				}
 			}

@@ -46,8 +46,8 @@ namespace hockman
 		InputManager::GetInstance()->Frame();
 		TimeManager::GetInstance()->Frame();
 
-		SceneManager::GetInstance()->Frame();
 		ColliderManager::GetInstance()->Frame();
+		SceneManager::GetInstance()->Frame();
 
 		RenderManager::GetInstance()->Render();
 	}

@@ -36,6 +36,11 @@ namespace hockman
 			return new PlayerJump();
 		}
 
+		int bitFlag = player->GetCollider()->GetCollisionBitFlag();
+		if ((bitFlag & static_cast<int>(eObjectType::GROUND)) == 0)
+		{
+			return new PlayerJump();
+		}
 		return nullptr;
 	}
 

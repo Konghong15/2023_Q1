@@ -49,5 +49,12 @@ namespace hockman
 
 		mSpawnObjects.push_back(obj);
 		ColliderManager::GetInstance()->OnRegister(collider);
+
+		obj = new Ground(hRectangle(0, 800, 1920, 100), eSpriteType::Player);
+		collider = new Collider(hRectangle(0, 0, 100, 100), *obj);
+		obj->AddCollider(collider);
+
+		mSpawnObjects.push_back(obj);
+		ColliderManager::GetInstance()->OnRegister(collider);
 	}
 }
