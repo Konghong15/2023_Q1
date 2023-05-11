@@ -24,23 +24,26 @@ namespace hockman
 			mCollisionBitFlag |= static_cast<int>(other.GetOwnerObject().GetObjectType());
 			other.mCollisionBitFlag |= static_cast<int>(GetOwnerObject().GetObjectType());
 		}
+
+
 	}
 
 	void Collider::Init()
 	{
 		mCollisionObjects.clear();
 		mCollisionBitFlag = 0;
+		mPrevWorldRectangle = GetWorldRectangle();
 	}
 
 	void Collider::Render()
 	{
-		/*if (mCollisionObjects.size() != 0)
+		if (mCollisionObjects.size() != 0)
 		{
 			RenderManager::GetInstance()->DrawRect(GetWorldRectangle(), RGB(255, 0, 0));
 		}
 		else
 		{
 			RenderManager::GetInstance()->DrawRect(GetWorldRectangle(), RGB(0, 0, 0));
-		}*/
+		}
 	}
 };

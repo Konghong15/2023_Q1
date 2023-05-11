@@ -13,7 +13,11 @@ namespace hockman
 		virtual void Enter(Player* player) override;
 		virtual PlayerState* HandleInputOrNull(Player* player) override;
 		virtual void Update(Player* player) override;
+		
+	public:
+		void checkWall(Player* player);
 
 	private:
+		float mButtonVX;
 	};
 }

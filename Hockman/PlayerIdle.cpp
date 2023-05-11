@@ -14,6 +14,8 @@ namespace hockman
 
 	void PlayerIdle::Enter(Player* player)
 	{
+		player->SetVX(0.f);
+		player->SetVY(0.f);
 		player->SetAniIndex(0);
 		player->SetAniElapsed(0.f);
 		player->SetAniDuration(1.f);

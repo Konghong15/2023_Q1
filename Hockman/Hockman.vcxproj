@@ -149,6 +149,7 @@
     <ClInclude Include="GameCore.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="Helper.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteManager.h" />
+    <ClInclude Include="Test.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="WinApp.h" />
@@ -175,6 +177,7 @@
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Helper.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -190,6 +193,7 @@
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
+    <ClCompile Include="Tesh.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="WinApp.cpp" />

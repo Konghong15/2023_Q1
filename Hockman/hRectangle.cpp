@@ -4,6 +4,11 @@
 
 namespace hockman
 {
+	hRectangle::hRectangle()
+		: hRectangle(0.f, 0.f, 0.f, 0.f)
+	{
+	}
+
 	hRectangle::hRectangle(Vector2 position, Vector2 size)
 		: mPosition(position)
 		, mSize(size)
@@ -33,9 +38,14 @@ namespace hockman
 
 	bool hRectangle::IsCollision(const hRectangle& rect, const hRectangle& otherRect)
 	{
-		hRectangle unionRect = getUnion(rect, otherRect);
+		hRectangle unionRect(getUnion(rect, otherRect));
+		Vector2 topLeft(rect.GetPos());
+		Vector2 bottomRight(rect.GetBottomRight());
+		Vector2 otherTopLeft = otherRect.GetPos();
+		Vector2 otherBottomRight(otherRect.GetBottomRight());
 
-		return unionRect.mSize <= (rect.mSize + otherRect.mSize);
+		return bottomRight.GetX() >= otherTopLeft.GetX() && otherBottomRight.GetX() >= topLeft.GetX()
+			&& topLeft.GetY() <= otherBottomRight.GetY() && otherTopLeft.GetY() <= bottomRight.GetY();
 	}
 
 	bool hRectangle::IsContained(const hRectangle& rect, const hRectangle& otherRect)
@@ -53,19 +63,22 @@ namespace hockman
 		}
 		else
 		{
-			Vector2 topLeft(rect.mPosition);
+			Vector2 topLeft(rect.GetPos());
 			Vector2 bottomRight(rect.GetBottomRight());
+			Vector2 otherTopLeft(otherRect.GetPos());
 			Vector2 otherBottomRight(otherRect.GetBottomRight());
 
-			topLeft.SetX(topLeft.GetX() >= otherRect.mPosition.GetX() ? topLeft.GetX() : otherRect.mPosition.GetX());
-			topLeft.SetY(topLeft.GetY() >= otherRect.mPosition.GetY() ? topLeft.GetY() : otherRect.mPosition.GetY());
+			Vector2 interSectionTopLeft(
+				topLeft.GetX() > otherTopLeft.GetX() ? topLeft.GetX() : otherTopLeft.GetX(),
+				topLeft.GetY() > otherTopLeft.GetY() ? topLeft.GetY() : otherTopLeft.GetY());
+			Vector2 interSectionBottomRight(
+				bottomRight.GetX() < otherBottomRight.GetX() ? bottomRight.GetX() : otherBottomRight.GetX(),
+				bottomRight.GetY() < otherBottomRight.GetY() ? bottomRight.GetY() : otherBottomRight.GetY());
+			Vector2 size(
+				interSectionBottomRight.GetX() - interSectionTopLeft.GetX(),
+				interSectionBottomRight.GetY() - interSectionTopLeft.GetY());
 
-			bottomRight.SetX(bottomRight.GetX() >= otherBottomRight.GetX() ? otherBottomRight.GetX() : bottomRight.GetX());
-			bottomRight.SetY(bottomRight.GetY() >= otherBottomRight.GetY() ? otherBottomRight.GetY() : bottomRight.GetY());
-
-			bottomRight -= topLeft;
-
-			return hRectangle(topLeft, bottomRight);
+			return hRectangle(interSectionTopLeft, size);
 		}
 	}
 

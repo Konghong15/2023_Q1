@@ -5,12 +5,15 @@
 #include <crtdbg.h>
 
 #include "WinApp.h"
+#include "Test.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
 	_In_ LPWSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
+	hockman::TestHelper();
+
 	const int WIDTH = 1920;
 	const int HEIGHT = 1080;
 	int result = hockman::WinApp::Run(hInstance, L"HockMan", 1920, 1080);
@@ -18,4 +21,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_CrtDumpMemoryLeaks();
 
 	return result;
+}
+
+void test()
+{
+
 }

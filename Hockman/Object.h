@@ -26,7 +26,7 @@ namespace hockman
 		inline bool GetValid() const;
 		inline Collider* GetCollider() const;
 
-		inline void SetRectangle();
+		inline void SetRectangle(const hRectangle& rect);
 
 		inline void Move(float distanceX, float distanceY);
 
@@ -61,6 +61,11 @@ namespace hockman
 	Collider* Object::GetCollider() const
 	{
 		return mCollider;
+	}
+
+	void Object::SetRectangle(const hRectangle& rect)
+	{
+		mRectangle = rect;
 	}
 
 	void Object::Move(float distanceX, float distanceY)

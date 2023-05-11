@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "TimeManager.h"
 #include "Collider.h"
+#include "Helper.h"
 
 namespace hockman
 {
@@ -15,6 +16,7 @@ namespace hockman
 
 	void PlayerRun::Enter(Player* player)
 	{
+		mButtonVX = 0;
 		player->SetAniIndex(0);
 		player->SetAniElapsed(0.f);
 		player->SetAniDuration(0.2f);
@@ -48,26 +50,80 @@ namespace hockman
 	{
 		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
 
-		player->AddAniElapsed(DELTA_TIME);
-
-		const float ELAPSED = player->GetAniElapsed();
-		const float DURATION = player->GetAniDuration();
-		if (ELAPSED >= DURATION)
+		// handle ani
 		{
-			player->AddAniIndex();
-			player->SetAniElapsed(ELAPSED - DURATION);
+			player->AddAniElapsed(DELTA_TIME);
+
+			const float ELAPSED = player->GetAniElapsed();
+			const float DURATION = player->GetAniDuration();
+			if (ELAPSED >= DURATION)
+			{
+				player->AddAniIndex();
+				player->SetAniElapsed(ELAPSED - DURATION);
+			}
 		}
 
-		const float distanceX = player->GetMoveSpeed() * DELTA_TIME;
+		float accel = player->GetMoveSpeed() * DELTA_TIME;
 		if (InputManager::GetInstance()->GetKeyState(VK_LEFT) != eKeyState::NONE)
 		{
-			player->Move(-distanceX, 0);
+			if (player->GetVX() > 0)
+			{
+				player->SetVX(0.f);
+			}
+
+			player->AddVX(-accel);
 			player->SetIsRight(false);
 		}
 		else if (InputManager::GetInstance()->GetKeyState(VK_RIGHT) != eKeyState::NONE)
 		{
-			player->Move(distanceX, 0);
+			if (player->GetVX() < 0)
+			{
+				player->SetVX(0.f);
+			}
+
+			player->AddVX(accel);
 			player->SetIsRight(true);
+		}
+
+		const float speedX = player->GetVX() * DELTA_TIME;
+		player->Move(speedX, 0);
+
+		checkWall(player);
+	}
+
+	void PlayerRun::checkWall(Player* player)
+	{
+		std::vector<Collider*> objects = player->GetCollider()->GetCollisionObjects();
+
+		for (auto iter = objects.begin(); iter != objects.end(); ++iter)
+		{
+			const Object& obj = (*iter)->GetOwnerObject();
+			const eObjectType& objectType = obj.GetObjectType();
+
+			if (objectType != eObjectType::GROUND)
+			{
+				continue;
+			}
+
+			const hRectangle& playerColRect = player->GetCollider()->GetWorldRectangle();
+			const hRectangle& objColRect = obj.GetCollider()->GetWorldRectangle();
+			const hRectangle intersectionRect = hRectangle::GetIntersection(playerColRect, objColRect);
+
+			if (Helper::Equals(objColRect.GetPos().GetY(), intersectionRect.GetPos().GetY()))
+			{
+				continue;
+			}
+
+			if (Helper::Equals(playerColRect.GetPos().GetX(), intersectionRect.GetPos().GetX()))
+			{
+				player->Move(intersectionRect.GetSize().GetX(), 0);
+				break;
+			}
+			else if (Helper::Equals(objColRect.GetPos().GetX(), intersectionRect.GetPos().GetX()))
+			{
+				player->Move(-intersectionRect.GetSize().GetX(), 0);
+				break;
+			}
 		}
 	}
 }

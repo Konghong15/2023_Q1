@@ -7,7 +7,7 @@ namespace hockman
 	class hRectangle
 	{
 	public:
-		hRectangle() = default;
+		hRectangle();
 		~hRectangle() = default;
 		hRectangle(const hRectangle&) = default;
 		hRectangle& operator=(const hRectangle&) = default;

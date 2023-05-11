@@ -47,7 +47,7 @@ namespace hockman
 		inline void SetIsRight(bool isRight);
 
 	private:
-		enum { MAX_VX = 2000 };
+		enum { MAX_VX = 1000 };
 		enum { MAX_VY = 2000 };
 
 		float mVX;

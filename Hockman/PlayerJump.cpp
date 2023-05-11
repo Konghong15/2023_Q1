@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "TimeManager.h"
 #include "Collider.h"
+#include "Helper.h"
 
 namespace hockman
 {
@@ -46,59 +47,68 @@ namespace hockman
 
 		if (player->GetVY() > 0)
 		{
-			player->SetAniIndex(1);
 			mIsDown = true;
-			player->AddVY(player->GetGravity() * DELTA_TIME * 2);
-		}
-		else
-		{
-			player->AddVY(player->GetGravity() * DELTA_TIME);
+			player->SetAniIndex(1);
 		}
 
-		float distanceX = player->GetMoveSpeed() * DELTA_TIME * 0.8f;
-		const float distanceY = player->GetVY() * DELTA_TIME;
+		player->AddVY(player->GetGravity() * DELTA_TIME);
 		if (InputManager::GetInstance()->GetKeyState(VK_LEFT) != eKeyState::NONE)
 		{
-			distanceX *= -1.f;
 			player->SetIsRight(false);
 		}
 		else if (InputManager::GetInstance()->GetKeyState(VK_RIGHT) != eKeyState::NONE)
 		{
 			player->SetIsRight(true);
 		}
-		else
-		{
-			distanceX = 0.f;
-		}
 
-		player->Move(distanceX, distanceY);
+		const float speedY = player->GetVY() * DELTA_TIME;
+		const float speedX = player->GetVX() * DELTA_TIME;
+		player->Move(speedX, speedY);
 
-		const hRectangle& playerRect = player->GetRectangle();
-		const Vector2& pos = playerRect.GetPos();
-		const Vector2& size = playerRect.GetSize();
-		const int BOTTOM_Y = pos.GetY() + size.GetY();
+		checkGround(player);
+	}
 
+	void PlayerJump::checkGround(Player* player)
+	{
 		std::vector<Collider*> objects = player->GetCollider()->GetCollisionObjects();
+
 		for (auto iter = objects.begin(); iter != objects.end(); ++iter)
 		{
-			const Object& obj = (*iter)->GetOwnerObject();
-			if (obj.GetObjectType() == eObjectType::GROUND)
+			const Object& curObject = (*iter)->GetOwnerObject();
+			const eObjectType& curObjectType = curObject.GetObjectType();
+
+			if (curObjectType != eObjectType::GROUND)
 			{
-				const hRectangle& playerRect = player->GetRectangle();
-				const hRectangle& objRect = obj.GetRectangle();
+				continue;
+			}
 
-				hRectangle intersectionRect = hRectangle::GetIntersection(objRect, playerRect);
+			const hRectangle& playerColRect = player->GetCollider()->GetWorldRectangle();
+			const hRectangle& playerPrevColRect = player->GetCollider()->GetPrevWorldRectangle();
+			const hRectangle& objColRect = curObject.GetCollider()->GetWorldRectangle();
+			const hRectangle intersectionRect = hRectangle::GetIntersection(playerColRect, objColRect);
 
-
-				if (intersectionRect.GetPos().GetY() == playerRect.GetPos().GetY())
+			if (Helper::Equals(playerColRect.GetPos().GetY(), intersectionRect.GetPos().GetY())
+				&& (playerPrevColRect.GetPos().GetY() - objColRect.GetBottomRight().GetY()) > -2.f)
+			{
+				player->Move(0, intersectionRect.GetSize().GetY());
+				player->SetVY(0.f);
+			}
+			else if (Helper::Equals(objColRect.GetPos().GetY(), intersectionRect.GetPos().GetY())
+				&& (playerPrevColRect.GetBottomRight().GetY() - objColRect.GetPos().GetY()) < 2.f)
+			{
+				player->Move(0, -intersectionRect.GetSize().GetY());
+				mIsEnd = true;
+			}
+			else if (playerPrevColRect.GetBottomRight().GetY() > objColRect.GetPos().GetY())
+			{
+				player->SetVX(0.f);
+				if (Helper::Equals(objColRect.GetTopRight().GetX(), intersectionRect.GetTopRight().GetX()))
 				{
-					player->SetVY(0.f);
-					break;
+					player->Move(intersectionRect.GetSize().GetX() + 1, 0);
 				}
-				else if (intersectionRect.GetBottomRight().GetY() == playerRect.GetBottomRight().GetY())
+				else if (Helper::Equals(objColRect.GetPos().GetX(), intersectionRect.GetPos().GetX()))
 				{
-					player->Move(0, objRect.GetPos().GetY() - BOTTOM_Y );
-					mIsEnd = true;
+					player->Move(-intersectionRect.GetSize().GetX() - 1, 0);
 				}
 			}
 		}

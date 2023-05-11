@@ -19,6 +19,7 @@ namespace hockman
 		void Init();
 		void Render();
 
+		inline const hRectangle& GetPrevWorldRectangle() const;
 		inline const hRectangle& GetRectangle() const;
 		inline hRectangle GetWorldRectangle() const;
 		inline const Object& GetOwnerObject() const;
@@ -28,11 +29,17 @@ namespace hockman
 	protected:
 		enum { RESERVE_SIZE = 128 };
 
+		hRectangle mPrevWorldRectangle;
 		hRectangle mRectangle;
 		const Object* mOwnerObject;
 		std::vector<Collider*> mCollisionObjects;
 		int mCollisionBitFlag;
 	};
+
+	const hRectangle& Collider::GetPrevWorldRectangle() const
+	{
+		return mPrevWorldRectangle;
+	}
 
 	const hRectangle& Collider::GetRectangle() const
 	{
