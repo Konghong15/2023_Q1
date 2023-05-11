@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <vector>
 
 namespace hockman
@@ -18,6 +19,8 @@ namespace hockman
 
 		inline size_t GetWidth() const;
 		inline size_t GetHeight() const;
+
+		inline void Spawn(Object* obj);
 
 	protected:
 		enum { RESERVE_SIZE = 128 };
@@ -38,5 +41,11 @@ namespace hockman
 	size_t Scene::GetHeight() const
 	{
 		return mHeight;
+	}
+
+	void Scene::Spawn(Object* obj)
+	{
+		assert(obj != nullptr);
+		mSpawnObjects.push_back(obj);
 	}
 }

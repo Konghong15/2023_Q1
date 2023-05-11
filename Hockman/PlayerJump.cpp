@@ -49,6 +49,7 @@ namespace hockman
 		{
 			mIsDown = true;
 			player->SetAniIndex(1);
+			player->SetAniIndexY(0);
 		}
 
 		player->AddVY(player->GetGravity() * DELTA_TIME);

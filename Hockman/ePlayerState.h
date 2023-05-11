@@ -6,6 +6,9 @@ namespace hockman
 	{
 		Idle,
 		Run,
-		Jump
+		Jump,
+		NonAttack,
+		Attack,
+		Charging
 	};
 };

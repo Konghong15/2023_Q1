@@ -3,6 +3,7 @@
 #include "TimeManager.h"
 #include "RenderManager.h"
 #include "PlayerIdle.h"
+#include "PlayerNonAttack.h"
 #include "Collider.h"
 
 namespace hockman
@@ -12,10 +13,13 @@ namespace hockman
 		, mUVRectangle(uvRectangle)
 		, mMoveSpeed(moveSpeed)
 		, mPlayerState(new PlayerIdle())
+		, mPlayerAttackState(new PlayerNonAttack())
 		, mIsRight(true)
 		, mGravity(5000.f)
+		, mAniIndexY(0)
 	{
 		mPlayerState->Enter(this);
+		mPlayerAttackState->Enter(this);
 	}
 
 	void Player::Frame()
@@ -31,10 +35,23 @@ namespace hockman
 			mPlayerState = nextState;
 			nextState->Enter(this);
 		}
-  	}
+
+		mPlayerAttackState->Update(this);
+		PlayerState* nextAttackState = mPlayerAttackState->HandleInputOrNull(this);
+
+		if (nextAttackState != nullptr)
+		{
+			delete mPlayerAttackState;
+			mPlayerAttackState = nextAttackState;
+			nextAttackState->Enter(this);
+		}
+	}
 
 	void Player::Render()
 	{
-		RenderManager::GetInstance()->Draw(mSpriteType, mRectangle, mUVRectangles->at(mAniIndex), mIsRight);
+		hRectangle anlRect = mUVRectangles->at(mAniIndex);
+		anlRect.SetPos(anlRect.GetPos().GetX(), anlRect.GetPos().GetY() + mAniIndexY * 32);
+
+		RenderManager::GetInstance()->Draw(mSpriteType, mRectangle, anlRect, mIsRight);
 	}
 }

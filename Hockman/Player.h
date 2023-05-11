@@ -25,17 +25,21 @@ namespace hockman
 		inline const hRectangle& GetUVRectangle()const;
 		inline const std::vector<hRectangle>& GetUVRectangles() const;
 		inline size_t GetAniIndex() const;
+		inline size_t GetAniIndexY() const;
 		inline float GetMoveSpeed() const;
 		inline float GetVX() const;
 		inline float GetVY() const;
 		inline float GetGravity() const;
+		inline bool GetIsRight()const;
 
 		// setter
 		inline void AddAniElapsed(float elapsed);
 		inline void AddAniIndex();
 		inline void AddVX(float accel);
 		inline void AddVY(float accel);
+		inline void AddAniIndexY();
 
+		inline void SetAniIndexY(size_t index);
 		inline void SetAniIndex(size_t index);
 		inline void SetVX(float vx);
 		inline void SetVY(float vy);
@@ -49,6 +53,7 @@ namespace hockman
 	private:
 		enum { MAX_VX = 1000 };
 		enum { MAX_VY = 2000 };
+		enum { MAX_ANI_Y = 7 };
 
 		float mVX;
 		float mVY;
@@ -63,8 +68,10 @@ namespace hockman
 		float mAniElapsed;
 		std::vector<hRectangle>* mUVRectangles;
 		size_t mAniIndex;
+		size_t mAniIndexY;
 
 		PlayerState* mPlayerState;
+		PlayerState* mPlayerAttackState;
 	};
 
 	bool Player::IsAniLoop() const
@@ -127,6 +134,11 @@ namespace hockman
 		return mAniIndex;
 	}
 
+	size_t Player::GetAniIndexY() const
+	{
+		return mAniIndexY;
+	}
+
 	void Player::AddAniIndex()
 	{
 		++mAniIndex;
@@ -164,6 +176,11 @@ namespace hockman
 	float Player::GetGravity() const
 	{
 		return mGravity;
+	}
+
+	bool Player::GetIsRight()const
+	{
+		return mIsRight;
 	}
 
 	void Player::AddVX(float accelX)
@@ -224,5 +241,15 @@ namespace hockman
 		{
 			mVY = -MAX_VY;
 		}
+	}
+
+	void Player::AddAniIndexY()
+	{
+		mAniIndexY = (mAniIndexY + 1) % MAX_ANI_Y;
+	}
+
+	void Player::SetAniIndexY(size_t index)
+	{
+		mAniIndexY = index % MAX_ANI_Y;
 	}
 }

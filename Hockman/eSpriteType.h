@@ -4,6 +4,7 @@ namespace hockman
 {
 	enum class eSpriteType
 	{
-		Player
+		Player,
+		Projectile
 	};
 }

@@ -4,16 +4,17 @@
 
 namespace hockman
 {
-	class PlayerIdle : public PlayerState
+	class PlayerNonAttack : public PlayerState
 	{
 	public:
-		PlayerIdle();
-		virtual ~PlayerIdle() = default;
+		PlayerNonAttack();
+		virtual ~PlayerNonAttack() = default;
 
 		virtual void Enter(Player* player) override;
 		virtual PlayerState* HandleInputOrNull(Player* player) override;
 		virtual void Update(Player* player) override;
+	
 	private:
-
+		float mKeyElapsedTime;
 	};
 }

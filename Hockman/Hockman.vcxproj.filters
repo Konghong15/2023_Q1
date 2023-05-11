@@ -141,6 +141,18 @@
     <ClCompile Include="Tesh.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerNonAttack.cpp">
+      <Filter>소스 파일\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerAttack.cpp">
+      <Filter>소스 파일\FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>소스 파일\Component\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCharging.cpp">
+      <Filter>소스 파일\FSM\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinApp.h">
@@ -232,6 +244,18 @@
     </ClInclude>
     <ClInclude Include="Test.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerAttack.h">
+      <Filter>헤더 파일\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCharging.h">
+      <Filter>헤더 파일\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerNonAttack.h">
+      <Filter>헤더 파일\FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>헤더 파일\Component\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

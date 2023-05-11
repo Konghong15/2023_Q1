@@ -25,7 +25,6 @@ namespace hockman
 		mInstance = nullptr;
 	}
 
-
 	SceneManager::SceneManager()
 		: mCurScene(nullptr)
 	{
@@ -74,5 +73,11 @@ namespace hockman
 	void SceneManager::Register(eSceneType type, Scene* scene)
 	{
 		mSceneMap.emplace(type, scene);
+	}
+
+	void SceneManager::SpawnCurScene(Object* obj)
+	{
+		assert(mCurScene != nullptr);
+		mCurScene->Spawn(obj);
 	}
 }

@@ -8,6 +8,7 @@ namespace hockman
 	Collider::Collider(hRectangle rectangle, const Object& ownerObject)
 		: mRectangle(rectangle)
 		, mOwnerObject(&ownerObject)
+		, mCollisionBitFlag(0)
 	{
 		mCollisionObjects.reserve(RESERVE_SIZE);
 	}

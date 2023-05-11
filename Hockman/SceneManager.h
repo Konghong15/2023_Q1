@@ -6,6 +6,7 @@
 namespace hockman
 {
 	class Scene;
+	class Object;
 
 	class SceneManager
 	{
@@ -21,6 +22,7 @@ namespace hockman
 		void Register(eSceneType type, Scene* scene);
 
 		inline const Scene& GetCurScene() const;
+		void SpawnCurScene(Object* obj);
 
 	private:
 		SceneManager();
