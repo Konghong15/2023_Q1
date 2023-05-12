@@ -30,7 +30,7 @@ namespace hockman
 		}
 		else
 		{
-			pos = player->GetRectangle().GetPos();
+			pos = player->GetRectangle().GetTopLeft();
 			direction = Vector2(-1, 0);
 		}
 		pos.SetY(pos.GetY() + 50);

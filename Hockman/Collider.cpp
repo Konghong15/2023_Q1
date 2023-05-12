@@ -25,8 +25,6 @@ namespace hockman
 			mCollisionBitFlag |= static_cast<int>(other.GetOwnerObject().GetObjectType());
 			other.mCollisionBitFlag |= static_cast<int>(GetOwnerObject().GetObjectType());
 		}
-
-
 	}
 
 	void Collider::Init()

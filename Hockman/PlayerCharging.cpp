@@ -14,6 +14,8 @@ namespace hockman
 		: PlayerState(ePlayerState::Charging)
 		, mKeyElapsedTime(0.f)
 		, mAniElpased(0.f)
+		, mAttackInterval(0.2f)
+		, mIsShoot(false)
 	{
 	}
 
@@ -26,7 +28,6 @@ namespace hockman
 	{
 		if (InputManager::GetInstance()->GetKeyState('X') == eKeyState::POP)
 		{
-			player->SetAniIndexY(0);
 			return new PlayerNonAttack();
 		}
 
@@ -38,6 +39,11 @@ namespace hockman
 		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
 		mKeyElapsedTime += DELTA_TIME;
 		mAniElpased += DELTA_TIME;
+
+		if (mIsShoot)
+		{
+			mAttackInterval -= DELTA_TIME;
+		}
 
 		if (mKeyElapsedTime > 3.f)
 		{
@@ -56,7 +62,6 @@ namespace hockman
 
 		if (InputManager::GetInstance()->GetKeyState('X') == eKeyState::POP)
 		{
-
 			Vector2 size(10 + 10 * mKeyElapsedTime, 10 + 10 * mKeyElapsedTime);
 			Vector2 pos;
 			Vector2 direction;
@@ -68,7 +73,7 @@ namespace hockman
 			}
 			else
 			{
-				pos = player->GetRectangle().GetPos();
+				pos = player->GetRectangle().GetTopLeft();
 				direction = Vector2(-1, 0);
 			}
 			pos.SetY(pos.GetY() + 50);

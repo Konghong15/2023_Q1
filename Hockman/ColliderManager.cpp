@@ -53,7 +53,7 @@ namespace hockman
 
 		for (auto iter = mColliders.begin(); iter != mColliders.end(); ++iter)
 		{
-			(*iter)->Render();
+			//(*iter)->Render();
 		}
 	}
 

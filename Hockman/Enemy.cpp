@@ -21,7 +21,7 @@ namespace hockman
 		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
 		const Scene& scene = SceneManager::GetInstance()->GetCurScene();
 
-		const Vector2& pos = mRectangle.GetPos();
+		const Vector2& pos = mRectangle.GetTopLeft();
 		const Vector2& size = mRectangle.GetSize();
 
 		if (pos.GetX() + size.GetX() > scene.GetWidth())

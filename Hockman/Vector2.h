@@ -39,7 +39,6 @@ namespace hockman
 
 		static float GetDistance(const Vector2& vector, const Vector2& otherVector);
 
-
 	private:
 		float mX;
 		float mY;

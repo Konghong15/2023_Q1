@@ -22,6 +22,7 @@ namespace hockman
 		inline ePlayerState GetPlayerState() const;
 
 		static void Init();
+		static void Release();
 
 	protected:
 		static std::vector<hRectangle> mIdleUVRects;

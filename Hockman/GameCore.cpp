@@ -58,7 +58,10 @@ namespace hockman
 		RenderManager::GetInstance()->Release();
 		//SoundManager::GetInstance()->Release();
 		SpriteManager::GetInstance()->Release();
+
+		_CrtDumpMemoryLeaks();
 		SceneManager::GetInstance()->Release();
+		_CrtDumpMemoryLeaks();
 		ColliderManager::GetInstance()->Release();
 
 		// Delete

@@ -13,7 +13,7 @@ namespace hockman
 	{
 	public:
 		Player(hRectangle worldRectangle, hRectangle uvRectangle, eSpriteType spriteType, eObjectType objectType, float moveSpeed);
-		~Player() = default;
+		~Player();
 
 		virtual void Frame() override;
 		virtual void Render() override;

@@ -27,6 +27,9 @@ namespace hockman
 		inline HDC GetBackDC() const;
 
 	private:
+		void rotateRender(float radian);
+
+	private:
 		RenderManager() = default;
 		~RenderManager() = default;
 

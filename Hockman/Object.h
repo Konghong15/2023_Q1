@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 
 #include "eObjectType.h"
 #include "eSpriteType.h"
@@ -29,6 +30,8 @@ namespace hockman
 		inline void SetRectangle(const hRectangle& rect);
 
 		inline void Move(float distanceX, float distanceY);
+
+		void Rotate(float radian);
 
 	protected:
 		hRectangle mRectangle;
@@ -70,7 +73,7 @@ namespace hockman
 
 	void Object::Move(float distanceX, float distanceY)
 	{
-		const Vector2& pos = mRectangle.GetPos();
+		const Vector2& pos = mRectangle.GetTopLeft();
 		mRectangle.SetPos(pos.GetX() + distanceX, pos.GetY() + distanceY);
 	}
 }

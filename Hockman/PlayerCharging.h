@@ -17,5 +17,7 @@ namespace hockman
 	private:
 		float mKeyElapsedTime;
 		float mAniElpased;
+		float mAttackInterval;
+		bool mIsShoot;
 	};
 }

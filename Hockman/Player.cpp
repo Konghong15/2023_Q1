@@ -22,6 +22,12 @@ namespace hockman
 		mPlayerAttackState->Enter(this);
 	}
 
+	Player::~Player()
+	{
+		delete mPlayerState;
+		delete mPlayerAttackState;
+	}
+
 	void Player::Frame()
 	{
 		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
@@ -50,7 +56,7 @@ namespace hockman
 	void Player::Render()
 	{
 		hRectangle anlRect = mUVRectangles->at(mAniIndex);
-		anlRect.SetPos(anlRect.GetPos().GetX(), anlRect.GetPos().GetY() + mAniIndexY * 32);
+		anlRect.SetPos(anlRect.GetTopLeft().GetX(), anlRect.GetTopLeft().GetY() + mAniIndexY * 32);
 
 		RenderManager::GetInstance()->Draw(mSpriteType, mRectangle, anlRect, mIsRight);
 	}

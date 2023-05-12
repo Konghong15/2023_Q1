@@ -48,7 +48,7 @@ namespace hockman
 
 	hRectangle Collider::GetWorldRectangle() const
 	{
-		return hRectangle(mRectangle.GetPos() + mOwnerObject->GetRectangle().GetPos(), mRectangle.GetSize());
+		return hRectangle(mRectangle.GetTopLeft() + mOwnerObject->GetRectangle().GetTopLeft(), mRectangle.GetSize());
 	}
 
 	const Object& Collider::GetOwnerObject() const

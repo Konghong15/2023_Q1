@@ -109,17 +109,17 @@ namespace hockman
 			const hRectangle& objColRect = obj.GetCollider()->GetWorldRectangle();
 			const hRectangle intersectionRect = hRectangle::GetIntersection(playerColRect, objColRect);
 
-			if (Helper::Equals(objColRect.GetPos().GetY(), intersectionRect.GetPos().GetY()))
+			if (Helper::Equals(objColRect.GetTopLeft().GetY(), intersectionRect.GetTopLeft().GetY()))
 			{
 				continue;
 			}
 
-			if (Helper::Equals(playerColRect.GetPos().GetX(), intersectionRect.GetPos().GetX()))
+			if (Helper::Equals(playerColRect.GetTopLeft().GetX(), intersectionRect.GetTopLeft().GetX()))
 			{
 				player->Move(intersectionRect.GetSize().GetX(), 0);
 				break;
 			}
-			else if (Helper::Equals(objColRect.GetPos().GetX(), intersectionRect.GetPos().GetX()))
+			else if (Helper::Equals(objColRect.GetTopLeft().GetX(), intersectionRect.GetTopLeft().GetX()))
 			{
 				player->Move(-intersectionRect.GetSize().GetX(), 0);
 				break;

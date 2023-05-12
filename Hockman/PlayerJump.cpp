@@ -88,26 +88,26 @@ namespace hockman
 			const hRectangle& objColRect = curObject.GetCollider()->GetWorldRectangle();
 			const hRectangle intersectionRect = hRectangle::GetIntersection(playerColRect, objColRect);
 
-			if (Helper::Equals(playerColRect.GetPos().GetY(), intersectionRect.GetPos().GetY())
-				&& (playerPrevColRect.GetPos().GetY() - objColRect.GetBottomRight().GetY()) > -2.f)
+			if (Helper::Equals(playerColRect.GetTopLeft().GetY(), intersectionRect.GetTopLeft().GetY())
+				&& (playerPrevColRect.GetTopLeft().GetY() - objColRect.GetBottomRight().GetY()) > -50.f)
 			{
 				player->Move(0, intersectionRect.GetSize().GetY());
 				player->SetVY(0.f);
 			}
-			else if (Helper::Equals(objColRect.GetPos().GetY(), intersectionRect.GetPos().GetY())
-				&& (playerPrevColRect.GetBottomRight().GetY() - objColRect.GetPos().GetY()) < 2.f)
+			else if (Helper::Equals(objColRect.GetTopLeft().GetY(), intersectionRect.GetTopLeft().GetY())
+				&& (playerPrevColRect.GetBottomRight().GetY() - objColRect.GetTopLeft().GetY()) < 50.f)
 			{
 				player->Move(0, -intersectionRect.GetSize().GetY());
 				mIsEnd = true;
 			}
-			else if (playerPrevColRect.GetBottomRight().GetY() > objColRect.GetPos().GetY())
+			else if (playerPrevColRect.GetBottomRight().GetY() > objColRect.GetTopLeft().GetY())
 			{
 				player->SetVX(0.f);
 				if (Helper::Equals(objColRect.GetTopRight().GetX(), intersectionRect.GetTopRight().GetX()))
 				{
 					player->Move(intersectionRect.GetSize().GetX() + 1, 0);
 				}
-				else if (Helper::Equals(objColRect.GetPos().GetX(), intersectionRect.GetPos().GetX()))
+				else if (Helper::Equals(objColRect.GetTopLeft().GetX(), intersectionRect.GetTopLeft().GetX()))
 				{
 					player->Move(-intersectionRect.GetSize().GetX() - 1, 0);
 				}

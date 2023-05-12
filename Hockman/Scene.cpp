@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Object.h"
+#include "InputManager.h"
 
 namespace hockman
 {
@@ -18,6 +19,14 @@ namespace hockman
 
 	void Scene::Frame()
 	{
+		if (InputManager::GetInstance()->GetKeyState('T') == eKeyState::PUSH)
+		{
+			for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
+			{
+				(*iter)->Rotate(1.5708f);
+			}
+		}
+
 		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end(); ++iter)
 		{
 			Object* obj = (*iter);
