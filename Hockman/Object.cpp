@@ -43,25 +43,33 @@ namespace hockman
 		const size_t CETNER_X = WinApp::GetWidth() / 2;
 		const size_t CENTER_Y = WinApp::GetHeight() / 2;
 
-		topLeft.SetX(pos.GetX() - CETNER_X);
-		topLeft.SetY(pos.GetY() - CENTER_Y);
+		// 원점 이동(스크린 -> 화면 중앙)
+		topLeft.SetX(topLeft.GetX() - CETNER_X);
+		topLeft.SetY(topLeft.GetY() - CENTER_Y);
+		bottomRight.SetX(bottomRight.GetX() - CETNER_X);
+		bottomRight.SetY(bottomRight.GetY() - CENTER_Y);
+
 		// 회전
 		{
 			float cosScalr = cos(radian);
 			float sinScalr = sin(radian);
 			Vector2 temp;
 
-			temp.SetX(pos.GetX() * cosScalr - pos.GetY() * sinScalr);
-			temp.SetY(pos.GetX() * sinScalr + pos.GetY() * cosScalr);
-			pos = temp;
+			temp.SetX(topLeft.GetX() * cosScalr - topLeft.GetY() * sinScalr);
+			temp.SetY(topLeft.GetX() * sinScalr + topLeft.GetY() * cosScalr);
+			topLeft = temp;
+
+			temp.SetX(bottomRight.GetX() * cosScalr - bottomRight.GetY() * sinScalr);
+			temp.SetY(bottomRight.GetX() * sinScalr + bottomRight.GetY() * cosScalr);
+			bottomRight = temp;
 		}
-		pos.SetX(pos.GetX() + CETNER_X);
-		pos.SetY(pos.GetY() + CENTER_Y);
 
-		mRectangle.SetPos(pos);
+		// 원점 이동(화면 중앙 -> 스크린)
+		topLeft.SetX(topLeft.GetX() + CETNER_X);
+		topLeft.SetY(topLeft.GetY() + CENTER_Y);
+		bottomRight.SetX(bottomRight.GetX() + CETNER_X);
+		bottomRight.SetY(bottomRight.GetY() + CENTER_Y);
 
-		const size_t WIDTH = mRectangle.GetSize().GetX();
-		const size_t HEIGHT = mRectangle.GetSize().GetY();
-		mRectangle.Setsize(HEIGHT, WIDTH);
+		mRectangle = hRectangle(topLeft, bottomRight);
 	}
 }

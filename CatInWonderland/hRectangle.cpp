@@ -2,7 +2,7 @@
 
 #include "hRectangle.h"
 
-namespace hockman
+namespace catInWonderland
 {
 	hRectangle::hRectangle()
 		: hRectangle(0.f, 0.f, 0.f, 0.f)

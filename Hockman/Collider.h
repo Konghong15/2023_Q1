@@ -11,7 +11,7 @@ namespace hockman
 	class Collider
 	{
 	public:
-		Collider(hRectangle rectangle, const Object& ownerObject);
+		Collider(hRectangle offset, const Object& ownerObject);
 		~Collider() = default;
 
 		void CheckCollision(Collider& other);
@@ -19,9 +19,10 @@ namespace hockman
 		void Init();
 		void Render();
 
+		inline const hRectangle& GetOffset() const;
+		inline const hRectangle& GetWorldRectangle() const;
 		inline const hRectangle& GetPrevWorldRectangle() const;
-		inline const hRectangle& GetRectangle() const;
-		inline hRectangle GetWorldRectangle() const;
+
 		inline const Object& GetOwnerObject() const;
 		inline std::vector<Collider*>& GetCollisionObjects();
 		inline int GetCollisionBitFlag() const;
@@ -29,26 +30,27 @@ namespace hockman
 	protected:
 		enum { RESERVE_SIZE = 128 };
 
+		hRectangle mOffset;
+		hRectangle mWorldRectangle;
 		hRectangle mPrevWorldRectangle;
-		hRectangle mRectangle;
 		const Object* mOwnerObject;
 		std::vector<Collider*> mCollisionObjects;
 		int mCollisionBitFlag;
 	};
+
+	const hRectangle& Collider::GetOffset() const
+	{
+		return mOffset;
+	}
 
 	const hRectangle& Collider::GetPrevWorldRectangle() const
 	{
 		return mPrevWorldRectangle;
 	}
 
-	const hRectangle& Collider::GetRectangle() const
+	const hRectangle& Collider::GetWorldRectangle() const
 	{
-		return mRectangle;
-	}
-
-	hRectangle Collider::GetWorldRectangle() const
-	{
-		return hRectangle(mRectangle.GetTopLeft() + mOwnerObject->GetRectangle().GetTopLeft(), mRectangle.GetSize());
+		return mWorldRectangle;
 	}
 
 	const Object& Collider::GetOwnerObject() const

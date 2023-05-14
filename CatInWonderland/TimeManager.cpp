@@ -5,7 +5,7 @@
 
 #include "TimeManager.h"
 
-namespace hockman
+namespace catInWonderland
 {
 	TimeManager* TimeManager::mInstance = nullptr;
 
@@ -14,6 +14,7 @@ namespace hockman
 		if (mInstance == nullptr)
 		{
 			mInstance = new TimeManager();
+			mInstance->Reset();
 		}
 
 		return mInstance;
@@ -25,18 +26,11 @@ namespace hockman
 		mInstance = nullptr;
 	}
 
-	TimeManager::TimeManager()
-		: mFPS(0)
-		, mFrameCount(0)
-		, mDeltaTime(0.f)
-	{
-		Init();
-	}
-
-	void TimeManager::Init()
+	void TimeManager::Reset()
 	{
 		QueryPerformanceFrequency(&mFrequency);
 		QueryPerformanceCounter(&mCurTime);
+		mDeltaTime = 0.f;
 		mPrevTime = mCurTime;
 		mFPS = 0;
 		mFrameCount = 0;
@@ -50,7 +44,7 @@ namespace hockman
 
 		char buf[64];
 		sprintf(buf, "fps : %d, DeltaTime : %.5f\n", mFPS, GetDeltaTime());
- 		// OutputDebugStringA(buf);
+		// OutputDebugStringA(buf);
 
 		if (sTime >= 1.f)
 		{

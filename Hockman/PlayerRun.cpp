@@ -93,6 +93,8 @@ namespace hockman
 
 	void PlayerRun::checkWall(Player* player)
 	{
+		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
+		const float speedX = player->GetVX() * DELTA_TIME;
 		std::vector<Collider*> objects = player->GetCollider()->GetCollisionObjects();
 
 		for (auto iter = objects.begin(); iter != objects.end(); ++iter)
@@ -116,12 +118,12 @@ namespace hockman
 
 			if (Helper::Equals(playerColRect.GetTopLeft().GetX(), intersectionRect.GetTopLeft().GetX()))
 			{
-				player->Move(intersectionRect.GetSize().GetX(), 0);
+				player->Move(intersectionRect.GetSize().GetX() + abs(speedX), 0);
 				break;
 			}
 			else if (Helper::Equals(objColRect.GetTopLeft().GetX(), intersectionRect.GetTopLeft().GetX()))
 			{
-				player->Move(-intersectionRect.GetSize().GetX(), 0);
+				player->Move(-(intersectionRect.GetSize().GetX() + abs(speedX)), 0);
 				break;
 			}
 		}

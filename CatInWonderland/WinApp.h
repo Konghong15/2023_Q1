@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-namespace hockman
+namespace catInWonderland
 {
 	class WinApp
 	{

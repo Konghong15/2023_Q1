@@ -16,6 +16,7 @@ namespace hockman
 
 	void PlayerNonAttack::Enter(Player* player)
 	{
+
 	}
 
 	PlayerState* PlayerNonAttack::HandleInputOrNull(Player* player)

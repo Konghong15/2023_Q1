@@ -4,11 +4,10 @@
 #include <Windows.h>
 #include <stdio.h>
 
-#include "WinApp.h"
 #include "InputManager.h"
-#include "RenderManager.h"
+#include "WinApp.h"
 
-namespace hockman
+namespace catInWonderland
 {
 	InputManager* InputManager::mInstance = nullptr;
 
@@ -17,6 +16,7 @@ namespace hockman
 		if (mInstance == nullptr)
 		{
 			mInstance = new InputManager();
+			mInstance->Reset();
 		}
 
 		return mInstance;
@@ -28,9 +28,10 @@ namespace hockman
 		mInstance = nullptr;
 	}
 
-	InputManager::InputManager()
-		: mKeyState{ eKeyState::NONE, }
+	void InputManager::Reset()
 	{
+		mMousePos = { 0, 0 };
+		memset(mKeyState, static_cast<int>(eKeyState::NONE), KEY_SIZE * sizeof(eKeyState));
 	}
 
 	void InputManager::Frame()

@@ -26,8 +26,9 @@ namespace hockman
 
 	PlayerState* PlayerCharging::HandleInputOrNull(Player* player)
 	{
-		if (InputManager::GetInstance()->GetKeyState('X') == eKeyState::POP)
+		if (mAttackInterval < 0.f)
 		{
+			player->SetAniIndexY(0);
 			return new PlayerNonAttack();
 		}
 
@@ -43,6 +44,7 @@ namespace hockman
 		if (mIsShoot)
 		{
 			mAttackInterval -= DELTA_TIME;
+			return;
 		}
 
 		if (mKeyElapsedTime > 3.f)
@@ -62,24 +64,29 @@ namespace hockman
 
 		if (InputManager::GetInstance()->GetKeyState('X') == eKeyState::POP)
 		{
-			Vector2 size(10 + 10 * mKeyElapsedTime, 10 + 10 * mKeyElapsedTime);
-			Vector2 pos;
+			player->SetAniIndexY(1);
+			mIsShoot = true;
+			Vector2 topLeft;
+			Vector2 bottomRight;
 			Vector2 direction;
 
 			if (player->GetIsRight())
 			{
-				pos = player->GetRectangle().GetTopRight();
+				topLeft = player->GetRectangle().GetTopRight();
+				topLeft += Vector2(0, 50);
+				bottomRight = topLeft + Vector2(20, 20);
 				direction = Vector2(1, 0);
 			}
 			else
 			{
-				pos = player->GetRectangle().GetTopLeft();
+				topLeft = player->GetRectangle().GetTopRight();
+				topLeft += Vector2(-20, 50);
+				bottomRight = topLeft + Vector2(20, 20);
 				direction = Vector2(-1, 0);
 			}
-			pos.SetY(pos.GetY() + 50);
 
-			Object* obj = new Projectile(hRectangle(pos, size), eSpriteType::Projectile, direction, 1000, 100, 5.f);
-			Collider* collider = new Collider(hRectangle(Vector2(0, 0), size), *obj);
+			Object* obj = new Projectile(hRectangle(topLeft, bottomRight), eSpriteType::Projectile, direction, 1500, 0, 5.f);
+			Collider* collider = new Collider(hRectangle(0, 0, 0, 0), *obj);
 			obj->AddCollider(collider);
 
 			ColliderManager::GetInstance()->OnRegister(collider);

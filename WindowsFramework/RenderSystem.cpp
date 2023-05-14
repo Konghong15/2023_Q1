@@ -5,7 +5,6 @@
 
 #pragma comment(lib, "msimg32.lib")
 
-
 namespace render
 {
 	HWND hWnd;

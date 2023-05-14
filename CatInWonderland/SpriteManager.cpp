@@ -5,7 +5,7 @@
 #include "SpriteManager.h"
 #include "Sprite.h"
 
-namespace hockman
+namespace catInWonderland
 {
 	SpriteManager* SpriteManager::mInstance = nullptr;
 
@@ -14,6 +14,7 @@ namespace hockman
 		if (mInstance == nullptr)
 		{
 			mInstance = new SpriteManager();
+			mInstance->init();
 		}
 
 		return mInstance;
@@ -21,17 +22,20 @@ namespace hockman
 
 	void SpriteManager::DeleteInstance()
 	{
+		mInstance->release();
 		delete mInstance;
 		mInstance = nullptr;
 	}
 
-	void SpriteManager::Init()
+	void SpriteManager::init()
 	{
-		// load..
-		load(eSpriteType::Player, ".\\resource\\img.bmp");
+		// load Sprite
+		// loadSpriteImage(eSpriteType::Player, ".\\resource\\img.bmp");
+
+		// load Animation Rectangle
 	}
 
-	void SpriteManager::Release()
+	void SpriteManager::release()
 	{
 		// delete all
 		for (auto iter = mSpriteMap.begin(); iter != mSpriteMap.end(); ++iter)
@@ -40,7 +44,7 @@ namespace hockman
 		}
 	}
 
-	void SpriteManager::load(eSpriteType spriteType, const char* fileName)
+	void SpriteManager::loadSpriteImage(eSpriteType spriteType, const char* fileName)
 	{
 		Sprite* sprite = new Sprite;
 		sprite->Hdc = CreateCompatibleDC(RenderManager::GetInstance()->GetFrontDC());
@@ -52,5 +56,10 @@ namespace hockman
 		GetObject(sprite->Bitmap, sizeof(BITMAP), &sprite->BitInfo);
 
 		mSpriteMap.emplace(spriteType, sprite);
+	}
+
+	void SpriteManager::loadAnimationRectangle(eAnimationType animationType, const char* fileName)
+	{
+
 	}
 }

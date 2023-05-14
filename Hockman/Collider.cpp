@@ -5,12 +5,12 @@
 
 namespace hockman
 {
-	Collider::Collider(hRectangle rectangle, const Object& ownerObject)
-		: mRectangle(rectangle)
+	Collider::Collider(hRectangle offset, const Object& ownerObject)
+		: mOffset(offset)
 		, mOwnerObject(&ownerObject)
-		, mCollisionBitFlag(0)
 	{
 		mCollisionObjects.reserve(RESERVE_SIZE);
+		Init();
 	}
 
 	void Collider::CheckCollision(Collider& other)
@@ -31,7 +31,9 @@ namespace hockman
 	{
 		mCollisionObjects.clear();
 		mCollisionBitFlag = 0;
-		mPrevWorldRectangle = GetWorldRectangle();
+		mPrevWorldRectangle = mWorldRectangle;
+		const hRectangle& ownerRect = mOwnerObject->GetRectangle();
+		mWorldRectangle = hRectangle(ownerRect.GetTopLeft() + mOffset.GetTopLeft(), ownerRect.GetBottomRight() - mOffset.GetBottomRight());
 	}
 
 	void Collider::Render()
@@ -42,7 +44,7 @@ namespace hockman
 		}
 		else
 		{
-			RenderManager::GetInstance()->DrawRect(GetWorldRectangle(), RGB(0, 0, 0));
+			RenderManager::GetInstance()->DrawRect(GetWorldRectangle(), RGB(120, 0, 0));
 		}
 	}
 };

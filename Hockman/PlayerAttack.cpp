@@ -19,24 +19,27 @@ namespace hockman
 	{
 		player->SetAniIndexY(1);
 
-		Vector2 size(10, 10);
-		Vector2 pos;
+		Vector2 topLeft; 
+		Vector2 bottomRight;
 		Vector2 direction;
 
 		if (player->GetIsRight())
 		{
-			pos = player->GetRectangle().GetTopRight();
+			topLeft = player->GetRectangle().GetTopRight();
+			topLeft += Vector2(0, 50);
+			bottomRight = topLeft + Vector2(10, 10);
 			direction = Vector2(1, 0);
 		}
 		else
 		{
-			pos = player->GetRectangle().GetTopLeft();
+			topLeft = player->GetRectangle().GetTopRight();
+			topLeft += Vector2(-10, 50);
+			bottomRight = topLeft + Vector2(10, 10);
 			direction = Vector2(-1, 0);
 		}
-		pos.SetY(pos.GetY() + 50);
 
-		Object* obj = new Projectile(hRectangle(pos, size), eSpriteType::Projectile, direction, 1500, 0, 5.f);
-		Collider* collider = new Collider(hRectangle(Vector2(0, 0), size), *obj);
+		Object* obj = new Projectile(hRectangle(topLeft, bottomRight), eSpriteType::Projectile, direction, 1500, 0, 5.f);
+		Collider* collider = new Collider(hRectangle(0, 0, 0, 0), *obj);
 		obj->AddCollider(collider);
 
 		ColliderManager::GetInstance()->OnRegister(collider);

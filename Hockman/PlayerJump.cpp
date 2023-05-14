@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "PlayerIdle.h"
 #include "PlayerJump.h"
 #include "PlayerRun.h"
@@ -6,6 +8,7 @@
 #include "TimeManager.h"
 #include "Collider.h"
 #include "Helper.h"
+
 
 namespace hockman
 {
@@ -95,10 +98,19 @@ namespace hockman
 				player->SetVY(0.f);
 			}
 			else if (Helper::Equals(objColRect.GetTopLeft().GetY(), intersectionRect.GetTopLeft().GetY())
-				&& (playerPrevColRect.GetBottomRight().GetY() - objColRect.GetTopLeft().GetY()) < 50.f)
+				&& playerPrevColRect.GetBottomRight().GetY() > objColRect.GetTopLeft().GetY())
 			{
-				player->Move(0, -intersectionRect.GetSize().GetY());
+				const float speedY = player->GetVY() * TimeManager::GetInstance()->GetDeltaTime();
+				float prevY = player->GetRectangle().GetTopLeft().GetY();
+
+				float y = intersectionRect.GetSize().GetY() + speedY;
+				player->Move(0, -y);
 				mIsEnd = true;
+
+				float curY = player->GetRectangle().GetTopLeft().GetY();
+				char buf[128];
+				sprintf(buf, "prevY : %f, curY : %f, y : %f\n", prevY, curY, y);
+				OutputDebugStringA(buf);
 			}
 			else if (playerPrevColRect.GetBottomRight().GetY() > objColRect.GetTopLeft().GetY())
 			{
