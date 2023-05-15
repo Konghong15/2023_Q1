@@ -17,9 +17,6 @@ namespace catInWonderland
 		void Render();
 
 		void Draw(hRectangle worldRect, eSpriteType spritType, eAnimationType animationType, int animationIndex);
-		void DrawReverseX(hRectangle worldRect, eSpriteType spritType, eAnimationType animationType, int animationIndex);
-		void DrawReverseY(hRectangle worldRect, eSpriteType spritType, eAnimationType animationType, int animationIndex);
-		void DrawRotate(hRectangle worldRect, eSpriteType spritType, eAnimationType animationType, int animationIndex);
 
 		void DrawRect(int x, int y, int w, int h, COLORREF color);
 		void DrawRect(hRectangle rectangle, COLORREF color);

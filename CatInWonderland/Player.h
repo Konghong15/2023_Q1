@@ -11,6 +11,7 @@ namespace catInWonderland
 		~Player() = default;
 
 		virtual void Frame() override;
+		virtual void Render() override;
 
 	private:
 		bool mbRight;

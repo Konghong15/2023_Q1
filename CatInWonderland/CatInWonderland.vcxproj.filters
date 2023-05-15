@@ -34,6 +34,9 @@
     <Filter Include="소스 파일\Math">
       <UniqueIdentifier>{9170b165-1019-48bd-9709-7f131a3e6ecc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Component\Object">
+      <UniqueIdentifier>{5c136060-7706-4e7f-a529-2fbe57d255be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameCore.cpp">
@@ -91,7 +94,7 @@
       <Filter>소스 파일\Component</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>소스 파일\Component</Filter>
+      <Filter>소스 파일\Component\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

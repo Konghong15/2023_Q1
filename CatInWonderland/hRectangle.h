@@ -1,9 +1,20 @@
 #pragma once
 
+#include <cassert>
+
 #include "Vector2.h"
 
 namespace catInWonderland
 {
+	enum class eRectangleIndex
+	{
+		TopLeft,
+		TopRight,
+		BottomLeft,
+		BottomRight,
+		Size
+	};
+
 	class hRectangle
 	{
 	public:
@@ -15,88 +26,90 @@ namespace catInWonderland
 		hRectangle(Vector2 topLeft, Vector2 bottomRight);
 		hRectangle(float x1, float y1, float x2, float y2);
 
-		inline void SetTopLeft(const Vector2& topLeft);
-		inline void SetBottomRight(const Vector2& bottomRight);
-		inline void SetPos(const Vector2& pos);
-		inline void SetPos(float x, float y);
-		inline void Setsize(float x, float y);
+		inline void Move(float x, float y);
+		void Rotate(const Vector2& origin, float radian);
 
-		inline Vector2 GetTopLeft() const;
-		inline Vector2 GetTopRight() const;
-		inline Vector2 GetBottomLeft() const;
-		inline Vector2 GetBottomRight() const;
+		inline void SetTopLeft(const Vector2& topLeft);
+		inline void SetTopRight(const Vector2& bottomRight);
+		inline void SetBottomLeft(const Vector2& bottomRight);
+		inline void SetBottomRight(const Vector2& bottomRight);
+
+		inline const Vector2& GetTopLeft() const;
+		inline const Vector2& GetTopRight() const;
+		inline const Vector2& GetBottomLeft() const;
+		inline const Vector2& GetBottomRight() const;
 		inline Vector2 GetCenter() const;
 		inline Vector2 GetSize() const;
 		inline float GetWidth() const;
 		inline float GetHeight() const;
 
-		static bool IsCollision(const hRectangle& rect, const hRectangle& otherRect);
-		static bool IsContained(const hRectangle& rect, const hRectangle& otherRect);
-		static hRectangle GetIntersection(const hRectangle& rect, const hRectangle& otherRect);
+		static bool IsCollision(const hRectangle& rectangle, const hRectangle& otherRectangle);
+		static bool IsContained(const hRectangle& rectangle, const hRectangle& otherRectangle);
+		static hRectangle GetIntersection(const hRectangle& rectangle, const hRectangle& otherRectangle);
+		static hRectangle GetBoundingRectangle(const hRectangle& rectangle);
 
 	private:
-		static hRectangle getUnion(const hRectangle& rect, const hRectangle& otherRect);
+		inline Vector2& getVertex(eRectangleIndex rectangleIndex);
+		inline const Vector2& getVertex(eRectangleIndex rectangleIndex) const;
 
 	private:
-		Vector2 mTopLeft;
-		Vector2 mBottomRight;
+		Vector2 mVertices[static_cast<size_t>(eRectangleIndex::Size)];
 	};
+
+	void hRectangle::Move(float x, float y)
+	{
+		for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
+		{
+			mVertices[i].Move(x, y);
+		}
+	}
 
 	void hRectangle::SetTopLeft(const Vector2& topLeft)
 	{
-		mTopLeft = topLeft;
+		getVertex(eRectangleIndex::TopLeft) = topLeft;
+	}
+
+	void hRectangle::SetTopRight(const Vector2& topRight)
+	{
+		getVertex(eRectangleIndex::TopRight) = topRight;
+	}
+
+	void hRectangle::SetBottomLeft(const Vector2& bottomLeft)
+	{
+		getVertex(eRectangleIndex::BottomLeft) = bottomLeft;
 	}
 
 	void hRectangle::SetBottomRight(const Vector2& bottomRight)
 	{
-		mBottomRight = bottomRight;
+		getVertex(eRectangleIndex::BottomRight) = bottomRight;
 	}
 
-	void hRectangle::SetPos(const Vector2& pos)
+	const Vector2& hRectangle::GetTopLeft() const
 	{
-		mBottomRight.SetX(pos.GetX() + GetWidth());
-		mBottomRight.SetY(pos.GetY() + GetHeight());
-		mTopLeft.SetX(pos.GetX());
-		mTopLeft.SetY(pos.GetY());
+		return getVertex(eRectangleIndex::TopLeft);
 	}
 
-	void hRectangle::SetPos(float x, float y)
+	const Vector2& hRectangle::GetTopRight() const
 	{
-		mBottomRight.SetX(x + GetWidth());
-		mBottomRight.SetY(y + GetHeight());
-		mTopLeft.SetX(x);
-		mTopLeft.SetY(y);
+		return getVertex(eRectangleIndex::TopRight);
 	}
 
-	void hRectangle::Setsize(float x, float y)
+	const Vector2& hRectangle::GetBottomLeft() const
 	{
-		mBottomRight.SetX(mTopLeft.GetX() + x);
-		mBottomRight.SetY(mTopLeft.GetX() + y);
+		return getVertex(eRectangleIndex::BottomLeft);
 	}
 
-	Vector2 hRectangle::GetTopLeft() const
+	const Vector2& hRectangle::GetBottomRight() const
 	{
-		return mTopLeft;
-	}
-
-	Vector2 hRectangle::GetTopRight() const
-	{
-		return Vector2(mBottomRight.GetX(), mTopLeft.GetY());
-	}
-
-	Vector2 hRectangle::GetBottomLeft() const
-	{
-		return Vector2(mTopLeft.GetX(), mBottomRight.GetY());
-	}
-
-	Vector2 hRectangle::GetBottomRight() const
-	{
-		return mBottomRight;
+		return getVertex(eRectangleIndex::BottomRight);
 	}
 
 	Vector2 hRectangle::GetCenter() const
 	{
-		return Vector2((mTopLeft.GetX() + mBottomRight.GetX()) * 0.5f, (mTopLeft.GetY() + mBottomRight.GetY()) * 0.5f);
+		const Vector2& topLeft = getVertex(eRectangleIndex::TopLeft);
+		const Vector2& bottomRight = getVertex(eRectangleIndex::BottomRight);
+
+		return Vector2((topLeft.GetX() + bottomRight.GetX()) * 0.5f, (topLeft.GetY() + bottomRight.GetY()) * 0.5f);
 	}
 
 	Vector2 hRectangle::GetSize() const
@@ -106,11 +119,25 @@ namespace catInWonderland
 
 	float hRectangle::GetWidth() const
 	{
-		return mBottomRight.GetX() - mTopLeft.GetX();
+		return Vector2::GetDistance(getVertex(eRectangleIndex::TopLeft), getVertex(eRectangleIndex::TopRight));
 	}
 
 	float hRectangle::GetHeight() const
 	{
-		return mBottomRight.GetY() - mTopLeft.GetY();
+		return Vector2::GetDistance(getVertex(eRectangleIndex::TopLeft), getVertex(eRectangleIndex::BottomLeft));
+	}
+
+	Vector2& hRectangle::getVertex(eRectangleIndex rectangleIndex)
+	{
+		assert(rectangleIndex != eRectangleIndex::Size);
+
+		return mVertices[static_cast<size_t>(rectangleIndex)];
+	}
+
+	inline const Vector2& hRectangle::getVertex(eRectangleIndex rectangleIndex) const
+	{
+		assert(rectangleIndex != eRectangleIndex::Size);
+
+		return mVertices[static_cast<size_t>(rectangleIndex)];
 	}
 }

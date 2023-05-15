@@ -20,7 +20,7 @@ namespace catInWonderland
 		inline bool GetValid() const;
 
 		void Move(float distanceX, float distanceY);
-		void Rotate(bool bLeft);
+		void Rotate(float radian, int originX, int originY);
 
 	protected:
 		hRectangle mRectangle;

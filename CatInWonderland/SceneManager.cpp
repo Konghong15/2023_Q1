@@ -30,12 +30,9 @@ namespace catInWonderland
 	void SceneManager::init()
 	{
 		// cur Scene setting
-		mCurScene = new GameScene(WinApp::GetWidth(), WinApp::GetHeight());
+		mCurScene = new GameScene();
 		mCurScene->Enter();
 		// init
-
-
-
 	}
 
 	void SceneManager::release()
@@ -54,11 +51,6 @@ namespace catInWonderland
 	void SceneManager::Frame()
 	{
 		mCurScene->Frame();
-	}
-
-	void SceneManager::Rotate(bool bLeft)
-	{
-		mCurScene->Rotate(bLeft);
 	}
 
 	void SceneManager::ChangeScene(eSceneType sceneType)

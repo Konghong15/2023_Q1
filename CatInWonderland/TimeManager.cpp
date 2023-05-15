@@ -44,7 +44,7 @@ namespace catInWonderland
 
 		char buf[64];
 		sprintf(buf, "fps : %d, DeltaTime : %.5f\n", mFPS, GetDeltaTime());
-		// OutputDebugStringA(buf);
+		OutputDebugStringA(buf);
 
 		if (sTime >= 1.f)
 		{

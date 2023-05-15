@@ -25,21 +25,11 @@ namespace catInWonderland
 
 	void Object::Move(float distanceX, float distanceY)
 	{
-		const Vector2& pos = mRectangle.GetTopLeft();
-		mRectangle.SetPos(pos.GetX() + distanceX, pos.GetY() + distanceY);
+		mRectangle.Move(distanceX, distanceY);
 	}
 
-	void Object::Rotate(bool bLeft)
+	void Object::Rotate(float radian, int originX, int originY)
 	{
-		if (bLeft)
-		{
-			BoardManager::GetInstance()->RotateLeft(&mIndexX, &mIndexY);
-		}
-		else
-		{
-			BoardManager::GetInstance()->RotateRight(&mIndexX, &mIndexY);
-		}
-
-		mRectangle = BoardManager::GetInstance()->GetWorldRect(mIndexX, mIndexY);
+		mRectangle.Rotate(Vector2(originX, originY), radian);
 	}
 }

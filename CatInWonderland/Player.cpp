@@ -2,6 +2,7 @@
 #include "InputManager.h"
 #include "BoardManager.h"
 #include "TimeManager.h"
+#include "RenderManager.h"
 
 namespace catInWonderland
 {
@@ -25,5 +26,11 @@ namespace catInWonderland
 			mIndexX = mIndexX < BOARD_SIZE - 1 ? mIndexX + 1 : mIndexX;
 			mRectangle = BoardManager::GetInstance()->GetWorldRect(mIndexX, mIndexY);
 		}
+	}
+
+	void Player::Render()
+	{
+		//RenderManager::GetInstance()->DrawRect(mRectangle, RGB(255, 0, 0));
+		RenderManager::GetInstance()->Draw(mRectangle, eSpriteType::Player, eAnimationType::None, 0);
 	}
 }

@@ -7,7 +7,7 @@ namespace catInWonderland
 	class GameScene : public Scene
 	{
 	public:
-		GameScene(size_t width, size_t height);
+		GameScene();
 		virtual ~GameScene() = default;
 
 		virtual void Enter() override;

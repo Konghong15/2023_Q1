@@ -5,15 +5,15 @@
 
 namespace catInWonderland
 {
-	Vector2::Vector2()
-		: mX(0)
-		, mY(0)
-	{
-	}
-
 	Vector2::Vector2(float x, float y)
 		: mX(x)
 		, mY(y)
+	{
+	}
+
+	Vector2::Vector2()
+		: mX(0)
+		, mY(0)
 	{
 	}
 
@@ -37,27 +37,35 @@ namespace catInWonderland
 		return *this;
 	}
 
-	bool Vector2::operator==(const Vector2& other)
+	float Vector2::GetDistance(const Vector2& vector, const Vector2& otherVector)
+	{
+		float x = abs(vector.mX - otherVector.mX);
+		float y = abs(vector.mY - otherVector.mY);
+
+		return sqrtf(x * x + y * y);
+	}
+
+	bool Vector2::operator==(const Vector2& other) const
 	{
 		return fabs(mX - other.mX) < FLT_EPSILON && fabs(mY - other.mY) < FLT_EPSILON;
 	}
 
-	bool Vector2::operator<(const Vector2& other)
+	bool Vector2::operator<(const Vector2& other) const
 	{
 		return (mX - other.mX) < FLT_EPSILON && (mY - other.mY) < FLT_EPSILON;
 	}
 
-	bool Vector2::operator<=(const Vector2& other)
+	bool Vector2::operator<=(const Vector2& other) const
 	{
 		return this->operator<(other) || this->operator==(other);
 	}
 
-	bool Vector2::operator>(const Vector2& other)
+	bool Vector2::operator>(const Vector2& other) const
 	{
 		return !this->operator<=(other);
 	}
 
-	bool Vector2::operator>=(const Vector2& other)
+	bool Vector2::operator>=(const Vector2& other) const
 	{
 		return !this->operator<(other);
 	}
@@ -104,13 +112,5 @@ namespace catInWonderland
 	{
 		mX *= scalar;
 		mY *= scalar;
-	}
-
-	float Vector2::GetDistance(const Vector2& vector, const Vector2& otherVector)
-	{
-		float x = abs(vector.mX - otherVector.mX);
-		float y = abs(vector.mY - otherVector.mY);
-
-		return (x * x + y * y);
 	}
 }

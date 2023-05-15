@@ -29,10 +29,7 @@ namespace catInWonderland
 
 	void SpriteManager::init()
 	{
-		// load Sprite
-		// loadSpriteImage(eSpriteType::Player, ".\\resource\\img.bmp");
-
-		// load Animation Rectangle
+		LoadSpriteImage(eSpriteType::Player, "C:\\Users\\User\\Desktop\\rockman_resource\\img.bmp");
 	}
 
 	void SpriteManager::release()
@@ -44,7 +41,7 @@ namespace catInWonderland
 		}
 	}
 
-	void SpriteManager::loadSpriteImage(eSpriteType spriteType, const char* fileName)
+	void SpriteManager::LoadSpriteImage(eSpriteType spriteType, const char* fileName)
 	{
 		Sprite* sprite = new Sprite;
 		sprite->Hdc = CreateCompatibleDC(RenderManager::GetInstance()->GetFrontDC());

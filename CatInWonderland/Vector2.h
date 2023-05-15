@@ -16,16 +16,17 @@ namespace catInWonderland
 		inline const float& GetY() const;
 		inline void SetX(float x);
 		inline void SetY(float y);
+		inline void Move(float x, float y);
 
 		Vector2 GetNormalized() const;
 		float GetMagnitude() const;
 		Vector2& SetNormalize();
-		
-		bool operator==(const Vector2& other);
-		bool operator<(const Vector2& other);
-		bool operator<=(const Vector2& other);
-		bool operator>(const Vector2& other);
-		bool operator>=(const Vector2& other);
+
+		bool operator==(const Vector2& other) const;
+		bool operator<(const Vector2& other) const;
+		bool operator<=(const Vector2& other) const;
+		bool operator>(const Vector2& other) const;
+		bool operator>=(const Vector2& other) const;
 
 		Vector2 operator+(const Vector2& other) const;
 		Vector2 operator-(const Vector2& other) const;
@@ -62,5 +63,11 @@ namespace catInWonderland
 	void Vector2::SetY(float y)
 	{
 		mY = y;
+	}
+
+	void Vector2::Move(float x, float y)
+	{
+		mX += x;
+		mY += y;
 	}
 }

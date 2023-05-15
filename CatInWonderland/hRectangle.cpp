@@ -1,43 +1,82 @@
+#include <cassert>
 #include <memory.h>
+#include <cmath>
 
 #include "hRectangle.h"
 
 namespace catInWonderland
 {
+	hRectangle::hRectangle(Vector2 topLeft, Vector2 bottomRight)
+	{
+		Vector2& memTopLeft = getVertex(eRectangleIndex::TopLeft);
+		Vector2& memBottomRight = getVertex(eRectangleIndex::BottomRight);
+
+		memTopLeft = topLeft;
+		memBottomRight = bottomRight;
+
+		float temp;
+		if (getVertex(eRectangleIndex::TopLeft).GetX() > getVertex(eRectangleIndex::BottomRight).GetX())
+		{
+			temp = memTopLeft.GetX();
+			memTopLeft.SetX(memBottomRight.GetX());
+			memBottomRight.SetX(temp);
+		}
+		if (memTopLeft.GetY() > memBottomRight.GetY())
+		{
+			temp = memTopLeft.GetY();
+			memTopLeft.SetY(memBottomRight.GetY());
+			memBottomRight.SetY(temp);
+		}
+
+		getVertex(eRectangleIndex::TopRight) = Vector2(memBottomRight.GetX(), memTopLeft.GetY());
+		getVertex(eRectangleIndex::BottomLeft) = Vector2(memTopLeft.GetX(), memBottomRight.GetY());
+	}
+
+	hRectangle::hRectangle(float x1, float y1, float x2, float y2)
+		: hRectangle(Vector2(x1, y1), Vector2(x2, y2))
+	{
+	}
+
 	hRectangle::hRectangle()
 		: hRectangle(0.f, 0.f, 0.f, 0.f)
 	{
 	}
 
-	hRectangle::hRectangle(Vector2 topLeft, Vector2 bottomRight)
-		: mTopLeft(topLeft)
-		, mBottomRight(bottomRight)
+	void hRectangle::Rotate(const Vector2& origin, float radian)
 	{
-		float temp;
-		if (mTopLeft.GetX() > mBottomRight.GetX())
+		// 원점 이동
+		for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
 		{
-			temp = mTopLeft.GetX();
-			mTopLeft.SetX(mBottomRight.GetX());
-			mBottomRight.SetX(temp);
+			mVertices[i].Move(-origin.GetX(), -origin.GetY());
 		}
-		if (mTopLeft.GetY() > mBottomRight.GetY())
-		{
-			temp = mTopLeft.GetY();
-			mTopLeft.SetY(mBottomRight.GetY());
-			mBottomRight.SetY(temp);
-		}
-	}
 
-	hRectangle::hRectangle(float x1, float y1, float x2, float y2)
-		: mTopLeft(x1, y1)
-		, mBottomRight(x2, y2)
-	{
+		// 회전
+		{
+			float cosScalr = cos(radian);
+			float sinScalr = sin(radian);
+			Vector2 temp;
+
+			for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
+			{
+				temp.SetX(mVertices[i].GetX() * cosScalr - mVertices[i].GetY() * sinScalr);
+				temp.SetY(mVertices[i].GetX() * sinScalr + mVertices[i].GetY() * cosScalr);
+				mVertices[i] = temp;
+			}
+		}
+
+		// 원점 이동
+		for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
+		{
+			mVertices[i].Move(origin.GetX(), origin.GetY());
+		}
 	}
 
 	bool hRectangle::IsCollision(const hRectangle& rect, const hRectangle& otherRect)
 	{
-		return rect.mBottomRight.GetX() >= otherRect.mTopLeft.GetX() && otherRect.mBottomRight.GetX() >= rect.mTopLeft.GetX()
-			&& rect.mTopLeft.GetY() <= otherRect.mBottomRight.GetY() && otherRect.mTopLeft.GetY() <= rect.mBottomRight.GetY();
+		return rect.getVertex(eRectangleIndex::BottomRight).GetX() >= otherRect.getVertex(eRectangleIndex::TopLeft).GetX()
+			&& otherRect.getVertex(eRectangleIndex::BottomRight).GetX() >= rect.getVertex(eRectangleIndex::TopLeft).GetX()
+			&& rect.getVertex(eRectangleIndex::TopLeft).GetY() <= otherRect.getVertex(eRectangleIndex::BottomRight).GetY()
+			&& otherRect.getVertex(eRectangleIndex::TopLeft).GetY() <= rect.getVertex(eRectangleIndex::BottomRight).GetY();
 	}
 
 	bool hRectangle::IsContained(const hRectangle& rect, const hRectangle& otherRect)
@@ -47,37 +86,49 @@ namespace catInWonderland
 
 	hRectangle hRectangle::GetIntersection(const hRectangle& rect, const hRectangle& otherRect)
 	{
-		if (!IsCollision(rect, otherRect))
-		{
-			return hRectangle();
-		}
-		else
-		{
-			Vector2 interSectionTopLeft(
-				rect.GetTopLeft().GetX() > otherRect.GetTopLeft().GetX() ? rect.GetTopLeft().GetX() : otherRect.GetTopLeft().GetX(),
-				rect.GetTopLeft().GetY() > otherRect.GetTopLeft().GetY() ? rect.GetTopLeft().GetY() : otherRect.GetTopLeft().GetY());
-			Vector2 interSectionBottomRight(
-				rect.GetBottomRight().GetX() < otherRect.GetBottomRight().GetX() ? rect.GetBottomRight().GetX() : otherRect.GetBottomRight().GetX(),
-				rect.GetBottomRight().GetY() < otherRect.GetBottomRight().GetY() ? rect.GetBottomRight().GetY() : otherRect.GetBottomRight().GetY());
+		assert(IsCollision(rect, otherRect));
 
-			return hRectangle(interSectionTopLeft, interSectionBottomRight);
-		}
+		Vector2 interSectionTopLeft(
+			rect.GetTopLeft().GetX() > otherRect.GetTopLeft().GetX() ? rect.GetTopLeft().GetX() : otherRect.GetTopLeft().GetX(),
+			rect.GetTopLeft().GetY() > otherRect.GetTopLeft().GetY() ? rect.GetTopLeft().GetY() : otherRect.GetTopLeft().GetY());
+		Vector2 interSectionBottomRight(
+			rect.GetBottomRight().GetX() < otherRect.GetBottomRight().GetX() ? rect.GetBottomRight().GetX() : otherRect.GetBottomRight().GetX(),
+			rect.GetBottomRight().GetY() < otherRect.GetBottomRight().GetY() ? rect.GetBottomRight().GetY() : otherRect.GetBottomRight().GetY());
+
+		return hRectangle(interSectionTopLeft, interSectionBottomRight);
 	}
 
-	hRectangle hRectangle::getUnion(const hRectangle& rect, const hRectangle& otherRect)
+	hRectangle hRectangle::GetBoundingRectangle(const hRectangle& rectangle)
 	{
-		/*	Vector2 topLeft(rect.mPosition);
-			Vector2 bottomRight(rect.GetBottomRight());
-			Vector2 otherBottomRight(otherRect.GetBottomRight());
+		float minX = rectangle.mVertices[0].GetX();
+		float minY = rectangle.mVertices[0].GetY();
+		float maxX = rectangle.mVertices[0].GetX();
+		float maxY = rectangle.mVertices[0].GetY();
 
-			topLeft.SetX(topLeft.GetX() < otherRect.mPosition.GetX() ? topLeft.GetX() : otherRect.mPosition.GetX());
-			topLeft.SetY(topLeft.GetY() < otherRect.mPosition.GetY() ? topLeft.GetY() : otherRect.mPosition.GetY());
+		for (size_t i = 1; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
+		{
+			float x = rectangle.mVertices[i].GetX();
+			float y = rectangle.mVertices[i].GetY();
 
-			bottomRight.SetX(bottomRight.GetX() < otherBottomRight.GetX() ? otherBottomRight.GetX() : bottomRight.GetX());
-			bottomRight.SetY(bottomRight.GetY() < otherBottomRight.GetY() ? otherBottomRight.GetY() : bottomRight.GetY());
+			if (minX > x)
+			{
+				minX = x;
+			}
+			else if (maxX < x)
+			{
+				maxX = x;
+			}
 
-			bottomRight -= topLeft;
-			return hRectangle(topLeft, bottomRight);*/
-		return hRectangle();
+			if (minY > y)
+			{
+				minY = y;
+			}
+			else if (maxY < y)
+			{
+				maxY = y;
+			}
+		}
+
+		return hRectangle(Vector2(minX, minY), Vector2(maxX, maxY));
 	}
 }

@@ -17,7 +17,6 @@ namespace catInWonderland
 		static void DeleteInstance();
 
 		void Frame();
-		void Rotate(bool bLeft);
 
 		void ChangeScene(eSceneType sceneType);
 		void SpawnCurScene(Object* obj);

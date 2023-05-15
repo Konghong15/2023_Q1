@@ -35,6 +35,7 @@ namespace hockman
 		mPlayerState->Update(this);
 		PlayerState* nextState = mPlayerState->HandleInputOrNull(this);
 
+
 		if (nextState != nullptr)
 		{
 			delete mPlayerState;

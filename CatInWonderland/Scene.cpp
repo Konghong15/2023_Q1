@@ -4,9 +4,7 @@
 
 namespace catInWonderland
 {
-	Scene::Scene(size_t width, size_t height)
-		: mWidth(width)
-		, mHeight(height)
+	Scene::Scene()
 	{
 		mObjects.reserve(RESERVE_SIZE);
 		mDeadObjects.reserve(RESERVE_SIZE);
@@ -47,7 +45,6 @@ namespace catInWonderland
 		{
 			(*iter)->Render();
 		}
-
 	}
 
 	void Scene::Exit()
@@ -72,13 +69,5 @@ namespace catInWonderland
 			delete obj;
 		}
 		mObjects.clear();
-	}
-
-	void Scene::Rotate(bool bLeft)
-	{
-		for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
-		{
-			(*iter)->Rotate(bLeft);
-		}
 	}
 }

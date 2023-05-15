@@ -53,118 +53,48 @@ namespace catInWonderland
 
 	void RenderManager::Render()
 	{
-		static float degreeinRadian = 0.f;
-		static float arrival = 0.f;
-
-		static bool bEnd = false;
-		static bool bSuccess = false;
-		static bool bLeft = false;
-		static float weight = 3.14159f / 1.f;
-
-		if (InputManager::GetInstance()->GetKeyState('E') == eKeyState::PUSH)
-		{
-			bLeft = false;
-			arrival = 1.5708f;
-		}
-		else if (InputManager::GetInstance()->GetKeyState('Q') == eKeyState::PUSH)
-		{
-			bLeft = true;
-			arrival = -1.5708f;
-		}
-
-		if (!bLeft)
-		{
-			if (degreeinRadian < arrival)
-			{
-				degreeinRadian += weight * TimeManager::GetInstance()->GetDeltaTime();
-			}
-			else
-			{
-				degreeinRadian = 0.f;
-				arrival = 0.f;
-			}
-		}
-		else
-		{
-			if (degreeinRadian > arrival)
-			{
-				degreeinRadian -= weight * TimeManager::GetInstance()->GetDeltaTime();
-			}
-			else
-			{
-				degreeinRadian = 0.f;
-				arrival = 0.f;
-			}
-		}
-		rotateRender(degreeinRadian);
-
-		// BitBlt(mFrontHDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mBackHDC, 0, 0, SRCCOPY);
+		BitBlt(mFrontHDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mBackHDC, 0, 0, SRCCOPY);
 		PatBlt(mBackHDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), WHITENESS);
 	}
 
 	void RenderManager::Draw(hRectangle worldRect, eSpriteType spritType, eAnimationType animationType, int animationIndex)
 	{
-		/*const Sprite& sprite = SpriteManager::GetInstance()->GetSprite(spritType);
+		const Sprite& sprite = SpriteManager::GetInstance()->GetSprite(spritType);
 
-		const Vector2& pos = worldRect.GetTopLeft();
-		const Vector2& size = worldRect.GetSize();
-		const Vector2& uvPos = uvRect.GetTopLeft();
-		const Vector2& uvSize = uvRect.GetSize();
+		const Vector2& topLeft = worldRect.GetTopLeft();
+		const Vector2& topRight = worldRect.GetTopRight();
+		const Vector2& bottomLeft = worldRect.GetBottomLeft();
 
-		if (isRight)
-		{
-			TransparentBlt(mBackHDC,
-				static_cast<int>(pos.GetX()),
-				static_cast<int>(pos.GetY()),
-				static_cast<int>(size.GetX()),
-				static_cast<int>(size.GetY()),
-				sprite.Hdc,
-				static_cast<int>(uvPos.GetX()),
-				static_cast<int>(uvPos.GetY()),
-				static_cast<int>(uvSize.GetX()),
-				static_cast<int>(uvSize.GetY()),
-				RGB(210, 230, 210));
-		}
-		else
-		{
-			POINT points[3] = { 0, };
+		POINT points[3] = { 0, };
 
-			points[0] = { static_cast<long>(pos.GetX()),  static_cast<long>(pos.GetY()) };
-			points[1] = { static_cast<long>(pos.GetX() + size.GetY()),  static_cast<long>(pos.GetY()) };
-			points[2] = { static_cast<long>(pos.GetX()),  static_cast<long>(pos.GetY() + size.GetY()) };
+		points[0] = { static_cast<long>(topLeft.GetX()), static_cast<long>(topLeft.GetY()) };
+		points[1] = { static_cast<long>(topRight.GetX()), static_cast<long>(topRight.GetY()) };
+		points[2] = { static_cast<long>(bottomLeft.GetX()), static_cast<long>(bottomLeft.GetY()) };
 
-			PlgBlt(mTempBackHDC, points, sprite.Hdc,
-				static_cast<int>(uvPos.GetX() + uvSize.GetX()),
-				static_cast<int>(uvPos.GetY()),
-				-static_cast<int>(uvSize.GetX()),
-				static_cast<int>(uvSize.GetY()),
-				0, 0, 0);
+		const size_t cx = 37;
+		const size_t cy = 40;
+		const size_t cw = 21;
+		const size_t ch = 24;
 
-			TransparentBlt(mBackHDC,
-				static_cast<int>(pos.GetX()),
-				static_cast<int>(pos.GetY()),
-				static_cast<int>(size.GetX()),
-				static_cast<int>(size.GetY()),
-				mTempBackHDC,
-				static_cast<int>(pos.GetX()),
-				static_cast<int>(pos.GetY()),
-				static_cast<int>(size.GetX()),
-				static_cast<int>(size.GetY()),
-				RGB(210, 230, 210));
-		}*/
-	}
+		PlgBlt(mTempBackHDC, points, sprite.Hdc, cx, cy, cw, ch, 0, 0, 0);
 
-	void RenderManager::DrawReverseX(hRectangle worldRect, eSpriteType spritType, eAnimationType animationType, int animationIndex)
-	{
+		const hRectangle boundingRectangle = hRectangle::GetBoundingRectangle(worldRect);
+		const Vector2& boundingTopLeft = boundingRectangle.GetTopLeft();
+		const Vector2& boundingBottomRight = boundingRectangle.GetBottomRight();
 
-	}
-	void RenderManager::DrawReverseY(hRectangle worldRect, eSpriteType spritType, eAnimationType animationType, int animationIndex)
-	{
+		TransparentBlt(mBackHDC,
+			static_cast<int>(boundingTopLeft.GetX()),
+			static_cast<int>(boundingTopLeft.GetY()),
+			static_cast<int>(boundingBottomRight.GetX() - boundingTopLeft.GetX()),
+			static_cast<int>(boundingBottomRight.GetX() - boundingTopLeft.GetX()),
+			mTempBackHDC,
+			static_cast<int>(boundingTopLeft.GetX()),
+			static_cast<int>(boundingTopLeft.GetY()),
+			static_cast<int>(boundingBottomRight.GetY() - boundingTopLeft.GetY()),
+			static_cast<int>(boundingBottomRight.GetY() - boundingTopLeft.GetY()),
+			RGB(0, 0, 0));
 
-	}
-
-	void RenderManager::DrawRotate(hRectangle worldRect, eSpriteType spritType, eAnimationType animationType, int animationIndex)
-	{
+		PatBlt(mTempBackHDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), WHITENESS);
 
 	}
 

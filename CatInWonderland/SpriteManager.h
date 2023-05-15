@@ -21,6 +21,8 @@ namespace catInWonderland
 		inline const Sprite& GetSprite(eSpriteType spriteType);
 		inline const hRectangle& GetSpriteRectangle(eAnimationType animationType, bool bLoop, size_t index = 0u);
 
+		void LoadSpriteImage(eSpriteType spriteType, const char* fileName);
+
 	private:
 		SpriteManager() = default;
 		~SpriteManager() = default;
@@ -28,7 +30,6 @@ namespace catInWonderland
 		void init();
 		void release();
 
-		void loadSpriteImage(eSpriteType spriteType, const char* fileName);
 		void loadAnimationRectangle(eAnimationType animationType, const char* fileName);
 
 	private:
