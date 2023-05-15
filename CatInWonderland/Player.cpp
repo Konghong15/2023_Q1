@@ -30,7 +30,6 @@ namespace catInWonderland
 
 	void Player::Render()
 	{
-		//RenderManager::GetInstance()->DrawRect(mRectangle, RGB(255, 0, 0));
 		RenderManager::GetInstance()->Draw(mRectangle, eSpriteType::Player, eAnimationType::None, 0);
 	}
 }

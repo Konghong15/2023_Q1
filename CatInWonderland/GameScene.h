@@ -2,7 +2,7 @@
 
 #include "Scene.h"
 
-namespace catInWonderland
+namespace catInWonderland  
 {
 	class GameScene : public Scene
 	{
@@ -12,5 +12,11 @@ namespace catInWonderland
 
 		virtual void Enter() override;
 		virtual void Frame() override;
+
+	private:
+		const float mRotationEnd;
+		bool mbRotate;
+		bool mbLeft;
+		float mElapsed;
 	};
 }

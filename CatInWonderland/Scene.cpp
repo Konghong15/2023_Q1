@@ -40,7 +40,10 @@ namespace catInWonderland
 				++iter;
 			}
 		}
+	}
 
+	void Scene::Render()
+	{
 		for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
 		{
 			(*iter)->Render();

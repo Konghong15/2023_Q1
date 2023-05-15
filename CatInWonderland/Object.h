@@ -18,9 +18,15 @@ namespace catInWonderland
 
 		inline const hRectangle& GetRectangle() const;
 		inline bool GetValid() const;
+		inline size_t GetIndexX() const;
+		inline size_t GetIndexY() const;
 
 		void Move(float distanceX, float distanceY);
-		void Rotate(float radian, int originX, int originY);
+		void Rotate(int originX, int originY, float radian);
+		void RotateIndex(bool bLeft);
+
+	private:
+		void adjustRectangle();
 
 	protected:
 		hRectangle mRectangle;
@@ -37,5 +43,15 @@ namespace catInWonderland
 	bool Object::GetValid() const
 	{
 		return mIsVaild;
+	}
+
+	size_t Object::GetIndexX() const
+	{
+		return mIndexX;
+	}
+
+	size_t Object::GetIndexY() const
+	{
+		return mIndexY;
 	}
 }

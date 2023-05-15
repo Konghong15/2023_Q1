@@ -57,12 +57,12 @@ namespace catInWonderland
 				switch (mKeyState[i])
 				{
 				case eKeyState::NONE:
-					/* intentional  fall-through */
+					/* intentional fall-through */
 				case eKeyState::POP:
 					mKeyState[i] = eKeyState::PUSH;
 					break;
 				case eKeyState::PUSH:
-					/* intentional  fall-through */
+					/* intentional fall-through */
 				case eKeyState::HOLD:
 					mKeyState[i] = eKeyState::HOLD;
 					break;
@@ -76,12 +76,12 @@ namespace catInWonderland
 				switch (mKeyState[i])
 				{
 				case eKeyState::NONE:
-					/* intentional  fall-through */
+					/* intentional fall-through */
 				case eKeyState::POP:
 					mKeyState[i] = eKeyState::NONE;
 					break;
 				case eKeyState::PUSH:
-					/* intentional  fall-through */
+					/* intentional fall-through */
 				case eKeyState::HOLD:
 					mKeyState[i] = eKeyState::POP;
 					break;

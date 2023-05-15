@@ -31,7 +31,7 @@ namespace catInWonderland
 	private:
 		enum { MAX_BOARD_SIZE = 10 };
 		enum { BOARD_PADDING = 200 };
-		enum { CELL_PADDING = 5 };
+		enum { CELL_PADDING = 1 };
 
 		static BoardManager* mInstance;
 

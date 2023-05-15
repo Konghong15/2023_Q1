@@ -69,8 +69,9 @@ namespace catInWonderland
 		assert(outIndexX != nullptr && outIndexY != nullptr);
 		assert(*outIndexX < mBoardSize && (*outIndexY) < mBoardSize);
 
-		*outIndexX = *outIndexY;
-		*outIndexY = mBoardSize - 1 - *outIndexY;
+		int y = *outIndexY;
+		*outIndexY = *outIndexX;
+		*outIndexX = mBoardSize - 1 - y;
 	}
 
 	void BoardManager::RotateLeft(size_t* outIndexX, size_t* outIndexY)
@@ -78,7 +79,8 @@ namespace catInWonderland
 		assert(outIndexX != nullptr && outIndexY != nullptr);
 		assert(*outIndexX < mBoardSize && (*outIndexY) < mBoardSize);
 
-		*outIndexY = *outIndexX;
-		*outIndexY = mBoardSize - 1 - *outIndexX;
+		int x = *outIndexX;
+		*outIndexX = *outIndexY;
+		*outIndexY = mBoardSize - 1 - x;
 	}
 }

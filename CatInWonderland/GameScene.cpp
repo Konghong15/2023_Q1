@@ -1,3 +1,7 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+
 #include "GameScene.h"
 #include "hRectangle.h"
 #include "WinApp.h"
@@ -11,6 +15,10 @@ namespace catInWonderland
 {
 	GameScene::GameScene()
 		: Scene()
+		, mbRotate(false)
+		, mbLeft(false)
+		, mRotationEnd(1.5708f)
+		, mElapsed(0.f)
 	{
 	}
 
@@ -40,61 +48,54 @@ namespace catInWonderland
 
 	void GameScene::Frame()
 	{
-		static bool bRotate = false;
-		static bool bLeft = false;
-
-		static float arrival = 0.f;
-		static float elapsed = 0.f;
-
-		if (InputManager::GetInstance()->GetKeyState('E') == eKeyState::PUSH)
-		{
-			elapsed = 0.f;
-			arrival = 1.5708f;
-			bRotate = true;
-			bLeft = false;
-		}
-		else if (InputManager::GetInstance()->GetKeyState('Q') == eKeyState::PUSH)
-		{
-			elapsed = 0.f;
-			arrival = 1.5708f;
-			bRotate = true;
-			bLeft = true;
-		}
-
-		if (bRotate)
+		if (mbRotate)
 		{
 			const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
-			elapsed += DELTA_TIME;
-			float curRadian = DELTA_TIME;
+			float radian = DELTA_TIME * mRotationEnd;
+			mElapsed += radian;
 
-			if (bLeft)
+			if (mbLeft)
 			{
-				curRadian *= -1;
+				radian *= -1;
 			}
 
 			for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
 			{
-				(*iter)->Rotate(curRadian, WinApp::GetWidth() / 2, WinApp::GetHeight() / 2);
+				(*iter)->Rotate(WinApp::GetWidth() / 2, WinApp::GetHeight() / 2, radian);
 			}
 
-			if (arrival < elapsed)
+			if (mRotationEnd < mElapsed)
 			{
-				bRotate = false;
-
-				float remaider = arrival - elapsed;
-
-				if (bLeft)
-				{
-					remaider *= -1;
-				}
+				mbRotate = false;
 
 				for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
 				{
-					(*iter)->Rotate(remaider, WinApp::GetWidth() / 2, WinApp::GetHeight() / 2);
+					(*iter)->RotateIndex(mbLeft);
+					char buffer[64];
+					sprintf(buffer, "{ %d, %d }", (*iter)->GetIndexX(), (*iter)->GetIndexY());
+					OutputDebugStringA(buffer);
 				}
+				OutputDebugStringA("\n");
 			}
 		}
+		else
+		{
+			if (InputManager::GetInstance()->GetKeyState('E') == eKeyState::PUSH)
+			{
+				mElapsed = 0.f;
+				mbRotate = true;
+				mbLeft = false;
+			}
+			else if (InputManager::GetInstance()->GetKeyState('Q') == eKeyState::PUSH)
+			{
+				mElapsed = 0.f;
+				mbRotate = true;
+				mbLeft = true;
+			}
 
-		Scene::Frame();
+			Scene::Frame();
+		}
+
+		Scene::Render();
 	}
 }

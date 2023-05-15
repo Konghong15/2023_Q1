@@ -42,12 +42,12 @@ namespace catInWonderland
 	{
 	}
 
-	void hRectangle::Rotate(const Vector2& origin, float radian)
+	void hRectangle::Rotate(int originX, int originY, float radian)
 	{
 		// 원점 이동
 		for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
 		{
-			mVertices[i].Move(-origin.GetX(), -origin.GetY());
+			mVertices[i].Move(-originX, -originY);
 		}
 
 		// 회전
@@ -67,16 +67,16 @@ namespace catInWonderland
 		// 원점 이동
 		for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
 		{
-			mVertices[i].Move(origin.GetX(), origin.GetY());
+			mVertices[i].Move(originX, originY);
 		}
 	}
 
 	bool hRectangle::IsCollision(const hRectangle& rect, const hRectangle& otherRect)
 	{
-		return rect.getVertex(eRectangleIndex::BottomRight).GetX() >= otherRect.getVertex(eRectangleIndex::TopLeft).GetX()
-			&& otherRect.getVertex(eRectangleIndex::BottomRight).GetX() >= rect.getVertex(eRectangleIndex::TopLeft).GetX()
-			&& rect.getVertex(eRectangleIndex::TopLeft).GetY() <= otherRect.getVertex(eRectangleIndex::BottomRight).GetY()
-			&& otherRect.getVertex(eRectangleIndex::TopLeft).GetY() <= rect.getVertex(eRectangleIndex::BottomRight).GetY();
+		return rect.GetVertex(eRectangleIndex::BottomRight).GetX() >= otherRect.GetVertex(eRectangleIndex::TopLeft).GetX()
+			&& otherRect.GetVertex(eRectangleIndex::BottomRight).GetX() >= rect.GetVertex(eRectangleIndex::TopLeft).GetX()
+			&& rect.GetVertex(eRectangleIndex::TopLeft).GetY() <= otherRect.GetVertex(eRectangleIndex::BottomRight).GetY()
+			&& otherRect.GetVertex(eRectangleIndex::TopLeft).GetY() <= rect.GetVertex(eRectangleIndex::BottomRight).GetY();
 	}
 
 	bool hRectangle::IsContained(const hRectangle& rect, const hRectangle& otherRect)

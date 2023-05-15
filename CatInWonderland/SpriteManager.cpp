@@ -29,7 +29,7 @@ namespace catInWonderland
 
 	void SpriteManager::init()
 	{
-		LoadSpriteImage(eSpriteType::Player, "C:\\Users\\User\\Desktop\\rockman_resource\\img.bmp");
+		LoadSpriteImage(eSpriteType::Player, "C:\\Users\\User\\Desktop\\rockman_resource\\image.bmp");
 	}
 
 	void SpriteManager::release()

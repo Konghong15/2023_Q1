@@ -47,20 +47,20 @@ namespace catInWonderland
 
 		MSG msg = { 0, };
 		GameCore::GetInstance()->Init();
+
+		while (msg.message != WM_QUIT)
 		{
-			while (msg.message != WM_QUIT)
+			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 			{
-				if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-				{
-					TranslateMessage(&msg);
-					DispatchMessage(&msg);
-				}
-				else
-				{
-					GameCore::GetInstance()->Frame();
-				}
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+			else
+			{
+				GameCore::GetInstance()->Frame();
 			}
 		}
+
 		GameCore::GetInstance()->Release();
 		GameCore::DeletInstance();
 

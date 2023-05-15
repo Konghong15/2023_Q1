@@ -28,8 +28,47 @@ namespace catInWonderland
 		mRectangle.Move(distanceX, distanceY);
 	}
 
-	void Object::Rotate(float radian, int originX, int originY)
+	void Object::Rotate(int originX, int originY, float radian)
 	{
-		mRectangle.Rotate(Vector2(originX, originY), radian);
+		mRectangle.Rotate(originX, originY, radian);
+	}
+
+	void Object::RotateIndex(bool bLeft)
+	{
+		if (bLeft)
+		{
+			BoardManager::GetInstance()->RotateLeft(&mIndexX, &mIndexY);
+		}
+		else
+		{
+			BoardManager::GetInstance()->RotateRight(&mIndexX, &mIndexY);
+
+		}
+
+		const hRectangle& alignedRectangle = BoardManager::GetInstance()->GetWorldRect(mIndexX, mIndexY);
+		const float MAX_DISTANCE = alignedRectangle.GetHeight() < alignedRectangle.GetWidth() ? alignedRectangle.GetHeight() * 0.5f : alignedRectangle.GetWidth() * 0.5f;
+
+		for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
+		{
+			eRectangleIndex iType = static_cast<eRectangleIndex>(i);
+			const Vector2& iVertex = mRectangle.GetVertex(iType);
+
+			for (size_t j = 0; j < static_cast<size_t>(eRectangleIndex::Size); ++j)
+			{
+				eRectangleIndex jTpye = static_cast<eRectangleIndex>(j);
+				const Vector2& jVertex = alignedRectangle.GetVertex(jTpye);
+
+				if (Vector2::GetDistance(iVertex, jVertex) < MAX_DISTANCE)
+				{
+					mRectangle.SetVertex(iType, jVertex);
+					break;
+				}
+			}
+		}
+	}
+
+	void Object::adjustRectangle()
+	{
+
 	}
 }

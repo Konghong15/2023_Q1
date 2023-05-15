@@ -71,10 +71,10 @@ namespace catInWonderland
 		points[1] = { static_cast<long>(topRight.GetX()), static_cast<long>(topRight.GetY()) };
 		points[2] = { static_cast<long>(bottomLeft.GetX()), static_cast<long>(bottomLeft.GetY()) };
 
-		const size_t cx = 37;
-		const size_t cy = 40;
-		const size_t cw = 21;
-		const size_t ch = 24;
+		const size_t cx = 756;
+		const size_t cy = 57;
+		const size_t cw = 273;
+		const size_t ch = 492;
 
 		PlgBlt(mTempBackHDC, points, sprite.Hdc, cx, cy, cw, ch, 0, 0, 0);
 
@@ -92,10 +92,9 @@ namespace catInWonderland
 			static_cast<int>(boundingTopLeft.GetY()),
 			static_cast<int>(boundingBottomRight.GetY() - boundingTopLeft.GetY()),
 			static_cast<int>(boundingBottomRight.GetY() - boundingTopLeft.GetY()),
-			RGB(0, 0, 0));
+			RGB(255, 255, 255));
 
 		PatBlt(mTempBackHDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), WHITENESS);
-
 	}
 
 	void RenderManager::DrawRect(hRectangle rectangle, COLORREF color)

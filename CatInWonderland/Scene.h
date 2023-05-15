@@ -15,6 +15,7 @@ namespace catInWonderland
 
 		virtual void Enter() = 0;
 		virtual void Frame();
+		virtual void Render();
 		virtual void Exit();
 
 		inline void Spawn(Object* obj);
