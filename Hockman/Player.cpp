@@ -28,13 +28,12 @@ namespace hockman
 		delete mPlayerAttackState;
 	}
 
-	void Player::Frame()
+	void Player::Frame() // update
 	{
 		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
 
 		mPlayerState->Update(this);
 		PlayerState* nextState = mPlayerState->HandleInputOrNull(this);
-
 
 		if (nextState != nullptr)
 		{

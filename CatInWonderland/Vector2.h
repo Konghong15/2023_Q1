@@ -12,15 +12,7 @@ namespace catInWonderland
 
 		Vector2(float x, float y);
 
-		inline const float& GetX() const;
-		inline const float& GetY() const;
-		inline void SetX(float x);
-		inline void SetY(float y);
 		inline void Move(float x, float y);
-
-		Vector2 GetNormalized() const;
-		float GetMagnitude() const;
-		Vector2& SetNormalize();
 
 		bool operator==(const Vector2& other) const;
 		bool operator<(const Vector2& other) const;
@@ -37,6 +29,15 @@ namespace catInWonderland
 		void operator-=(const Vector2& other);
 		void operator/=(float scalar);
 		void operator*=(float scalar);
+
+		inline const float& GetX() const;
+		inline const float& GetY() const;
+		Vector2 GetNormalized() const;
+		float GetMagnitude() const;
+
+		inline void SetX(float x);
+		inline void SetY(float y);
+		Vector2& SetNormalize();
 
 		static float GetDistance(const Vector2& vector, const Vector2& otherVector);
 

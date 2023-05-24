@@ -38,7 +38,7 @@ namespace catInWonderland
 			WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME,
 			(screenWidth - (rect.right - rect.left)) / 2,
 			(screenHeight - (rect.bottom - rect.top)) / 2,
-			width, height,
+			width, rect.bottom - rect.top,
 			nullptr, nullptr,
 			hInstance, nullptr);
 

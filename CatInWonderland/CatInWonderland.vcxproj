@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoardManager.h" />
+    <ClInclude Include="BoardObject.h" />
     <ClInclude Include="eAnimationType.h" />
     <ClInclude Include="eSceneType.h" />
     <ClInclude Include="eSprtieType.h" />

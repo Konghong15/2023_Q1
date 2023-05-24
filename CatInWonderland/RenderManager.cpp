@@ -92,7 +92,7 @@ namespace catInWonderland
 			static_cast<int>(boundingTopLeft.GetY()),
 			static_cast<int>(boundingBottomRight.GetY() - boundingTopLeft.GetY()),
 			static_cast<int>(boundingBottomRight.GetY() - boundingTopLeft.GetY()),
-			RGB(255, 255, 255));
+			RGB(255, 255, 255)); // 0 255 255 
 
 		PatBlt(mTempBackHDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), WHITENESS);
 	}

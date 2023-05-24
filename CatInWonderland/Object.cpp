@@ -42,7 +42,6 @@ namespace catInWonderland
 		else
 		{
 			BoardManager::GetInstance()->RotateRight(&mIndexX, &mIndexY);
-
 		}
 
 		const hRectangle& alignedRectangle = BoardManager::GetInstance()->GetWorldRect(mIndexX, mIndexY);
