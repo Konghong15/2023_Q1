@@ -1,7 +1,5 @@
 #include <cassert>
-#include <memory.h>
 #include <cmath>
-
 #include "hRectangle.h"
 
 namespace catInWonderland
@@ -33,7 +31,7 @@ namespace catInWonderland
 	}
 
 	hRectangle::hRectangle(float x1, float y1, float x2, float y2)
-		: hRectangle(Vector2(x1, y1), Vector2(x2, y2))
+		:hRectangle(Vector2(x1, y1), Vector2(x2, y2))
 	{
 	}
 
@@ -42,20 +40,44 @@ namespace catInWonderland
 	{
 	}
 
-	void hRectangle::Rotate(int originX, int originY, float radian)
+	void hRectangle::Rotate(float originX, float originY, float cosf, float sinf)
 	{
-		// 원점 이동
 		for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
 		{
 			mVertices[i].Move(-originX, -originY);
 		}
 
-		// 회전
+		// 회전 
+		{
+			Vector2 temp;
+			for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
+			{
+				temp.SetX(mVertices[i].GetX() * cosf - mVertices[i].GetY() * sinf);
+				temp.SetY(mVertices[i].GetX() * sinf + mVertices[i].GetY() * cosf);
+				mVertices[i] = temp;
+			}
+		}
+
+		// 원점 초기화
+		for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
+		{
+			mVertices[i].Move(originX, originY);
+		}
+	}
+
+	void hRectangle::Rotate(float originX, float originY, float radian)
+	{
+		// 원점 옮기기
+		for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
+		{
+			mVertices[i].Move(-originX, -originY);
+		}
+
+		// 회전 
 		{
 			float cosScalr = cos(radian);
 			float sinScalr = sin(radian);
 			Vector2 temp;
-
 			for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
 			{
 				temp.SetX(mVertices[i].GetX() * cosScalr - mVertices[i].GetY() * sinScalr);
@@ -64,7 +86,7 @@ namespace catInWonderland
 			}
 		}
 
-		// 원점 이동
+		// 원점 초기화
 		for (size_t i = 0; i < static_cast<size_t>(eRectangleIndex::Size); ++i)
 		{
 			mVertices[i].Move(originX, originY);
@@ -73,15 +95,26 @@ namespace catInWonderland
 
 	bool hRectangle::IsCollision(const hRectangle& rect, const hRectangle& otherRect)
 	{
-		return rect.GetVertex(eRectangleIndex::BottomRight).GetX() >= otherRect.GetVertex(eRectangleIndex::TopLeft).GetX()
-			&& otherRect.GetVertex(eRectangleIndex::BottomRight).GetX() >= rect.GetVertex(eRectangleIndex::TopLeft).GetX()
-			&& rect.GetVertex(eRectangleIndex::TopLeft).GetY() <= otherRect.GetVertex(eRectangleIndex::BottomRight).GetY()
-			&& otherRect.GetVertex(eRectangleIndex::TopLeft).GetY() <= rect.GetVertex(eRectangleIndex::BottomRight).GetY();
+		return rect.GetBottomRight().GetX() >= otherRect.GetTopLeft().GetX()
+			&& otherRect.GetBottomRight().GetX() >= rect.GetTopLeft().GetX()
+			&& rect.GetTopLeft().GetY() <= otherRect.GetBottomRight().GetY()
+			&& otherRect.GetTopLeft().GetY() <= rect.GetBottomRight().GetY();
 	}
 
 	bool hRectangle::IsContained(const hRectangle& rect, const hRectangle& otherRect)
 	{
-		return rect.GetTopLeft() < otherRect.GetTopLeft() && rect.GetBottomRight() > otherRect.GetBottomRight();
+		return rect.GetTopLeft().GetX() < otherRect.GetTopLeft().GetX()
+			&& rect.GetTopLeft().GetY() < otherRect.GetTopLeft().GetY()
+			&& rect.GetBottomRight().GetX() > otherRect.GetBottomRight().GetX()
+			&& rect.GetBottomRight().GetY() > otherRect.GetBottomRight().GetY();
+	}
+
+	bool hRectangle::IsContainVertex(const hRectangle& rect, float x, float y)
+	{
+		return rect.GetTopLeft().GetX() < x
+			&& rect.GetTopLeft().GetY() < y
+			&& rect.GetBottomRight().GetX() > x
+			&& rect.GetBottomRight().GetY() > y;
 	}
 
 	hRectangle hRectangle::GetIntersection(const hRectangle& rect, const hRectangle& otherRect)

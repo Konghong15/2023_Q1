@@ -2,21 +2,33 @@
 
 namespace catInWonderland
 {
+	class BoardManager;
+	class InputManager;
+	class RenderManager;
+	class SceneManager;
+	class SoundManager;
+	class SpriteManager;
+	class TimeManager;
+
 	class GameCore
 	{
 	public:
-		static GameCore* GetInstance();
-		static void DeletInstance();
+		GameCore();
+		~GameCore();
+		GameCore(const GameCore&) = delete;
+		GameCore& operator=(const GameCore&) = delete;
 
-		void Init();
 		void Frame();
-		void Release();
 
 	private:
-		GameCore() = default;
-		~GameCore() = default;
+		static unsigned int mInstanceCount;
 
-	private:
-		static GameCore* mInstance;
+		BoardManager* mBoardManager;
+		InputManager* mInputManager;
+		RenderManager* mRenderManager;
+		SceneManager* mSceneManager;
+		SoundManager* mSoundManager;
+		SpriteManager* mSpriteManager;
+		TimeManager* mTimeManager;
 	};
 }

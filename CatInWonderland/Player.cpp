@@ -1,35 +1,81 @@
+#include <cassert>
+#include <Windows.h>
+
 #include "Player.h"
+
+#include "PlayerIdle.h"
+#include "PlayerMove.h"
+#include "PlayerAction.h"
+#include "PlayerPlummet.h"
+
 #include "InputManager.h"
 #include "BoardManager.h"
-#include "TimeManager.h"
-#include "RenderManager.h"
 
 namespace catInWonderland
 {
-	Player::Player(hRectangle rectangle, size_t indexX, size_t indexY)
-		: Object(rectangle, indexX, indexY)
-		, mbRight(true)
+	Player::Player(const ObjectInfo& objectInfo, size_t boardX, size_t boardY)
+		: BoardObject(objectInfo, boardX, boardY)
+		, mPlayerState{ nullptr, }
+		, mbStageClear(false)
+		, mCurrentStateType(ePlayerStateType::Idle)
+		, mPreventStateType(ePlayerStateType::Idle)
 	{
 	}
 
-	void Player::Frame()
+	Player::Player(hRectangle worldRectangle, hRectangle spriteRectangle, Sprite* sprite, eLayerType layerType, size_t boardX, size_t boardY, bool isLeft)
+		: BoardObject(worldRectangle, spriteRectangle, sprite, eObjectType::Player, layerType, boardX, boardY, isLeft)
+		, mPlayerState{ nullptr, }
+		, mbStageClear(false)
+		, mCurrentStateType(ePlayerStateType::Idle)
+		, mPreventStateType(ePlayerStateType::Idle)
 	{
-		const size_t BOARD_SIZE = BoardManager::GetInstance()->GetBoardSize();
+		mPlayerState[static_cast<unsigned int>(ePlayerStateType::Idle)] = new PlayerIdle();
+		mPlayerState[static_cast<unsigned int>(ePlayerStateType::Move)] = new PlayerMove();
+		mPlayerState[static_cast<unsigned int>(ePlayerStateType::Action)] = new PlayerAction();
+		mPlayerState[static_cast<unsigned int>(ePlayerStateType::Plummet)] = new PlayerPlummet();
+	}
 
-		if (InputManager::GetInstance()->GetKeyState('A') == eKeyState::PUSH)
+	Player::~Player()
+	{
+		for (int i = 0; i < static_cast<int>(ePlayerStateType::Size); i++)
 		{
-			mIndexX = mIndexX != 0 ? mIndexX - 1 : mIndexX;
-			mRectangle = BoardManager::GetInstance()->GetWorldRect(mIndexX, mIndexY);
-		}
-		else if (InputManager::GetInstance()->GetKeyState('D') == eKeyState::PUSH)
-		{
-			mIndexX = mIndexX < BOARD_SIZE - 1 ? mIndexX + 1 : mIndexX;
-			mRectangle = BoardManager::GetInstance()->GetWorldRect(mIndexX, mIndexY);
+			delete mPlayerState[i];
+			mPlayerState[i] = nullptr;
 		}
 	}
 
-	void Player::Render()
+	void Player::Update()
 	{
-		RenderManager::GetInstance()->Draw(mRectangle, eSpriteType::Player, eAnimationType::None, 0);
+		PlayerState* currentState = mPlayerState[static_cast<int>(mCurrentStateType)];
+		assert(currentState != nullptr);
+
+		currentState->Update(this);
+		ePlayerStateType nextStateType = currentState->HandleStateOrNull(this);
+
+		if (mCurrentStateType != nextStateType)
+		{
+			currentState->Exit(this);
+			mPreventStateType = mCurrentStateType;
+			mCurrentStateType = nextStateType;
+			mPlayerState[static_cast<int>(nextStateType)]->Enter(this);
+		}
+	}
+
+
+	void Player::SetIsLeft(bool bLeft)
+	{
+		mbLeft = bLeft;
+		mButterfly->SetIsLeft(bLeft);
+	}
+
+
+	void Player::SetIsRed(bool bRed)
+	{
+		mButterfly->SetIsRed(bRed);
+	}
+
+	bool Player::GetIsRed() const
+	{
+		return mButterfly->GetIsRed();
 	}
 }

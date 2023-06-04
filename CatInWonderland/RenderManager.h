@@ -2,52 +2,63 @@
 
 #include <Windows.h>
 
-#include "eAnimationType.h"
-#include "eSprtieType.h"
-#include "hRectangle.h"
+#include "eLayerType.h"
 
 namespace catInWonderland
 {
-	class RenderManager
+	class hRectangle;
+	struct Sprite;
+
+	class RenderManager final
 	{
 	public:
-		static RenderManager* GetInstance();
-		static void DeleteInstance();
+		RenderManager();
+		~RenderManager();
+		RenderManager(const RenderManager&) = delete;
+		RenderManager operator=(const RenderManager&) = delete;
 
 		void Render();
 
-		void Draw(hRectangle worldRect, eSpriteType spritType, eAnimationType animationType, int animationIndex);
+		void Draw(const hRectangle& worldRectangle, const hRectangle& spriteRectangle, const Sprite& sprite, eLayerType layerType = eLayerType::NonBlendObject, bool bLeft = true);
 
-		void DrawRect(int x, int y, int w, int h, COLORREF color);
-		void DrawRect(hRectangle rectangle, COLORREF color);
-		void DrawLine(int startX, int startY, int endX, int endY, COLORREF color);
-		void DrawPoint(int x, int y, COLORREF color);
+		void SetPostProcessingColor(COLORREF color);
+		inline void SetScale(eLayerType layerType, float scale);
+		inline void SetAlpha(eLayerType layerType, unsigned int alpha);
 
 		inline HDC GetFrontDC() const;
 
 	private:
-		void rotateRender(float radian);
+		float mScales[static_cast<unsigned int>(eLayerType::Size)];
+		unsigned int mAlphas[static_cast<unsigned int>(eLayerType::Size)];
+		HDC mLayerDCs[static_cast<unsigned int>(eLayerType::Size)]; // FrameDC
 
-	private:
-		RenderManager() = default;
-		~RenderManager() = default;
+		HBITMAP mLayerBitmaps[static_cast<unsigned int>(eLayerType::Size)];
 
-		void init();
-		void release();
+		HDC mFrontMemDC;
+		HDC mBackMemDC;
+		HDC mRotateMemDC;
+		HDC mScaleDC;
+		HDC mBlendDC;
 
-	private:
-		static RenderManager* mInstance;
-
-		HDC mFrontHDC;
-		HDC mBackHDC;
-		HBITMAP mBackBitMap;
-
-		HDC mTempBackHDC;
-		HBITMAP mTempBackBitMap;
+		HBITMAP mBackBitmap;
+		HBITMAP mRotateBitmap;
+		HBITMAP mScaleBitmap;
+		HBITMAP mBlendBitmap;
 	};
+
+	void RenderManager::SetScale(eLayerType layerType, float scale)
+	{
+		mScales[static_cast<unsigned int>(layerType)] = scale;
+	}
+
+	void RenderManager::SetAlpha(eLayerType layerTpye, unsigned int alpha)
+	{
+		mAlphas[static_cast<unsigned int>(layerTpye)] = alpha;
+	}
 
 	HDC RenderManager::GetFrontDC() const
 	{
-		return mFrontHDC;
+		return mFrontMemDC;
 	}
+
 }

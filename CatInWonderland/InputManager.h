@@ -12,25 +12,22 @@ namespace catInWonderland
 		POP
 	};
 
-	class InputManager
+	class InputManager final
 	{
 	public:
-		static InputManager* GetInstance();
-		static void DeleteInstance();
+		InputManager();
+		~InputManager() = default;
+		InputManager(const InputManager&) = delete;
+		InputManager operator=(const InputManager&) = delete;
 
-		void Reset();
-		void Frame();
+		void Init();
+		void Update();
 
 		inline eKeyState GetKeyState(WORD keyCode);
 		inline const POINT& GetMousePos() const;
 
 	private:
-		InputManager() = default;
-		~InputManager() = default;
-
-	private:
 		enum { KEY_SIZE = 255 };
-		static InputManager* mInstance;
 
 		POINT mMousePos;
 		eKeyState mKeyState[KEY_SIZE];

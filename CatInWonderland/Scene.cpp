@@ -1,43 +1,80 @@
 #include "Scene.h"
 #include "Object.h"
+#include "Button.h"
+#include "ConstantTable.h"
+#include "SpriteManager.h"
+#include "RenderManager.h"
+#include "TimeManager.h"
 #include "InputManager.h"
+#include "SoundManager.h"
 
 namespace catInWonderland
 {
-	Scene::Scene()
+	bool Scene::mbSoundOn = true;
+
+	Scene::Scene(eSceneType sceneType)
+		: mSceneType(sceneType)
+		, mSoundButton(nullptr)
+		, mFadeInElapsed(1.f)
+		, mbStart(false)
 	{
-		mObjects.reserve(RESERVE_SIZE);
-		mDeadObjects.reserve(RESERVE_SIZE);
-		mSpawnObjects.reserve(RESERVE_SIZE);
+		mObjects.reserve(OBJECT_CAPACITY);
 	}
 
-	void Scene::Frame()
+	Scene::~Scene()
 	{
-		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end(); ++iter)
-		{
-			Object* obj = (*iter);
-			delete obj;
-		}
-		mDeadObjects.clear();
+		Exit();
+	}
 
-		for (auto iter = mSpawnObjects.begin(); iter != mSpawnObjects.end(); ++iter)
-		{
-			mObjects.push_back((*iter));
-		}
-		mSpawnObjects.clear();
+	void Scene::Enter()
+	{
+		mSoundButton = new Button(hRectangle(48, 22, 193, 169), SET_BUTTON_RECT, &SpriteManager::GetInstance()->GetSprite(mbSoundOn ? eSpriteType::SoundOn : eSpriteType::SoundOff), eLayerType::Background);
+		RegisterObject(mSoundButton);
 
-		for (auto iter = mObjects.begin(); iter != mObjects.end();)
-		{
-			(*iter)->Frame();
+		mbStart = false;
+		mFadeInElapsed = 1.f;
+	}
 
-			if (!(*iter)->GetValid())
+	void Scene::Update()
+	{
+		if (mSoundButton->GetButtonState() == eButtonState::Click)
+		{
+			if (mbSoundOn == true)
 			{
-				mDeadObjects.push_back(*iter);
-				iter = mObjects.erase(iter);
+				mbSoundOn = false;
+				mSoundButton->SetSprite(&SpriteManager::GetInstance()->GetSprite(eSpriteType::SoundOff));
+
+				SoundManager::GetInstance()->SetVolume(0.f);
 			}
-			else
+			else if (mbSoundOn == false)
 			{
-				++iter;
+				mbSoundOn = true;
+				mSoundButton->SetSprite(&SpriteManager::GetInstance()->GetSprite(eSpriteType::SoundOn));
+
+				SoundManager::GetInstance()->SetVolume(0.5f);
+			}
+		}
+		RenderManager::GetInstance()->SetPostProcessingColor(RGB(0, 0, 0));
+		const float DELTA_TIME = TimeManager::GetInstance()->GetDeltaTime();
+
+		if (mFadeInElapsed > 0.f && !mbStart)
+		{
+			mFadeInElapsed -= DELTA_TIME;
+
+			if (mFadeInElapsed <= 0.f)
+			{
+				mFadeInElapsed = 0.f;
+				mbStart = true;
+			}
+
+			RenderManager::GetInstance()->SetAlpha(eLayerType::PostProcessing, static_cast<unsigned int>(mFadeInElapsed * 255));
+		}
+
+		if (mbStart)
+		{
+			for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
+			{
+				(*iter)->Update();
 			}
 		}
 	}
@@ -52,25 +89,14 @@ namespace catInWonderland
 
 	void Scene::Exit()
 	{
-		for (auto iter = mDeadObjects.begin(); iter != mDeadObjects.end(); ++iter)
-		{
-			Object* obj = (*iter);
-			delete obj;
-		}
-		mDeadObjects.clear();
-
-		for (auto iter = mSpawnObjects.begin(); iter != mSpawnObjects.end(); ++iter)
-		{
-			Object* obj = (*iter);
-			delete obj;
-		}
-		mSpawnObjects.clear();
-
 		for (auto iter = mObjects.begin(); iter != mObjects.end(); ++iter)
 		{
-			Object* obj = (*iter);
-			delete obj;
+			Object* object = (*iter);
+			delete object;
 		}
+
 		mObjects.clear();
+		mSoundButton = nullptr;
+		RenderManager::GetInstance()->SetAlpha(eLayerType::PostProcessing, 0);
 	}
 }

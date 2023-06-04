@@ -4,6 +4,7 @@
 
 namespace catInWonderland
 {
+	//(경고) struct 표시 문제
 	struct Sprite
 	{
 	public:

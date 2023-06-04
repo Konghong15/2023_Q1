@@ -1,61 +1,48 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <Windows.h>
+#include <cmath>
 #include <stdio.h>
 
 #include "TimeManager.h"
+#include "WinApp.h"
 
 namespace catInWonderland
 {
-	TimeManager* TimeManager::mInstance = nullptr;
-
-	TimeManager* TimeManager::GetInstance()
+	TimeManager::TimeManager()
+		: mCurrentTime(GetTickCount64())
+		, mPreviousTime(mCurrentTime)
+		, mDeltaTime(0.f)
+		, mFPS(0u)
+		, mElapsed(0.f)
+		, mFrameCount(0u)
 	{
-		if (mInstance == nullptr)
-		{
-			mInstance = new TimeManager();
-			mInstance->Reset();
-		}
-
-		return mInstance;
+		mPreviousTime = mCurrentTime;
 	}
 
-	void TimeManager::DeleteInstance()
+	void TimeManager::Init()
 	{
-		delete mInstance;
-		mInstance = nullptr;
-	}
-
-	void TimeManager::Reset()
-	{
-		QueryPerformanceFrequency(&mFrequency);
-		QueryPerformanceCounter(&mCurTime);
+		mPreviousTime = mCurrentTime = GetTickCount64();
 		mDeltaTime = 0.f;
-		mPrevTime = mCurTime;
-		mFPS = 0;
-		mFrameCount = 0;
 	}
 
-	void TimeManager::Frame()
+	void TimeManager::Update()
 	{
-		static float sTime = 0.f;
+		mPreviousTime = mCurrentTime;
+		mCurrentTime = GetTickCount64();
+		mDeltaTime = (mCurrentTime - mPreviousTime) * 0.001f;
 
-		sTime += GetDeltaTime();
-
-		char buf[64];
+		char buf[128];
 		sprintf(buf, "fps : %d, DeltaTime : %.5f\n", mFPS, GetDeltaTime());
-		// OutputDebugStringA(buf);
+		OutputDebugStringA(buf);
 
-		if (sTime >= 1.f)
+		mElapsed += mDeltaTime;
+		mFrameCount++;
+
+		if (mElapsed >= 1.f)
 		{
-			sTime -= 1.f;
 			mFPS = mFrameCount;
+			mElapsed -= 1.f;
 			mFrameCount = 0;
 		}
-
-		mDeltaTime = (float)(mCurTime.QuadPart - mPrevTime.QuadPart) / mFrequency.QuadPart;
-		mPrevTime = mCurTime;
-		QueryPerformanceCounter(&mCurTime);
-		++mFrameCount;
 	}
 }

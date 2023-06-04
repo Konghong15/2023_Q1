@@ -1,7 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <cassert>
-#include <Windows.h>
 #include <stdio.h>
 
 #include "InputManager.h"
@@ -9,36 +8,17 @@
 
 namespace catInWonderland
 {
-	InputManager* InputManager::mInstance = nullptr;
-
-	InputManager* InputManager::GetInstance()
-	{
-		if (mInstance == nullptr)
-		{
-			mInstance = new InputManager();
-			mInstance->Reset();
-		}
-
-		return mInstance;
-	}
-
-	void InputManager::DeleteInstance()
-	{
-		delete mInstance;
-		mInstance = nullptr;
-	}
-
-	void InputManager::Reset()
+	void InputManager::Init()
 	{
 		mMousePos = { 0, 0 };
 		memset(mKeyState, static_cast<int>(eKeyState::NONE), KEY_SIZE * sizeof(eKeyState));
 	}
 
-	void InputManager::Frame()
+	void InputManager::Update()
 	{
 		POINT curMousePos;
 		GetCursorPos(&curMousePos); // temp
-		if (ScreenToClient(WinApp::GetHWND(), &curMousePos) != false)
+		if (ScreenToClient(WinApp::GetWindow(), &curMousePos) != false)
 		{
 			mMousePos = curMousePos;
 		}
@@ -92,4 +72,4 @@ namespace catInWonderland
 			}
 		}
 	}
-};
+}

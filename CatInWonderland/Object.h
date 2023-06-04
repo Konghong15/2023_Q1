@@ -1,57 +1,106 @@
 #pragma once
 
-#include "hRectangle.h"
-#include "Vector2.h"
+#include "ObjectInfo.h"
+#include "eLayerType.h"
+#include "eAnimaitonType.h"
+#include "eSpriteType.h"
 
 namespace catInWonderland
 {
-	class Collider;
+	class Sprtie;
 
 	class Object
 	{
 	public:
-		Object(hRectangle rectangle, size_t indexX, size_t indexY);
-		virtual ~Object();
+		Object(const ObjectInfo& objectInfo);
+		Object(hRectangle worldRectangle, hRectangle spriteRectangle, eSpriteType spriteType, eObjectType objectType, eLayerType layerType, bool bLeft = true);
+		virtual ~Object() = default;
 
-		virtual void Frame() = 0;
-		virtual void Render();
+		virtual void Update(float deltaTime) = 0;
 
-		inline const hRectangle& GetRectangle() const;
-		inline bool GetValid() const;
-		inline size_t GetIndexX() const;
-		inline size_t GetIndexY() const;
+		inline void MoveInWorld(float x, float y);
+		virtual void SetIsLeft(bool bLeft);
 
-		void Move(float distanceX, float distanceY);
-		void Rotate(int originX, int originY, float radian);
-		void RotateIndex(bool bLeft);
+		inline void SetSpriteType(eSpriteType spriteType);
+		inline void SetSpriteRectangle(const hRectangle& spriteRectangle);
+		inline void SetLayerType(eLayerType layerType);
+		inline void SetWorldRectangle(const hRectangle& spriteRectangle);
+		inline void SetVisible(bool bVisible);
 
-	private:
-		void adjustRectangle();
+		inline bool GetIsLeft() const;
+		inline const hRectangle& GetWorldRectangle() const;
+		inline eObjectType GetObjectType() const;
+		inline eLayerType GetLayerType() const;
+		inline eSpriteType GetSpriteType() const;
+		inline bool GetIsVisible() const;
 
 	protected:
-		hRectangle mRectangle;
-		size_t mIndexX;
-		size_t mIndexY;
-		bool mIsVaild;
+		hRectangle mWorldRectangle;
+		hRectangle mSpriteRectangle;
+		eLayerType mLayerType;
+		eSpriteType mSpriteType;
+		eObjectType mObjectType;
+		bool mbLeft;
+		bool mbVisible;
 	};
 
-	const hRectangle& Object::GetRectangle() const
+	void Object::SetSpriteType(eSpriteType spriteType)
 	{
-		return mRectangle;
+		mSpriteType = spriteType;
 	}
 
-	bool Object::GetValid() const
+	void Object::SetSpriteRectangle(const hRectangle& spriteRectangle)
 	{
-		return mIsVaild;
+		mSpriteRectangle = spriteRectangle;
 	}
 
-	size_t Object::GetIndexX() const
+	void Object::SetWorldRectangle(const hRectangle& worldRectangle)
 	{
-		return mIndexX;
+		mWorldRectangle = worldRectangle;
 	}
 
-	size_t Object::GetIndexY() const
+	void Object::SetVisible(bool bVisible)
 	{
-		return mIndexY;
+		mbVisible = bVisible;
+	}
+
+	bool Object::GetIsVisible() const
+	{
+		return mbVisible;
+	}
+
+	bool Object::GetIsLeft() const
+	{
+		return mbLeft;
+	}
+
+	const hRectangle& Object::GetWorldRectangle() const
+	{
+		return mWorldRectangle;
+	}
+
+	eObjectType Object::GetObjectType() const
+	{
+		return mObjectType;
+	}
+
+	eSpriteType Object::GetSpriteType() const
+	{
+		return mSpriteType;
+	}
+
+	void Object::MoveInWorld(float x, float y)
+	{
+		mWorldRectangle.Move(x, y);
+	}
+
+	eLayerType Object::GetLayerType() const
+	{
+		return mLayerType;
+	}
+
+	void Object::SetLayerType(eLayerType layerType)
+	{
+		mLayerType = layerType;
 	}
 }

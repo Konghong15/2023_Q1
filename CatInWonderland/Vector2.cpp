@@ -3,6 +3,10 @@
 
 #include "Vector2.h"
 
+#ifndef EPSILON
+#define EPSILON (0.001f)
+#endif 
+
 namespace catInWonderland
 {
 	Vector2::Vector2(float x, float y)
@@ -12,29 +16,18 @@ namespace catInWonderland
 	}
 
 	Vector2::Vector2()
-		: mX(0)
-		, mY(0)
+		: Vector2(0.f, 0.f)
 	{
 	}
 
-	Vector2 Vector2::GetNormalized() const
+	bool Vector2::operator==(const Vector2& other) const
 	{
-		float magnitude = GetMagnitude();
-		return Vector2(mX / magnitude, mY / magnitude);
+		return fabs(mX - other.mX) < EPSILON && fabs(mY - other.mY) < EPSILON;
 	}
 
-	float Vector2::GetMagnitude() const
+	bool Vector2::operator!=(const Vector2& other) const
 	{
-		return sqrt(mX * mX + mY * mY);
-	}
-
-	Vector2& Vector2::SetNormalize()
-	{
-		float magnitude = GetMagnitude();
-		mX /= magnitude;
-		mY /= magnitude;
-
-		return *this;
+		return fabs(mX - other.mX) > EPSILON || fabs(mY - other.mY) > EPSILON;
 	}
 
 	float Vector2::GetDistance(const Vector2& vector, const Vector2& otherVector)
@@ -45,72 +38,19 @@ namespace catInWonderland
 		return sqrtf(x * x + y * y);
 	}
 
-	bool Vector2::operator==(const Vector2& other) const
-	{
-		return fabs(mX - other.mX) < FLT_EPSILON && fabs(mY - other.mY) < FLT_EPSILON;
-	}
-
-	bool Vector2::operator<(const Vector2& other) const
-	{
-		return (mX - other.mX) < FLT_EPSILON && (mY - other.mY) < FLT_EPSILON;
-	}
-
-	bool Vector2::operator<=(const Vector2& other) const
-	{
-		return this->operator<(other) || this->operator==(other);
-	}
-
-	bool Vector2::operator>(const Vector2& other) const
-	{
-		return !this->operator<=(other);
-	}
-
-	bool Vector2::operator>=(const Vector2& other) const
-	{
-		return !this->operator<(other);
-	}
-
 	Vector2 Vector2::operator+(const Vector2& other) const
 	{
 		return Vector2(mX + other.mX, mY + other.mY);
 	}
 
-	Vector2 Vector2::operator-(const Vector2& other)const
+	Vector2 Vector2::operator-(const Vector2& other) const
 	{
 		return Vector2(mX - other.mX, mY - other.mY);
 	}
 
-	Vector2 Vector2::operator*(float scalar)const
+	float Vector2::GetMagnitude() const
 	{
-		return Vector2(mX * scalar, mY * scalar);
-	}
-
-	Vector2 Vector2::operator/(float scalar)const
-	{
-		return Vector2(mX / scalar, mY / scalar);
-	}
-
-	void Vector2::operator+=(const Vector2& other)
-	{
-		mX += other.mX;
-		mY += other.mY;
-	}
-
-	void Vector2::operator-=(const Vector2& other)
-	{
-		mX -= other.mX;
-		mY -= other.mY;
-	}
-
-	void Vector2::operator/=(float scalar)
-	{
-		mX /= scalar;
-		mY /= scalar;
-	}
-
-	void Vector2::operator*=(float scalar)
-	{
-		mX *= scalar;
-		mY *= scalar;
+		return sqrt(mX * mX + mY * mY);
 	}
 }
+

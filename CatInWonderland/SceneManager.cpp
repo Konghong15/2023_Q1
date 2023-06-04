@@ -1,71 +1,40 @@
 #include <cassert>
+#include <Windows.h>
 
 #include "SceneManager.h"
-#include "WinApp.h"
 #include "Scene.h"
-#include "GameScene.h"
+#include "SoundManager.h"
+#include "WinApp.h"
+#include "Stage01.h"
 
 namespace catInWonderland
 {
-	SceneManager* SceneManager::mInstance = nullptr;
-
-	SceneManager* SceneManager::GetInstance()
+	SceneManager::~SceneManager()
 	{
-		if (mInstance == nullptr)
+		for (auto iter = mSceneMap.begin(); iter != mSceneMap.end(); ++iter)
 		{
-			mInstance = new SceneManager();
-			mInstance->init();
-		}
-
-		return mInstance;
-	}
-
-	void SceneManager::DeleteInstance()
-	{
-		mInstance->release();
-		delete mInstance;
-		mInstance = nullptr;
-	}
-
-	void SceneManager::init()
-	{
-		// cur Scene setting
-		mCurScene = new GameScene();
-		mCurScene->Enter();
-		// init
-	}
-
-	void SceneManager::release()
-	{
-		mCurScene->Exit();
-
-		for (auto iter = mSceneMap.begin(); iter != mSceneMap.end();)
-		{
-			delete (iter->second);
-			iter = mSceneMap.erase(iter);
+			Scene* scene = iter->second;
+			delete scene;
 		}
 
 		mSceneMap.clear();
 	}
 
-	void SceneManager::Frame()
+	void SceneManager::Update()
 	{
-		mCurScene->Frame();
-	}
+		mCurrentScene->Update();
+		mCurrentScene->Render();
 
-	void SceneManager::ChangeScene(eSceneType sceneType)
-	{
-		auto iter = mSceneMap.find(sceneType);
-		assert(iter != mSceneMap.end());
+		eSceneType nextSceneType = mCurrentScene->HandleScene();
 
-		mCurScene->Exit();
-		mCurScene = iter->second;
-		mCurScene->Enter();
-	}
+		if (nextSceneType != mCurrentScene->GetSceneType())
+		{
+			mCurrentScene->Exit();
+			auto iter = mSceneMap.find(nextSceneType);
+			assert(iter != mSceneMap.end());
+			mCurrentScene = iter->second;
 
-	void SceneManager::SpawnCurScene(Object* obj)
-	{
-		assert(mCurScene != nullptr);
-		mCurScene->Spawn(obj);
+			mCurrentScene->Enter();
+		}
 	}
 }

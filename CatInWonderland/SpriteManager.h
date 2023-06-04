@@ -2,44 +2,41 @@
 
 #include <cassert>
 #include <map>
-#include <vector>
+#include <Windows.h>
 
-#include "eSprtieType.h"
-#include "eAnimationType.h"
+#include "eSpriteType.h"
+#include "eAnimaitonType.h"
 #include "hRectangle.h"
+#include "Animator.h"
 
 namespace catInWonderland
 {
 	struct Sprite;
+	class hRectangle;
 
-	class SpriteManager
+	class SpriteManager final
 	{
 	public:
-		static SpriteManager* GetInstance();
-		static void DeleteInstance();
-
-		inline const Sprite& GetSprite(eSpriteType spriteType);
-		inline const hRectangle& GetSpriteRectangle(eAnimationType animationType, bool bLoop, size_t index = 0u);
-
-		void LoadSpriteImage(eSpriteType spriteType, const char* fileName);
-
-	private:
 		SpriteManager() = default;
-		~SpriteManager() = default;
+		~SpriteManager();
+		SpriteManager(const SpriteManager&) = delete;
+		SpriteManager& operator=(const SpriteManager&) = delete;
 
-		void init();
-		void release();
+		void LoadSpriteImage(eSpriteType spriteType, const WCHAR* fileName);
+		void LoadSpriteImage(eSpriteType spriteType, const char* fileName);
+		void LoadAnimationRectangle(eAnimationType animationType, const WCHAR* fileName, float interval);
+		void LoadAnimationRectangle(eAnimationType animationType, const char* fileName, float interval);
 
-		void loadAnimationRectangle(eAnimationType animationType, const char* fileName);
+		inline Sprite& GetSprite(eSpriteType spriteType) const;
+		inline const hRectangle& GetSpriteRectangle(eAnimationType animationType, unsigned int index) const;
+		inline const Animator& GetAnimator(eAnimationType animationType) const;
 
 	private:
-		static SpriteManager* mInstance;
-
 		std::map<eSpriteType, Sprite*> mSpriteMap;
-		std::map<eAnimationType, std::vector<hRectangle>> mSpriteRectMap;
+		std::map<eAnimationType, Animator> mSpriteRectMap;
 	};
 
-	const Sprite& SpriteManager::GetSprite(eSpriteType spriteType)
+	Sprite& SpriteManager::GetSprite(eSpriteType spriteType) const
 	{
 		auto finded = mSpriteMap.find(spriteType);
 		assert(finded != mSpriteMap.end());
@@ -47,25 +44,16 @@ namespace catInWonderland
 		return *(finded->second);
 	}
 
-	const hRectangle& SpriteManager::GetSpriteRectangle(eAnimationType animationType, bool bLoop, size_t index)
+	const Animator& SpriteManager::GetAnimator(eAnimationType animationType) const
 	{
 		auto finded = mSpriteRectMap.find(animationType);
 		assert(finded != mSpriteRectMap.end());
 
-		std::vector<hRectangle>& spriteRectangles = (finded->second);
-		size_t spriteCount = spriteRectangles.size();
-		size_t aniIndex;
+		return finded->second;
+	}
 
-		if (bLoop)
-		{
-			aniIndex = index % spriteCount;
-		}
-		else
-		{
-			aniIndex = index < spriteCount ? index : spriteCount - 1;
-		}
-
-		assert(index < spriteCount);
-		return spriteRectangles.at(aniIndex);
+	const hRectangle& SpriteManager::GetSpriteRectangle(eAnimationType animationType, unsigned int index) const
+	{
+		return GetAnimator(animationType).GetSpriteRectangle(index);
 	}
 }

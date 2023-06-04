@@ -2,199 +2,173 @@
 #include "SpriteManager.h"
 #include "Sprite.h"
 #include "WinApp.h"
-#include "InputManager.h"
-#include "TimeManager.h"
-#include "SceneManager.h"
+#include "Vector2.h"
 
 #pragma comment(lib, "msimg32.lib")
 
 namespace catInWonderland
 {
-	RenderManager* RenderManager::mInstance = nullptr;
-
-	RenderManager* RenderManager::GetInstance()
+	RenderManager::RenderManager()
+		: mScales{ 0.f, }
+		, mAlphas{ 0, }
 	{
-		if (mInstance == nullptr)
+		mFrontMemDC = GetDC(WinApp::GetWindow());
+
+		for (unsigned int i = 0; i < static_cast<unsigned int>(eLayerType::Size); ++i)
 		{
-			mInstance = new RenderManager();
-			mInstance->init();
+			mScales[i] = 1.f;
+			mAlphas[i] = 255;
+			mLayerDCs[i] = CreateCompatibleDC(mFrontMemDC);
+			mLayerBitmaps[i] = CreateCompatibleBitmap(mFrontMemDC, WinApp::GetWidth(), WinApp::GetHeight());
+			SelectObject(mLayerDCs[i], mLayerBitmaps[i]);
 		}
 
-		return mInstance;
+		//   mAlphas[static_cast<unsigned int>(eLayerType::PostProcessing)] = 0.f;
+
+		mBackMemDC = CreateCompatibleDC(mFrontMemDC);
+		mRotateMemDC = CreateCompatibleDC(mFrontMemDC);
+		mScaleDC = CreateCompatibleDC(mFrontMemDC);
+		mBlendDC = CreateCompatibleDC(mFrontMemDC);
+
+		mBackBitmap = CreateCompatibleBitmap(mFrontMemDC, WinApp::GetWidth(), WinApp::GetHeight());
+		mRotateBitmap = CreateCompatibleBitmap(mFrontMemDC, WinApp::GetWidth(), WinApp::GetHeight());
+		mScaleBitmap = CreateCompatibleBitmap(mFrontMemDC, WinApp::GetWidth(), WinApp::GetHeight());
+		mBlendBitmap = CreateCompatibleBitmap(mFrontMemDC, WinApp::GetWidth(), WinApp::GetHeight());
+
+		SelectObject(mBackMemDC, mBackBitmap);
+		SelectObject(mRotateMemDC, mRotateBitmap);
+		SelectObject(mScaleDC, mScaleBitmap);
+		SelectObject(mBlendDC, mBlendBitmap);
 	}
 
-	void RenderManager::DeleteInstance()
+	RenderManager::~RenderManager()
 	{
-		mInstance->release();
-		delete mInstance;
-		mInstance = nullptr;
-	}
+		for (unsigned int i = 0; i < static_cast<unsigned int>(eLayerType::Size); ++i)
+		{
+			DeleteDC(mLayerDCs[i]);
+			DeleteObject(mLayerBitmaps[i]);
+		}
 
-	void RenderManager::init()
-	{
-		mFrontHDC = GetDC(WinApp::GetHWND());
-		mBackHDC = CreateCompatibleDC(mFrontHDC);
-		mBackBitMap = CreateCompatibleBitmap(mFrontHDC, WinApp::GetWidth(), WinApp::GetHeight());
-		SelectObject(mBackHDC, mBackBitMap);
+		DeleteObject(mBackBitmap);
+		DeleteObject(mRotateBitmap);
+		DeleteObject(mScaleBitmap);
+		DeleteObject(mBlendBitmap);
 
-		mTempBackHDC = CreateCompatibleDC(mFrontHDC);
-		mTempBackBitMap = CreateCompatibleBitmap(mFrontHDC, WinApp::GetWidth(), WinApp::GetHeight());
-		SelectObject(mTempBackHDC, mTempBackBitMap);
-	}
+		DeleteDC(mBackMemDC);
+		DeleteDC(mRotateMemDC);
+		DeleteDC(mScaleDC);
+		DeleteDC(mBlendDC);
 
-	void RenderManager::release()
-	{
-		DeleteObject(mBackBitMap);
-		DeleteObject(mTempBackBitMap);
-		DeleteDC(mBackHDC);
-		DeleteDC(mTempBackHDC);
-		ReleaseDC(WinApp::GetHWND(), mFrontHDC);
+		ReleaseDC(WinApp::GetWindow(), mFrontMemDC);
 	}
 
 	void RenderManager::Render()
 	{
-		BitBlt(mFrontHDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mBackHDC, 0, 0, SRCCOPY);
-		PatBlt(mBackHDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), WHITENESS);
+		BitBlt(mBackMemDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mLayerDCs[static_cast<unsigned int>(eLayerType::Background)], 0, 0, SRCCOPY);
+		PatBlt(mLayerDCs[static_cast<unsigned int>(eLayerType::Background)], 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), WHITENESS);
+
+		for (unsigned int i = 1; i < static_cast<unsigned int>(eLayerType::PostProcessing); ++i)
+		{
+			unsigned int width = static_cast<unsigned int>(WinApp::GetWidth() * mScales[i]);
+			unsigned int height = static_cast<unsigned int>(WinApp::GetHeight() * mScales[i]);
+			int x = (static_cast<int>(WinApp::GetWidth()) - static_cast<int>(width)) / 2;
+			int y = (static_cast<int>(WinApp::GetHeight()) - static_cast<int>(height)) / 2;
+
+			BLENDFUNCTION bf = { 0, };
+			bf.BlendOp = AC_SRC_OVER;
+			bf.SourceConstantAlpha = mAlphas[i];
+
+			//StretchBlt(mScaleDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mLayerDCs[i], x, y, width, height, SRCCOPY);
+			//BitBlt(mLayerDCs[i], 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mBackMemDC, 0, 0, SRCCOPY);
+			//BitBlt(mBlendDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mBackMemDC, 0, 0, SRCCOPY);
+			//TransparentBlt(mBlendDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mScaleDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), RGB(255, 255, 255));
+			//AlphaBlend(mLayerDCs[i], 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mBlendDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), bf);
+			//TransparentBlt(mBackMemDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mLayerDCs[i], 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), RGB(255, 255, 255));
+
+			BitBlt(mBlendDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mBackMemDC, 0, 0, SRCCOPY);
+			TransparentBlt(mBlendDC, x, y, width, height, mLayerDCs[i], 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), RGB(255, 255, 255));
+			AlphaBlend(mBackMemDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mBlendDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), bf);
+			//PatBlt(mBlendDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), WHITENESS);
+			PatBlt(mLayerDCs[i], 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), WHITENESS);
+		}
+		{
+			unsigned int index = static_cast<unsigned int>(eLayerType::PostProcessing);
+			BLENDFUNCTION bf = { 0, };
+			bf.BlendOp = AC_SRC_OVER;
+			bf.SourceConstantAlpha = mAlphas[index];
+			AlphaBlend(mBackMemDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mLayerDCs[index], 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), bf);
+		}
+
+		BitBlt(mFrontMemDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), mBackMemDC, 0, 0, SRCCOPY);
+		PatBlt(mBackMemDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), WHITENESS);
 	}
 
-	void RenderManager::Draw(hRectangle worldRect, eSpriteType spritType, eAnimationType animationType, int animationIndex)
+	void RenderManager::Draw(const hRectangle& worldRectangle, const hRectangle& spriteRectangle, const Sprite& sprite, eLayerType layerType, bool bLeft)
 	{
-		const Sprite& sprite = SpriteManager::GetInstance()->GetSprite(spritType);
-
-		const Vector2& topLeft = worldRect.GetTopLeft();
-		const Vector2& topRight = worldRect.GetTopRight();
-		const Vector2& bottomLeft = worldRect.GetBottomLeft();
+		const Vector2& topLeft = worldRectangle.GetTopLeft();
+		const Vector2& topRight = worldRectangle.GetTopRight();
+		const Vector2& bottomLeft = worldRectangle.GetBottomLeft();
+		const Vector2& bottomRight = worldRectangle.GetBottomRight();
 
 		POINT points[3] = { 0, };
 
-		points[0] = { static_cast<long>(topLeft.GetX()), static_cast<long>(topLeft.GetY()) };
-		points[1] = { static_cast<long>(topRight.GetX()), static_cast<long>(topRight.GetY()) };
-		points[2] = { static_cast<long>(bottomLeft.GetX()), static_cast<long>(bottomLeft.GetY()) };
+		if (bLeft)
+		{
+			points[0] = { static_cast<long>(topLeft.GetX()), static_cast<long>(topLeft.GetY()) };
+			points[1] = { static_cast<long>(topRight.GetX()), static_cast<long>(topRight.GetY()) };
+			points[2] = { static_cast<long>(bottomLeft.GetX()), static_cast<long>(bottomLeft.GetY()) };
+		}
+		else
+		{
+			points[0] = { static_cast<long>(topRight.GetX()), static_cast<long>(topRight.GetY()) };
+			points[1] = { static_cast<long>(topLeft.GetX()), static_cast<long>(topLeft.GetY()) };
+			points[2] = { static_cast<long>(bottomRight.GetX()), static_cast<long>(bottomRight.GetY()) };
+		}
 
-		const size_t cx = 756;
-		const size_t cy = 57;
-		const size_t cw = 273;
-		const size_t ch = 492;
+		const Vector2& spritePosition = spriteRectangle.GetTopLeft();
+		const Vector2& spriteSize = spriteRectangle.GetSize();
 
-		PlgBlt(mTempBackHDC, points, sprite.Hdc, cx, cy, cw, ch, 0, 0, 0);
+		PlgBlt(mRotateMemDC, points, sprite.Hdc, static_cast<int>(spritePosition.GetX()), static_cast<int>(spritePosition.GetY()), static_cast<int>(spriteSize.GetX()), static_cast<int>(spriteSize.GetY()), 0, 0, 0);
 
-		const hRectangle boundingRectangle = hRectangle::GetBoundingRectangle(worldRect);
+		const hRectangle boundingRectangle = hRectangle::GetBoundingRectangle(worldRectangle);
 		const Vector2& boundingTopLeft = boundingRectangle.GetTopLeft();
 		const Vector2& boundingBottomRight = boundingRectangle.GetBottomRight();
 
-		TransparentBlt(mBackHDC,
+		TransparentBlt(mLayerDCs[static_cast<unsigned int>(layerType)],
 			static_cast<int>(boundingTopLeft.GetX()),
 			static_cast<int>(boundingTopLeft.GetY()),
 			static_cast<int>(boundingBottomRight.GetX() - boundingTopLeft.GetX()),
-			static_cast<int>(boundingBottomRight.GetX() - boundingTopLeft.GetX()),
-			mTempBackHDC,
-			static_cast<int>(boundingTopLeft.GetX()),
-			static_cast<int>(boundingTopLeft.GetY()),
 			static_cast<int>(boundingBottomRight.GetY() - boundingTopLeft.GetY()),
+			mRotateMemDC,
+			static_cast<int>(boundingTopLeft.GetX()),
+			static_cast<int>(boundingTopLeft.GetY()),
+			static_cast<int>(boundingBottomRight.GetX() - boundingTopLeft.GetX()),
 			static_cast<int>(boundingBottomRight.GetY() - boundingTopLeft.GetY()),
 			RGB(255, 255, 255));
 
-		PatBlt(mTempBackHDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), WHITENESS);
+		PatBlt(mRotateMemDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight(), WHITENESS);
 	}
 
-	void RenderManager::DrawRect(hRectangle rectangle, COLORREF color)
+	void RenderManager::SetPostProcessingColor(COLORREF color)
 	{
+		HDC currentDC = mLayerDCs[static_cast<unsigned int>(eLayerType::PostProcessing)];
+
 		HPEN hPen = CreatePen(PS_SOLID, 1, color);
-		HPEN hPrevPen = (HPEN)SelectObject(mBackHDC, hPen);
 
-		const Vector2& topLeft = rectangle.GetTopLeft();
-		const Vector2& bottomRight = rectangle.GetBottomRight();
+		HPEN hOldPen = (HPEN)SelectObject(currentDC, hPen);
 
-		Rectangle(mBackHDC,
-			static_cast<int>(topLeft.GetX()),
-			static_cast<int>(topLeft.GetY()),
-			static_cast<int>(bottomRight.GetX()),
-			static_cast<int>(bottomRight.GetY()));
+		HBRUSH hBrush = CreateSolidBrush(color);
 
-		SelectObject(mBackHDC, hPrevPen);
+		HBRUSH hOldBrush = (HBRUSH)SelectObject(currentDC, hBrush);
+
+		Rectangle(currentDC, 0, 0, WinApp::GetWidth(), WinApp::GetHeight());
+		RECT rect{ 0,0, static_cast<LONG>(WinApp::GetWidth()),static_cast<LONG>(WinApp::GetHeight()) };
+		FillRect(currentDC, &rect, hBrush);
+
+		SelectObject(currentDC, hOldPen);
+		SelectObject(currentDC, hOldBrush);
+
 		DeleteObject(hPen);
+		DeleteObject(hBrush);
 	}
-
-	void RenderManager::DrawRect(int x, int y, int w, int h, COLORREF color)
-	{
-		HPEN hPen = CreatePen(PS_SOLID, 1, color);
-		HPEN hPrevPen = (HPEN)SelectObject(mBackHDC, hPen);
-
-		Rectangle(mBackHDC, x, y, x + w, y + h);
-
-		SelectObject(mBackHDC, hPrevPen);
-		DeleteObject(hPen);
-	}
-
-	void RenderManager::DrawLine(int startX, int startY, int endX, int endY, COLORREF color)
-	{
-		HPEN hPen = CreatePen(PS_SOLID, 1, color);
-		HPEN hPrevPen = (HPEN)SelectObject(mBackHDC, hPen);
-
-		MoveToEx(mBackHDC, startX, startY, NULL);
-		LineTo(mBackHDC, endX, endY);
-
-		SelectObject(mBackHDC, hPrevPen);
-		DeleteObject(hPen);
-	}
-
-	void RenderManager::DrawPoint(int x, int y, COLORREF color)
-	{
-		HPEN hPen = CreatePen(PS_SOLID, 1, color);
-		HPEN hPrevPen = (HPEN)SelectObject(mBackHDC, hPen);
-
-		for (int i = 0; i < 50; ++i)
-		{
-			for (int j = 0; j < 50; ++j)
-			{
-				SetPixel(mBackHDC, x + i, y + j, color);
-			}
-		}
-
-		SelectObject(mBackHDC, hPrevPen);
-		DeleteObject(hPen);
-	}
-
-	void RenderManager::rotateRender(float radian)
-	{
-		POINT points[3] = { 0, };
-
-		points[0] = { 0,0 };
-		points[1] = { static_cast<LONG>(WinApp::GetWidth()), 0 };
-		points[2] = { 0, static_cast<LONG>(WinApp::GetHeight()) };
-
-		POINT center = { static_cast<LONG>(WinApp::GetWidth()) / 2 , static_cast<LONG>(WinApp::GetHeight()) / 2 };
-		{
-			for (int i = 0; i < 3; ++i)
-			{
-				points[i].x -= center.x;
-				points[i].y -= center.y;
-			}
-		}
-
-		// 회전
-		{
-			float cosScalr = cos(radian);
-			float sinScalr = sin(radian);
-			POINT temp;
-
-			for (int i = 0; i < 3; ++i)
-			{
-				temp.x = points[i].x * cosScalr - points[i].y * sinScalr;
-				temp.y = points[i].x * sinScalr + points[i].y * cosScalr;
-				points[i] = temp;
-			}
-		}
-
-		// 월드 좌표로 원점이동
-		{
-			for (int i = 0; i < 3; ++i)
-			{
-				points[i].x += center.x;
-				points[i].y += center.y;
-			}
-		}
-
-		PlgBlt(mFrontHDC, points, mBackHDC, 0, 0, static_cast<LONG>(WinApp::GetWidth()), static_cast<LONG>(WinApp::GetHeight()), 0, 0, 0);
-	}
-};
+}

@@ -1,56 +1,60 @@
+#include <cassert>
+#include <string>
+
 #include "GameCore.h"
+#include "EnumLoader.h"
 #include "InputManager.h"
+#include "RenderManager.h"
+#include "SceneManager.h"
 #include "TimeManager.h"
 #include "SpriteManager.h"
-//#include "SoundManager.h"
-#include "SceneManager.h"
-#include "RenderManager.h"
+#include "BoardManager.h"
+#include "SoundManager.h"
+#include "WinApp.h"
 
 namespace catInWonderland
 {
-	GameCore* GameCore::mInstance = nullptr;
+	unsigned int GameCore::mInstanceCount = 0u;
 
-	GameCore* GameCore::GetInstance()
+	GameCore::GameCore()
+		: mBoardManager(new BoardManager())
+		, mInputManager(new InputManager())
+		, mRenderManager(new RenderManager())
+		, mSceneManager(new SceneManager())
+		, mSoundManager(new SoundManager())
+		, mSpriteManager(new SpriteManager())
+		, mTimeManager(new TimeManager())
 	{
-		if (mInstance == nullptr)
-		{
-			mInstance = new GameCore();
-		}
+		++mInstanceCount;
+		assert(mInstanceCount == 1);
 
-		return mInstance;
+		EnumLoader::LoadSound(mSoundManager);
+		EnumLoader::LoadSprtie(mSpriteManager);
+		EnumLoader::LoadAnimationRectangle(mSpriteManager);
+		EnumLoader::LoadScene(mSceneManager);
+
+		mSceneManager->SetCurScene(eSceneType::START);
 	}
 
-	void GameCore::DeletInstance()
+	GameCore::~GameCore()
 	{
-		delete mInstance;
-		mInstance = nullptr;
-	}
+		--mInstanceCount;
+		assert(mInstanceCount == 0);
 
-	void GameCore::Init()
-	{
-		TimeManager::GetInstance();
-		InputManager::GetInstance();
-		SpriteManager::GetInstance();
-		//SoundManager::GetInstance()->Init();
-		SceneManager::GetInstance();
-		RenderManager::GetInstance();
+		delete mBoardManager;
+		delete	mInputManager;
+		delete	mRenderManager;
+		delete	mSceneManager;
+		delete	mSoundManager;
+		delete	mSpriteManager;
+		delete	mTimeManager;
 	}
 
 	void GameCore::Frame()
 	{
-		InputManager::GetInstance()->Frame();
-		TimeManager::GetInstance()->Frame();
-		SceneManager::GetInstance()->Frame();
-		RenderManager::GetInstance()->Render();
-	}
-
-	void GameCore::Release()
-	{
-		RenderManager::DeleteInstance();
-		SceneManager::DeleteInstance();
-		//SoundManager::DeleteInstance();
-		SpriteManager::DeleteInstance();
-		TimeManager::DeleteInstance();
-		InputManager::DeleteInstance();
+		mInputManager->Update();
+		mTimeManager->Update();
+		mSceneManager->Update();
+		mRenderManager->Render();
 	}
 }

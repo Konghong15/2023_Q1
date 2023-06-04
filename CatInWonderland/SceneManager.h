@@ -4,42 +4,49 @@
 #include <map>
 
 #include "eSceneType.h"
+#include "Scene.h"
 
 namespace catInWonderland
 {
 	class Scene;
-	class Object;
 
-	class SceneManager
+	class SceneManager final
 	{
 	public:
-		static SceneManager* GetInstance();
-		static void DeleteInstance();
-
-		void Frame();
-
-		void ChangeScene(eSceneType sceneType);
-		void SpawnCurScene(Object* obj);
-
-		inline const Scene& GetCurScene() const;
-
-	private:
 		SceneManager() = default;
-		~SceneManager() = default;
+		~SceneManager();
+		SceneManager(const SceneManager&) = delete;
+		SceneManager& operator=(const SceneManager&) = delete;
 
-		void init();
-		void release();
+		void Update(float deltaTime);
+
+		inline void RegisterScene(eSceneType sceneType, Scene* scene);
+		inline void SetCurScene(eSceneType sceneType);
+
+		inline const Scene& GetCurrentScene() const;
 
 	private:
-		static SceneManager* mInstance;
-
 		std::map<eSceneType, Scene*> mSceneMap;
-		Scene* mCurScene;
+		Scene* mCurrentScene;
 	};
 
-	const Scene& SceneManager::GetCurScene() const
+	void SceneManager::RegisterScene(eSceneType sceneType, Scene* scene)
 	{
-		return *mCurScene;
+		assert(mSceneMap.find(sceneType) == mSceneMap.end());
+		mSceneMap.emplace(sceneType, scene);
 	}
 
+	const Scene& SceneManager::GetCurrentScene() const
+	{
+		return *mCurrentScene;
+	}
+
+	void SceneManager::SetCurScene(eSceneType sceneType)
+	{
+		auto iter = mSceneMap.find(sceneType);
+		assert(iter != mSceneMap.end());
+
+		mCurrentScene = iter->second;
+		mCurrentScene->Enter();
+	}
 }

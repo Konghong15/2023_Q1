@@ -19,53 +19,136 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animator.h" />
+    <ClInclude Include="BoardManager.h" />
+    <ClInclude Include="BoardObject.h" />
+    <ClInclude Include="BoardObjectInfo.h" />
+    <ClInclude Include="Brick.h" />
+    <ClInclude Include="Butterfly.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="ChangeColorTile.h" />
+    <ClInclude Include="ConstantTable.h" />
+    <ClInclude Include="Creator.h" />
+    <ClInclude Include="CutScene.h" />
+    <ClInclude Include="CutScene01.h" />
+    <ClInclude Include="CutScene02.h" />
+    <ClInclude Include="CutScene03.h" />
+    <ClInclude Include="eAnimaitonType.h" />
+    <ClInclude Include="eLayerType.h" />
+    <ClInclude Include="eMagent.h" />
+    <ClInclude Include="EnumLoader.h" />
+    <ClInclude Include="eObjectType.h" />
+    <ClInclude Include="ePlayerState.h" />
+    <ClInclude Include="ePlayerStateType.h" />
+    <ClInclude Include="eSceneType.h" />
+    <ClInclude Include="eSoundType.h" />
+    <ClInclude Include="eSpriteType.h" />
+    <ClInclude Include="GameCore.h" />
+    <ClInclude Include="GameScene.h" />
+    <ClInclude Include="GuideButton.h" />
+    <ClInclude Include="hRectangle.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectInfo.h" />
+    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerAction.h" />
+    <ClInclude Include="PlayerIdle.h" />
+    <ClInclude Include="PlayerMove.h" />
+    <ClInclude Include="PlayerPlummet.h" />
+    <ClInclude Include="PlayerState.h" />
+    <ClInclude Include="PlummetObject.h" />
+    <ClInclude Include="Portal.h" />
+    <ClInclude Include="RenderManager.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneLoader.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SceneStart.h" />
+    <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteManager.h" />
+    <ClInclude Include="Stage01.h" />
+    <ClInclude Include="Stage02.h" />
+    <ClInclude Include="Stage03.h" />
+    <ClInclude Include="Stage04.h" />
+    <ClInclude Include="Stage05.h" />
+    <ClInclude Include="Stage06.h" />
+    <ClInclude Include="Stage07.h" />
+    <ClInclude Include="Stage08.h" />
+    <ClInclude Include="Stage09.h" />
+    <ClInclude Include="Stage10.h" />
+    <ClInclude Include="Tile.h" />
+    <ClInclude Include="TimeManager.h" />
+    <ClInclude Include="TitlePlayer.h" />
+    <ClInclude Include="UnitTest.h" />
+    <ClInclude Include="Vector2.h" />
+    <ClInclude Include="WinApp.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Animator.cpp" />
     <ClCompile Include="BoardManager.cpp" />
+    <ClCompile Include="BoardObject.cpp" />
+    <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="Butterfly.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="ChangeColorTile.cpp" />
+    <ClCompile Include="ConstantTable.cpp" />
+    <ClCompile Include="Creator.cpp" />
+    <ClCompile Include="CutScene.cpp" />
+    <ClCompile Include="CutScene01.cpp" />
+    <ClCompile Include="CutScene02.cpp" />
+    <ClCompile Include="CutScene03.cpp" />
+    <ClCompile Include="EnumLoader.cpp" />
     <ClCompile Include="GameCore.cpp" />
     <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="GuideButton.cpp" />
     <ClCompile Include="hRectangle.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerAction.cpp" />
+    <ClCompile Include="PlayerIdle.cpp" />
+    <ClCompile Include="PlayerMove.cpp" />
+    <ClCompile Include="PlayerPlummet.cpp" />
+    <ClCompile Include="PlayerState.cpp" />
+    <ClCompile Include="PlummetObject.cpp" />
+    <ClCompile Include="Portal.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneLoader.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SceneStart.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
+    <ClCompile Include="Stage01.cpp" />
+    <ClCompile Include="Stage02.cpp" />
+    <ClCompile Include="Stage03.cpp" />
+    <ClCompile Include="Stage04.cpp" />
+    <ClCompile Include="Stage05.cpp" />
+    <ClCompile Include="Stage06.cpp" />
+    <ClCompile Include="Stage07.cpp" />
+    <ClCompile Include="Stage08.cpp" />
+    <ClCompile Include="Stage09.cpp" />
+    <ClCompile Include="Stage10.cpp" />
+    <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="TitlePlayer.cpp" />
+    <ClCompile Include="UnitTest.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="WinApp.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoardManager.h" />
-    <ClInclude Include="eAnimationType.h" />
-    <ClInclude Include="eSceneType.h" />
-    <ClInclude Include="eSprtieType.h" />
-    <ClInclude Include="GameCore.h" />
-    <ClInclude Include="GameScene.h" />
-    <ClInclude Include="Helper.h" />
-    <ClInclude Include="hRectangle.h" />
-    <ClInclude Include="InputManager.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="RenderManager.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Sound.h" />
-    <ClInclude Include="SoundManager.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="SpriteManager.h" />
-    <ClInclude Include="TimeManager.h" />
-    <ClInclude Include="Vector2.h" />
-    <ClInclude Include="WinApp.h" />
+    <None Include="fmod.dll" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e924982b-cf80-424b-9e63-ed3ff2c2a6b2}</ProjectGuid>
+    <ProjectGuid>{7c1a3388-8cbd-48d1-b96f-7d7a831a30b2}</ProjectGuid>
     <RootNamespace>CatInWonderland</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -114,18 +197,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -160,11 +231,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>.\\resources\\include\\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>.\\resources\\library\\$(Platform)\\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d ".\\resources\\library\\$(Platform)\\fmod.dll" "$(OutDir)"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -174,13 +251,19 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>.\\resources\\include\\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>.\\resources\\library\\$(Platform)\\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d ".\\resources\\library\\$(Platform)\\fmod.dll" "$(OutDir)"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

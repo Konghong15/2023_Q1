@@ -1,58 +1,67 @@
-#include <Windows.h>
+#define WIN32_LEAN_AND_MEAN
 
-#include "WinApp.h"
+#include <cassert>
+#include <cstdlib>
+#include <string>
+#include <SDKDDKVer.h>
+
 #include "GameCore.h"
+#include "SoundManager.h"
+#include "WinApp.h"
 
 namespace catInWonderland
 {
-	HWND WinApp::mHWnd = NULL;
-	UINT WinApp::mWidth = 0;
-	UINT WinApp::mHeight = 0;
+	HWND WinApp::mHWnd;
+	UINT WinApp::mWidth;
+	UINT WinApp::mHeight;
+	char WinApp::mPath[260];
 
-	int WinApp::Run(HINSTANCE hInstance, const WCHAR* name, UINT width, UINT height)
+	int WinApp::Run(HINSTANCE hInstance, const TCHAR* appName, UINT width, UINT height)
 	{
 		mWidth = width;
 		mHeight = height;
 
-		WNDCLASSEXW wcex;
-		ZeroMemory(&wcex, sizeof(WNDCLASSEXW));
+		WNDCLASS wndClass;
+		ZeroMemory(&wndClass, sizeof(WNDCLASS));
 
-		wcex.cbSize = sizeof(WNDCLASSEX);
-		wcex.style = CS_HREDRAW | CS_VREDRAW;
-		wcex.hInstance = hInstance;
-		wcex.hbrBackground = CreateSolidBrush(RGB(255, 255, 255));
-		wcex.lpszClassName = name;
-		wcex.lpfnWndProc = WinApp::WndProc;
-		wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+		wndClass.style = CS_HREDRAW | CS_VREDRAW;
+		wndClass.hInstance = hInstance;
+		wndClass.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
+		wndClass.lpszClassName = appName;
+		wndClass.lpfnWndProc = WinApp::WndProc;
+		wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wndClass.hIcon = LoadIcon(hInstance, IDI_APPLICATION);
 
-		RegisterClassExW(&wcex);
+		RegisterClass(&wndClass);
 
-		RECT rect = { 0, 0 ,width, height };
+		RECT rect{ 0, 0, static_cast<long>(mWidth), static_cast<long>(mHeight) };
 		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
 
-		UINT screenWidth = GetSystemMetrics(SM_CXSCREEN);
-		UINT screenHeight = GetSystemMetrics(SM_CYSCREEN);
+		mHWnd = CreateWindow(
+			appName, appName,
+			WS_OVERLAPPED | WS_SYSMENU,
+			rect.top, rect.left,
+			rect.right - rect.left, rect.bottom - rect.top,
+			NULL, NULL,
+			hInstance, NULL);
 
-		mHWnd = CreateWindowW(
-			name, name,
-			WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME,
-			(screenWidth - (rect.right - rect.left)) / 2,
-			(screenHeight - (rect.bottom - rect.top)) / 2,
-			width, height,
-			nullptr, nullptr,
-			hInstance, nullptr);
-
-		ShowWindow(mHWnd, SW_SHOW);
+		ShowWindow(mHWnd, SW_SHOWNORMAL);
 		UpdateWindow(mHWnd);
 
+		_CrtDumpMemoryLeaks();
 		MSG msg = { 0, };
-		GameCore::GetInstance()->Init();
+		GameCore::GetInstance();
+
+		// 여기에 path
+		WinApp::GetPath();
+
+		//전체화면 만드는 코드
+		SetWindowLongPtr(mHWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
 
 		while (msg.message != WM_QUIT)
 		{
-			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 			{
-				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
 			else
@@ -61,13 +70,49 @@ namespace catInWonderland
 			}
 		}
 
-		GameCore::GetInstance()->Release();
-		GameCore::DeletInstance();
+		GameCore::DestroyInstance();
 
-		return (int)msg.wParam;
+		return static_cast<int>(msg.wParam);
 	}
 
-	HWND WinApp::GetHWND()
+	LRESULT CALLBACK WinApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	{
+		switch (message)
+		{
+		case WM_CREATE:
+		{
+			placeInCenterOfScreen(hWnd, WS_OVERLAPPEDWINDOW, WS_EX_APPWINDOW | WS_EX_WINDOWEDGE);
+		}
+		break;
+
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			break;
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+		return 0;
+	}
+
+	void WinApp::placeInCenterOfScreen(HWND window, DWORD style, DWORD exStyle)
+	{
+		int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+		int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+		RECT clientRect;
+		GetClientRect(window, &clientRect);
+
+		int clientWidth = clientRect.right - clientRect.left;
+		int clientHeight = clientRect.bottom - clientRect.top;
+
+		SetWindowPos(window, NULL,
+			screenWidth / 2 - clientWidth / 2,
+			screenHeight / 2 - clientHeight / 2,
+			clientWidth, clientHeight, 0
+		);
+	}
+
+	HWND WinApp::GetWindow()
 	{
 		return mHWnd;
 	}
@@ -82,17 +127,32 @@ namespace catInWonderland
 		return mHeight;
 	}
 
-	LRESULT WinApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	const char* WinApp::GetPath()
 	{
-		switch (message)
+		///*char highFolder[50] = "../../CatInWonderland/resources/";
+		//LPCSTR Filename = "";
+		//strcat(highFolder, Filename);
+		//OutputDebugStringA(highFolder);*/
+
+		if (GetCurrentDirectoryA(MAX_PATH, mPath) > 0)
 		{
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			break;
-		default:
-			return DefWindowProc(hWnd, message, wParam, lParam);
+			// (경고) size_t -> int
+			int str_len = static_cast<int>(strlen(mPath));
+
+			OutputDebugStringA(("\nnum = " + std::to_string(str_len) + "\n").c_str());
+
+			int highFolderIdx = str_len;
+			for (highFolderIdx; highFolderIdx >= 0; highFolderIdx--)
+			{
+				if (mPath[highFolderIdx] == '\\')
+				{
+					mPath[highFolderIdx] = '\0';
+					OutputDebugStringA(mPath);
+					break;
+				}
+			}
 		}
 
-		return 0;
+		return nullptr;
 	}
-};
+}

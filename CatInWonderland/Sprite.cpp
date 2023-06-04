@@ -2,7 +2,6 @@
 
 namespace catInWonderland
 {
-
 	Sprite::Sprite(HDC hdc, HBITMAP bitmap, BITMAP bitInfo)
 		: Hdc(hdc)
 		, Bitmap(bitmap)

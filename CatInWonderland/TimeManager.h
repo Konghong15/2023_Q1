@@ -4,41 +4,36 @@
 
 namespace catInWonderland
 {
-	class TimeManager
+	class TimeManager final
 	{
 	public:
-		static TimeManager* GetInstance();
-		static void DeleteInstance();
-
-		void Reset();
-		void Frame();
-
-		inline float GetDeltaTime();
-		inline unsigned int GetFPS();
-
-	private:
-		TimeManager() = default;
+		TimeManager();
 		~TimeManager() = default;
+		TimeManager(const TimeManager&) = delete;
+		TimeManager& operator=(const TimeManager&) = delete;
+
+		void Init();
+		void Update();
+
+		inline unsigned int GetFrameRate() const;
+		inline float GetDeltaTime() const;
 
 	private:
-		static TimeManager* mInstance;
-
-		LARGE_INTEGER mCurTime;
-		LARGE_INTEGER mPrevTime;
-		LARGE_INTEGER mFrequency;
-		unsigned int mFrameCount;
-		unsigned int mFPS;
-
+		ULONGLONG mCurrentTime;
+		ULONGLONG mPreviousTime;
 		float mDeltaTime;
+		float mElapsed;
+		unsigned int mFPS;
+		unsigned int mFrameCount;
 	};
 
-	float TimeManager::GetDeltaTime()
-	{
-		return  mDeltaTime > 0.03f ? 0.03f : mDeltaTime;
-	}
-
-	unsigned int TimeManager::GetFPS()
+	unsigned int TimeManager::GetFrameRate() const
 	{
 		return mFPS;
+	}
+
+	float TimeManager::GetDeltaTime() const
+	{
+		return mDeltaTime;
 	}
 }
